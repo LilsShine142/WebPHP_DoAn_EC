@@ -226,18 +226,30 @@
                                     Calculate Shipping
                                 </span>
 
+                                <div class="bor8 bg0 m-b-12">
+                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
+                                        placeholder="Họ và tên">
+                                </div>
+                                <div class="bor8 bg0 m-b-12">
+                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
+                                        placeholder="Email">
+                                </div>
+                                <div class="bor8 bg0 m-b-12">
+                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
+                                        placeholder="Số điện thoại">
+                                </div>
                                 <div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
                                     <select class="js-select2" name="time">
-                                        <option>Select a country...</option>
-                                        <option>USA</option>
-                                        <option>UK</option>
+                                        <option>Chọn tỉnh/thành phố</option>
+                                        <option>HCM</option>
+                                        <option>HN</option>
                                     </select>
                                     <div class="dropDownSelect2"></div>
                                 </div>
 
                                 <div class="bor8 bg0 m-b-12">
                                     <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
-                                        placeholder="State /  country">
+                                        placeholder="Địa chỉ cụ thể">
                                 </div>
 
                                 <div class="bor8 bg0 m-b-22">
@@ -254,9 +266,30 @@
 
                             </div>
                         </div>
+                        <div class="">
+                            <div class="">
+                                <span class="mtext-101 cl2">
+                                    Phương thức thanh toán
+                                </span>
+                            </div>
+
+                            <div class="">
+                                <div type="checkbox" class="">
+                                    <div>
+                                        <label for="cod">Thanh toán khi nhận hàng</label>
+                                        <input type="radio" id="cod" name="payment" value="cod">
+                                    </div>
+                                    <div>
+                                        <label for="cod">Thanh toán momo</label>
+                                        <input type="radio" id="cod" name="payment" value="cod">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="flex-w flex-t p-t-27 p-b-33">
+                    <div class="flex-w flex-t ">
                         <div class="size-208">
                             <span class="mtext-101 cl2">
                                 Total:

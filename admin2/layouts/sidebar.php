@@ -58,7 +58,7 @@
                </a>
              </li>
              <li class="nav-item">
-               <a href="" class="nav-link">
+               <a href="index.php?page=pages/Category/list.php" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>List</p>
                </a>
@@ -76,13 +76,13 @@
            </a>
            <ul class="nav nav-treeview">
              <li class="nav-item">
-               <a href="" class="nav-link">
+               <a href="index.php?page=pages/Product/create.php" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>Create</p>
                </a>
              </li>
              <li class="nav-item">
-               <a href="" class="nav-link">
+               <a href="index.php?page=pages/Product/list.php" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>List</p>
                </a>
@@ -145,6 +145,29 @@
                <a href="" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>Account</p>
+               </a>
+             </li>
+           </ul>
+         </li>
+         <li class="nav-item">
+           <a href="#" class="nav-link">
+             <i class="nav-icon fas fa-box"></i>
+             <p>
+               Provider
+               <i class="right fas fa-angle-left"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview">
+             <li class="nav-item">
+               <a href="index.php?page=pages/Provider/create.php" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Create</p>
+               </a>
+             </li>
+             <li class="nav-item">
+               <a href="index.php?page=pages/Provider/list.php" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>List</p>
                </a>
              </li>
            </ul>

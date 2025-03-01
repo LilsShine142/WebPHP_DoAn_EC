@@ -74,7 +74,7 @@ $(document).ready(function() {
                                     <td>${role.id}</td>
                                     <td>${role.name}</td>
                                     <td>
-                                        <a href='view.php?id=${role.id}' class='btn btn-info btn-sm' title='View'>
+                                        <a href='index.php?page=pages/Permission/role_details.php&id=${role.id}' class='btn btn-info btn-sm' title='View'>
                                             <i class='fas fa-eye'></i>
                                         </a>
                                         <a href='edit.php?id=${role.id}' class='btn btn-warning btn-sm' title='Edit'>

@@ -13,7 +13,7 @@ class CartGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM carts LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM carts OFFSET :offset";
+      $sql = "SELECT * FROM carts LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM carts";
     }

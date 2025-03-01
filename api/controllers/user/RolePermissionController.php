@@ -35,10 +35,10 @@ class RolePermissionController extends ErrorHandler {
           $this->sendErrorResponse(422, "permission_id is required");
           break;
         }
-        $res = $this->gateway->delete($role_id, $permission_id);
+        $this->gateway->delete($role_id, $permission_id);
 
         echo json_encode([
-          "success" => $res,
+          "success" => true,
           "message" => "Role id $role_id and permission id $permission_id was deleted"
         ]);
         break;

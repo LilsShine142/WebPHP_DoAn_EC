@@ -23,7 +23,7 @@ class ProductCategoryGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM product_categories LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM product_categories OFFSET: offset";
+      $sql = "SELECT * FROM product_categories LIMIT 18446744073709551615 OFFSET: offset";
     } else {
       $sql = "SELECT * FROM product_categories";
     }

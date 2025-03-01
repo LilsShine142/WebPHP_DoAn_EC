@@ -50,10 +50,10 @@ class ProductVariationController extends ErrorHandler {
 
       case "DELETE":
         $this->auths->verifyAction("DELETE_PRODUCT_VARIATION");
-        $res = $this->gateway->delete($id);
+        $this->gateway->delete($id);
 
         echo json_encode([
-          "success" => $res,
+          "success" => true,
           "message" => "Product variation id $id was deleted or stop_selling if there is a constrain"
         ]);
         break;

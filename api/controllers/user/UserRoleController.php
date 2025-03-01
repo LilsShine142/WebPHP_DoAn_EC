@@ -35,10 +35,10 @@ class UserRoleController extends ErrorHandler {
           $this->sendErrorResponse(422, "role_id is required");
           break;
         }
-        $res = $this->gateway->delete($user_id, $role_id);
+        $this->gateway->delete($user_id, $role_id);
 
         echo json_encode([
-          "success" => $res,
+          "success" => true,
           "message" => "User's id $user_id and role's id $role_id was deleted"
         ]);
         break;

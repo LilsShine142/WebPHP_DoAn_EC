@@ -13,7 +13,7 @@ class RolePermissionGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM role_permissions LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM role_permissions OFFSET :offset";
+      $sql = "SELECT * FROM role_permissions LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM role_permissions";
     }
@@ -29,7 +29,7 @@ class RolePermissionGateway {
   public function create(array $data): array | false {
     $sql = "INSERT INTO role_permissions (role_id, permission_id)
       VALUES (:role_id, :permission_id)";
-    
+
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":role_id", $data["role_id"], PDO::PARAM_INT);
     $stmt->bindValue(":permission_id", $data["permission_id"], PDO::PARAM_INT);
@@ -39,7 +39,7 @@ class RolePermissionGateway {
   }
 
   public function get(int $role_id, ?int $permission_id): array | false {
-    $sql = $role_id && $permission_id 
+    $sql = $role_id && $permission_id
       ? "SELECT * FROM role_permissions WHERE role_id = :role_id AND permission_id = :permission_id"
       : "SELECT * FROM role_permissions WHERE role_id = :role_id";
 

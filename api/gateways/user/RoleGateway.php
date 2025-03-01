@@ -23,7 +23,7 @@ class RoleGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM roles LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM roles OFFSET: offset";
+      $sql = "SELECT * FROM roles LIMIT 18446744073709551615 OFFSET: offset";
     } else {
       $sql = "SELECT * FROM roles";
     }

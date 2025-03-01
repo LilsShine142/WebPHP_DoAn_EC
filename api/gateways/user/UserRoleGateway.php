@@ -13,7 +13,7 @@ class UserRoleGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM user_roles LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM user_roles OFFSET :offset";
+      $sql = "SELECT * FROM user_roles LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM user_roles";
     }
@@ -29,7 +29,7 @@ class UserRoleGateway {
   public function create(array $data): array | false {
     $sql = "INSERT INTO user_roles (user_id, role_id)
       VALUES (:user_id, :role_id)";
-    
+
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":user_id", $data["user_id"], PDO::PARAM_INT);
     $stmt->bindValue(":role_id", $data["role_id"], PDO::PARAM_INT);
@@ -39,7 +39,7 @@ class UserRoleGateway {
   }
 
   public function get(int $user_id, ?int $role_id): array | false {
-    $sql = $user_id && $role_id 
+    $sql = $user_id && $role_id
       ? "SELECT * FROM user_roles WHERE user_id = :user_id AND role_id = :role_id"
       : "SELECT * FROM user_roles WHERE user_id = :user_id";
 
@@ -58,5 +58,15 @@ class UserRoleGateway {
     $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
     $stmt->bindValue(":role_id", $role_id, PDO::PARAM_INT);
     return $stmt->execute();
+  }
+
+  public function deleteByUserId(int $user_id): bool {
+    $sql = "DELETE FROM user_roles WHERE user_id = :user_id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->rowCount();
   }
 }

@@ -8,7 +8,6 @@ class Auths extends ErrorHandler  {
   }
 
   public function verifyAction(string $action_code): void {
-    /* Comment for testing
     if(!$this->usr_email || !$this->usr_pwd) {
       $this->sendErrorResponse(403, "Unauthorized");
       die;
@@ -21,7 +20,7 @@ class Auths extends ErrorHandler  {
         INNER JOIN permissions AS per ON rol_per.permission_id = per.id
         WHERE usr.email = :email
         AND usr.password = :password
-        AND per.action_code = UPPER(:action_code)
+        AND per.action_code = LOWER(:action_code)
       )
     ";
 
@@ -36,9 +35,6 @@ class Auths extends ErrorHandler  {
       $this->sendErrorResponse(403, "Unauthorized");
       die;
     }
-    */
   }
 
 }
-
-// action_code is about CRUD_products, CRUD_users, CRUD_cart, ...

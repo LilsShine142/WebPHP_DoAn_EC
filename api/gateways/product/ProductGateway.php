@@ -13,7 +13,7 @@ class ProductGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM products LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM products OFFSET :offset";
+      $sql = "SELECT * FROM products LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM products";
     }
@@ -28,7 +28,7 @@ class ProductGateway {
   public function create(array $data): array | false {
     $sql = "INSERT INTO products (name, brand_id, model, category_id, description, stop_selling)
       VALUES (:name, :brand_id, :model, :category_id, :description, :stop_selling)";
-    
+
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":name", $data["name"], PDO::PARAM_STR);
     $stmt->bindValue(":brand_id", $data["brand_id"], PDO::PARAM_INT);

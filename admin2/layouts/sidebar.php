@@ -91,33 +91,10 @@
          </li>
 
          <li class="nav-item">
-           <a href="#" class="nav-link">
+           <a href="index.php?page=pages/Order/list.php" class="nav-link">
              <i class="nav-icon fas fa-users"></i>
-             <p>
-               Order
-               <i class="right fas fa-angle-left"></i>
-             </p>
+             <p>Order</p>
            </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Pending</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Delivering</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Delivered</p>
-               </a>
-             </li>
-           </ul>
          </li>
 
          <li class="nav-item">

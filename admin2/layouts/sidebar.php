@@ -124,7 +124,7 @@
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-users"></i>
              <p>
-               Customer
+               User
                <i class="right fas fa-angle-left"></i>
              </p>
            </a>
@@ -138,13 +138,13 @@
              <li class="nav-item">
                <a href="index.php?page=pages/Customer/list.php" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
-                 <p>List</p>
+                 <p>Employee</p>
                </a>
              </li>
              <li class="nav-item">
-               <a href="" class="nav-link">
+               <a href="index.php?page=pages/Customer/list.php" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
-                 <p>Account</p>
+                 <p>Customer</p>
                </a>
              </li>
            </ul>

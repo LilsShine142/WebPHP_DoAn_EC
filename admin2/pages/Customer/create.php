@@ -1,60 +1,64 @@
-<form method="post" action="">
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- Default box -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Customer create</h3>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sản Phẩm Mới</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
 
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>First Name</label>
-                        <input type="text" class="form-control" placeholder="Enter your first name" name="firstname" value="" >
-                    </div>
-
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Last Name</label>
-                        <input type="text" class="form-control" placeholder="Enter your last name" name="lastname" value="">
-                    </div>
-
-
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="text" class="form-control" placeholder="Enter email" name="email" value="">
-            </div>
-
+<body>
+    <button type="button" class="btn btn-primary" style="margin: 15px 20px -20px;" onclick="window.location.href='index.php?page=pages/Customer/list.php'">Quay về</button>
+    <div class="container mt-5">
+        <h2>Thêm Người dùng Mới</h2>
+        <form action="index.php?page=pages/Customer/create.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="customerId" name="customerId">
 
             <div class="form-group">
-                <label>Phone</label>
-                <input type="text" class="form-control" placeholder="Enter phone" name="phone">
+                <label for="fullname">Họ và tên:</label>
+                <input type="text" class="form-control" id="fullname" name="fullname" required>
             </div>
-            
-            <div class="form-group">
-                <label>Address</label>
-                <input type="text" class="form-control" placeholder="Enter address" name="address">
-            </div>
-        </div>
 
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Create</button>
-        </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Số điện thoại:</label>
+                <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="province">Tỉnh/Thành phố:</label>
+                <select class="form-control" id="province" name="province" required></select>
+            </div>
+
+            <div class="form-group">
+                <label for="district">Quận/Huyện:</label>
+                <select class="form-control" id="district" name="district" required></select>
+            </div>
+
+            <div class="form-group">
+                <label for="ward">Phường/Xã:</label>
+                <select class="form-control" id="ward" name="ward" required></select>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Địa chỉ chi tiết:</label>
+                <input type="text" class="form-control" id="address" name="address" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="saveCustomer">Thêm Người dùng</button>
+        </form>
     </div>
+    <!-- Toast container để hiển thị thông báo thành công -->
+    <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+    <script src="assets/js/Customer/validationCustomer.js"></script>
+    <script src="assets/js/Customer/customerActions.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 
-    <!-- /.card -->
-</form>
+</html>

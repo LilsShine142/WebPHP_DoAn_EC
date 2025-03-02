@@ -1,4 +1,5 @@
 <?php
+//API v1.1
 
 declare(strict_types=1);
 
@@ -14,9 +15,16 @@ spl_autoload_register(function ($class) use ($classMap): void {
 set_exception_handler("ErrorHandler::handleException");
 
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Origin: *"); // Allow your origin
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allowed request methods
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allowed headers
 
 $method = $_SERVER["REQUEST_METHOD"];
-$uri = trim(parse_url($_SERVER["REQUEST_URI"])["path"], "/");
+if($method === "OPTIONS") {
+  http_response_code(200); // Respond with OK for preflight requests
+  exit;
+}
+$uri = trim(parse_url($_SERVER["REQUEST_URI"])["path"], "/"); //web2-project/api/...
 $uri_parts = explode("/", $uri);
 
 $usr_email = $_SERVER["PHP_AUTH_USER"] ?? null;
@@ -25,76 +33,36 @@ $limit = isset($_GET["limit"]) ? abs((int) $_GET["limit"]) : null;
 $offset = isset($_GET["offset"]) ? abs((int) $_GET["offset"]) : null;
 $id = is_numeric(end($uri_parts)) ? (int) end($uri_parts) : null;
 
-$db = new Database("localhost", "smartwatch_db", "root", "");
+$db = new Database("localhost", "ec", "root", "");
 $auths = new Auths($db, $usr_email, $usr_pwd);
 
-$uri = preg_replace('/\/[0-9]+$/', '', $uri); // Remove {id} if exists
+$uri = preg_replace('/\/[0-9]+$/', '', $uri); //AI gen: remove {id} if exist
+switch(true) {
+  case str_contains($uri, SOURCE_URI . "/products"):
+    include_once "./routes/product.php";
+    break;
 
-switch (true) {
-    case str_contains($uri, SOURCE_URI . "/products"):
-        $controller = new ProductController(new ProductGateway($db), $auths);
-        break;
+  case str_contains($uri, SOURCE_URI . "/users"):
+    include_once "./routes/user.php";
+    break;
 
-    case str_contains($uri, SOURCE_URI . "/product_os"):
-        $controller = new ProductOSController(new ProductOSGateway($db), $auths);
-        break;
+  case str_contains($uri, SOURCE_URI . "/carts"):
+    include_once "./routes/cart.php";
+    break;
 
-    case str_contains($uri, SOURCE_URI . "/product_brands"):
-        $controller = new ProductBrandController(new ProductBrandGateway($db), $auths);
-        break;
+  case str_contains($uri, SOURCE_URI . "/orders"):
+    include_once "./routes/order.php";
+    break;
 
-    case str_contains($uri, SOURCE_URI . "/product_categories"):
-        $controller = new ProductCategoryController(new ProductCategoryGateway($db), $auths);
-        break;
+  case str_contains($uri, SOURCE_URI . "/providers"):
+    include_once "./routes/provider.php";
+    break;
 
-    case str_contains($uri, SOURCE_URI . "/product_instances"):
-        $controller = new ProductInstanceController(new ProductInstanceGateway($db), $auths);
-        $id = $_GET["sku"] ?? null;
-        break;
+  case str_contains($uri, SOURCE_URI . "/goods_receipt_notes"):
+    include_once "./routes/goodsReceiptNote.php";
+    break;
 
-    case str_contains($uri, SOURCE_URI . "/product_variations"):
-        $controller = new ProductVariationController(new ProductVariationGateway($db), $auths, new Utils());
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/orders"):
-        $controller = new OrdersController(new OrdersGateway($db), $auths);
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/order_delivery_states"):
-        $controller = new OrderDeliveryStateController(new OrderDeliveryStateGateway($db), $auths);
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/order_items"):
-        $controller = new OrderItemsController(new OrderItemsGateway($db), $auths);
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/users"):
-        include_once "./routes/user.php";
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/carts"):
-        include_once "./routes/cart.php";
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/providers"):
-        include_once "./routes/provider.php";
-        break;
-
-    case str_contains($uri, SOURCE_URI . "/goods_receipt_notes"):
-        include_once "./routes/goodsReceiptNote.php";
-        break;
-
-    default:
-        http_response_code(404);
-        echo json_encode(["success" => false, "message" => "Request not found!"]);
-        exit;
-}
-
-try {
-    if (isset($controller)) {
-        $controller->processRequest($method, $id, $limit, $offset);
-    }
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(["success" => false, "message" => "Internal Server Error", "error" => $e->getMessage()]);
+  default:
+    $errorHandler = new ErrorHandler();
+    $errorHandler->sendErrorResponse(404, "Request not found!");
 }

@@ -24,7 +24,7 @@ class PermissionGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM permissions LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM permissions OFFSET: offset";
+      $sql = "SELECT * FROM permissions LIMIT 18446744073709551615 OFFSET: offset";
     } else {
       $sql = "SELECT * FROM permissions";
     }

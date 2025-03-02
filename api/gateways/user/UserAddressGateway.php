@@ -13,7 +13,7 @@ class UserAddressGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM user_addresses LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM user_addresses OFFSET :offset";
+      $sql = "SELECT * FROM user_addresses LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM user_addresses";
     }
@@ -22,7 +22,7 @@ class UserAddressGateway {
     if($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
     if($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
@@ -48,7 +48,7 @@ class UserAddressGateway {
       :is_default,
       :name
     )";
-    
+
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":user_id", $data["user_id"], PDO::PARAM_INT);
     $stmt->bindValue(":street", $data["street"], PDO::PARAM_STR);

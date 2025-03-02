@@ -52,11 +52,11 @@ class UserController extends ErrorHandler {
 
       case "DELETE":
         $this->auths->verifyAction("DELETE_USER");
-        $res = $this->gateway->delete($id);
+        $this->gateway->delete($id);
 
         echo json_encode([
-          "success" => $res,
-          "message" => "User id $id was deleted or all user's roles deleted if there is a constrain"
+          "success" => true,
+          "message" => "User id $id was deleted or all user's roles was deleted if there is a constrain"
         ]);
         break;
 

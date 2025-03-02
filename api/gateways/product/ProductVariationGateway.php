@@ -99,7 +99,7 @@ class ProductVariationGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM product_variations LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM product_variations OFFSET :offset";
+      $sql = "SELECT * FROM product_variations LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM product_variations";
     }
@@ -118,7 +118,7 @@ class ProductVariationGateway {
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
-    
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
@@ -185,8 +185,8 @@ class ProductVariationGateway {
   }
 
   public function delete(int $id): bool {
-    $sql = $this->hasConstrain($id) 
-      ? "UPDATE product_variations SET stop_selling = true WHERE id = :id" 
+    $sql = $this->hasConstrain($id)
+      ? "UPDATE product_variations SET stop_selling = true WHERE id = :id"
       : "DELETE FROM product_variations WHERE id = :id";
 
     $stmt = $this->conn->prepare($sql);

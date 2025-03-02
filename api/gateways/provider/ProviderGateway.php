@@ -13,7 +13,7 @@ class ProviderGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM providers LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM providers OFFSET :offset";
+      $sql = "SELECT * FROM providers LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM providers";
     }
@@ -54,7 +54,7 @@ class ProviderGateway {
     $sql = "UPDATE providers SET
       full_name = :full_name,
       email = :email,
-      phone_number = :phone_number,
+      phone_number = :phone_number
       WHERE id = :id
     ";
 

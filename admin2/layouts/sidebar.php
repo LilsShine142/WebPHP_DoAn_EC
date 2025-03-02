@@ -173,27 +173,10 @@
            </ul>
          </li>
          <li class="nav-item">
-           <a href="#" class="nav-link">
-             <i class="nav-icon fas fa-users"></i>
-             <p>
-               Warehouse
-               <i class="right fas fa-angle-left"></i>
-             </p>
+           <a href="index.php?page=pages/Permission/role.php" class="nav-link">
+             <i class="nav-icon fas fa-user-shield"></i>
+             <p>Permission</p>
            </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Import</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>List</p>
-               </a>
-             </li>
-           </ul>
          </li>
          <li class="nav-item">
            <a href="#" class="nav-link">

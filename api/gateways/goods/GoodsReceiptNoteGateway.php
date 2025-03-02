@@ -13,7 +13,7 @@ class GoodsReceiptNoteGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM goods_receipt_notes LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM goods_receipt_notes OFFSET :offset";
+      $sql = "SELECT * FROM goods_receipt_notes LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM goods_receipt_notes";
     }
@@ -22,7 +22,7 @@ class GoodsReceiptNoteGateway {
     if($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
     if($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
@@ -32,15 +32,15 @@ class GoodsReceiptNoteGateway {
       provider_id,
       staff_id,
       total_price_cents,
-      quantity,
+      quantity
     ) VALUES (
       :name,
       :provider_id,
       :staff_id,
       :total_price_cents,
-      :quantity,
+      :quantity
     )";
-    
+
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":name", $data["name"], PDO::PARAM_STR);
     $stmt->bindValue(":provider_id", $data["provider_id"], PDO::PARAM_INT);
@@ -69,7 +69,7 @@ class GoodsReceiptNoteGateway {
       provider_id = :provider_id,
       staff_id = :staff_id,
       total_price_cents = :total_price_cents,
-      quantity = :quantity,
+      quantity = :quantity
       WHERE id = :id
     ";
 

@@ -23,7 +23,7 @@ class ProductOSGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM product_os LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM product_os OFFSET: offset";
+      $sql = "SELECT * FROM product_os LIMIT 18446744073709551615 OFFSET: offset";
     } else {
       $sql = "SELECT * FROM product_os";
     }
@@ -53,7 +53,7 @@ class ProductOSGateway {
     $stmt->bindValue(":name", $new["name"] ?? $current["name"], PDO::PARAM_STR);
     $stmt->bindValue(":id", $current["id"], PDO::PARAM_INT);
     $stmt->execute();
-    
+
     return $this->get($current["id"]);
   }
 

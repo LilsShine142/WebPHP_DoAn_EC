@@ -120,7 +120,7 @@
                             Promise.all(permissionPromises)
                                 .then(() => {
                                     alert("Role created successfully!");
-                                    // window.location.href = "index.php?page=pages/Permission/role.php";
+                                    window.location.href = "index.php?page=pages/Permission/role.php";
                                 })
                                 .catch(error => {
                                     console.error("Error assigning permissions:", error);

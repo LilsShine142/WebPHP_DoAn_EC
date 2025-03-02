@@ -77,7 +77,7 @@ $(document).ready(function() {
                                         <a href='index.php?page=pages/Permission/role_details.php&id=${role.id}' class='btn btn-info btn-sm' title='View'>
                                             <i class='fas fa-eye'></i>
                                         </a>
-                                        <a href='edit.php?id=${role.id}' class='btn btn-warning btn-sm' title='Edit'>
+                                        <a href='index.php?page=pages/Permission/role_update.php&id=${role.id}' class='btn btn-warning btn-sm' title='Edit'>
                                             <i class='fas fa-edit'></i>
                                         </a>
                                         <button class='btn btn-danger btn-sm' title='Delete' onclick='deleteRole(${role.id})'>
@@ -98,25 +98,29 @@ $(document).ready(function() {
     }
 
     // Xóa role
-    window.deleteRole = function(id) {
+    window.deleteRole = function(roleId) {
         if (confirm("Are you sure you want to delete this role?")) {
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/roles/${id}`,
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/role_permissions?role_id=${roleId}`,
+                type: "DELETE"
+            });
+            $.ajax({
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/roles/${roleId}`,
                 type: "DELETE",
                 success: function(response) {
                     if (response.success) {
-                        alert("Role deleted successfully!");
-                        loadRoles(); // Reload lại danh sách sau khi xóa
+                        alert("Role deleted successfully");
+                        loadRoles();
                     } else {
-                        alert("Failed to delete role!");
+                        alert("Failed to delete role");
                     }
                 },
                 error: function() {
-                    alert("Error deleting role!");
+                    alert("Failed to delete role");
                 }
             });
         }
-    };
+    }
 
     // Tìm kiếm Role
     $("#searchInput").on("keyup", function() {

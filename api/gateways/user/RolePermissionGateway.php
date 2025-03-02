@@ -51,12 +51,11 @@ class RolePermissionGateway {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function delete(int $role_id, int $permission_id): bool {
-    $sql = "DELETE FROM role_permissions WHERE role_id = :role_id AND permission_id = :permission_id";
+  public function delete(int $role_id): bool {
+    $sql = "DELETE FROM role_permissions WHERE role_id = :role_id";
 
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":role_id", $role_id, PDO::PARAM_INT);
-    $stmt->bindValue(":permission_id", $permission_id, PDO::PARAM_INT);
     return $stmt->execute();
   }
 }

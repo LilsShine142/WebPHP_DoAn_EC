@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Role Details</h2>
+        <h2 id="roleTitle">Role Details: </h2>
         <form>
             <table class="table table-bordered">
                 <thead>
@@ -43,7 +43,18 @@
 
             let allPermissions = {}; // Lưu danh sách permission dạng nhóm (Create, Read, Update, Delete)
             let assignedPermissions = new Set(); // Lưu các quyền đã cấp
-
+            let roleRequest = $.ajax({
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/roles/${roleId}`,
+                method: "GET",
+                dataType: "json"
+            });
+            roleRequest.done(function (response) {
+                if (response.success && response.data.name) {
+                    $("#roleTitle").text(`Role Details: ${response.data.name}`);
+                }
+            }).fail(function () {
+                alert("Failed to load role data.");
+            });
             // Gọi cả hai API song song
             let permissionRequest = $.ajax({
                 url: "http://localhost:81/WebPHP_DoAn_EC/api/users/permissions",

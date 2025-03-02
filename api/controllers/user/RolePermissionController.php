@@ -31,15 +31,11 @@ class RolePermissionController extends ErrorHandler {
 
       case "DELETE":
         $this->auths->verifyAction("DELETE_ROLE_PERMISSION");
-        if(!$permission_id) {
-          $this->sendErrorResponse(422, "permission_id is required");
-          break;
-        }
-        $this->gateway->delete($role_id, $permission_id);
+        $this->gateway->delete($role_id);
 
         echo json_encode([
           "success" => true,
-          "message" => "Role id $role_id and permission id $permission_id was deleted"
+          "message" => "Permissions of role id $role_id was deleted"
         ]);
         break;
 

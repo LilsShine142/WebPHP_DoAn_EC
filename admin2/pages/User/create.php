@@ -9,10 +9,10 @@
 </head>
 
 <body>
-    <button type="button" class="btn btn-primary" style="margin: 15px 20px -20px;" onclick="window.location.href='index.php?page=pages/Customer/list.php'">Quay về</button>
+    <button type="button" class="btn btn-primary" style="margin: 15px 20px -20px;" onclick="window.location.href='index.php?page=pages/User/list.php'">Quay về</button>
     <div class="container mt-5">
         <h2>Thêm Người dùng Mới</h2>
-        <form action="index.php?page=pages/Customer/create.php" method="POST" enctype="multipart/form-data">
+        <form action="index.php?page=pages/User/create.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" id="customerId" name="customerId">
 
             <div class="form-group">

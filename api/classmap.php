@@ -12,6 +12,9 @@ define("USER_CONTROLLER_PATH", CONTROLLERS_PATH . "/user");
 define("CART_GATEWAY_PATH", GATEWAYS_PATH . "/cart");
 define("CART_CONTROLLER_PATH", CONTROLLERS_PATH . "/cart");
 
+define("ORDER_GATEWAY_PATH", GATEWAYS_PATH . "/order");
+define("ORDER_CONTROLLER_PATH", CONTROLLERS_PATH . "/order");
+
 define("PROVIDER_GATEWAY_PATH", GATEWAYS_PATH . "/provider");
 define("PROVIDER_CONTROLLER_PATH", CONTROLLERS_PATH . "/provider");
 
@@ -20,6 +23,8 @@ define("GOODS_CONTROLLER_PATH", CONTROLLERS_PATH . "/goods");
 
 return [
   "Database" => __DIR__ . "/config/Database.php",
+
+  //gateways
   "ProductGateway" => PRODUCT_GATEWAY_PATH . "/ProductGateway.php",
   "ProductVariationGateway" => PRODUCT_GATEWAY_PATH . "/ProductVariationGateway.php",
   "ProductBrandGateway" => PRODUCT_GATEWAY_PATH . "/ProductBrandGateway.php",
@@ -35,11 +40,14 @@ return [
   "UserAddressGateway" => USER_GATEWAY_PATH  . "/UserAddressGateway.php",
 
   "CartGateway" => CART_GATEWAY_PATH . "/CartGateway.php",
+  "OrderGateway" => ORDER_GATEWAY_PATH . "/OrderGateway.php",
+  "OrderItemGateway" => ORDER_GATEWAY_PATH . "/OrderItemGateway.php",
+  "OrderDeliveryStateGateway" => ORDER_GATEWAY_PATH . "/OrderDeliveryStateGateway.php",
 
   "ProviderGateway" => PROVIDER_GATEWAY_PATH . "/ProviderGateway.php",
-  
   "GoodsReceiptNoteGateway" => GOODS_GATEWAY_PATH . "/GoodsReceiptNoteGateway.php",
 
+  //controllers
   "ProductController" => PRODUCT_CONTROLLER_PATH . "/ProductController.php",
   "ProductVariationController" => PRODUCT_CONTROLLER_PATH . "/ProductVariationController.php",
   "ProductBrandController" => PRODUCT_CONTROLLER_PATH . "/ProductBrandController.php",
@@ -55,21 +63,16 @@ return [
   "UserAddressController" => USER_CONTROLLER_PATH . "/UserAddressController.php",
 
   "CartController" => CART_CONTROLLER_PATH . "/CartController.php",
+  "OrderController" => ORDER_CONTROLLER_PATH . "/OrderController.php",
+  "OrderItemController" => ORDER_CONTROLLER_PATH . "/OrderItemController.php",
+  "OrderDeliveryStateController" => ORDER_CONTROLLER_PATH . "/OrderDeliveryStateController.php",
 
   "ProviderController" => PROVIDER_CONTROLLER_PATH . "/ProviderController.php",
-
   "GoodsReceiptNoteController" => GOODS_CONTROLLER_PATH . "/GoodsReceiptNoteController.php",
 
-  "OrdersGateway" => __DIR__ . "/gateways/order/OrdersGateway.php",
-  "OrdersController" => __DIR__ . "/controllers/order/OrdersController.php",
-  "OrderDeliveryStateGateway" => __DIR__ . "/gateways/order/OrderDeliveryStateGateway.php",
-  "OrderDeliveryStateController" => __DIR__ . "/controllers/order/OrderDeliveryStateController.php",
-  "OrderItemsGateway" => __DIR__ . "/gateways/order/OrderItemsGateway.php",
-  "OrderItemsController" => __DIR__ . "/controllers/order/OrderItemsController.php",
-
+  //orders
   "ErrorHandler" => __DIR__ . "/ErrorHandler.php",
   "Auths" => __DIR__ . "/Auths.php",
   "Utils" => __DIR__ . "/Utils.php"
-  // ... other classes
 ];
 

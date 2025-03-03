@@ -7,62 +7,8 @@
     <title>Bootstrap 5.3 Modal Example</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<?php
-// ========================= Tạo dữ liệu tạm thời (đến lúc kết nối database sẽ xóa phần này) =========================
-$categories = [
-    [
-        'id' => 1,
-        'name' => 'Men\'s Smartwatch',
-        'product_count' => 15,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 2,
-        'name' => 'Women\'s Smartwatch',
-        'product_count' => 12,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 3,
-        'name' => 'Kids Smartwatch',
-        'product_count' => 8,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 4,
-        'name' => 'Straps & Accessories',
-        'product_count' => 20,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 5,
-        'name' => 'Sports & Fitness Smartwatches',
-        'product_count' => 18,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 6,
-        'name' => 'Luxury Smartwatches',
-        'product_count' => 5,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 7,
-        'name' => 'Smartwatches for Seniors',
-        'product_count' => 7,
-        'status' => 'Active',
-    ],
-    [
-        'id' => 8,
-        'name' => 'Smartwatch Chargers & Docks',
-        'product_count' => 12,
-        'status' => 'Active',
-    ],
-];
-
-
-?>
 
 <body>
     <div class="card">
@@ -121,20 +67,8 @@ $categories = [
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php foreach ($categories as $category): ?>
-                        <tr>
-                            <td><?php echo $category['id']; ?></td>
-                            <td><?php echo $category['name']; ?></td>
-                            <td><?php echo $category['product_count']; ?></td>
-                            <td><?php echo $category['status']; ?></td>
-                            <td>
-                                <button class="btn btn-info btn-view" data-id="<?php echo $category['id']; ?>">View</button>
-                                <button class="btn btn-warning btn-update" data-id="<?php echo $category['id']; ?>">Update</button>
-                                <button class="btn btn-danger btn-delete" data-id="<?php echo $category['id']; ?>">Delete</button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                <tbody id="data-table">
+                    <!-- CHÈN DỮ LIỆU TỪ SCRIPT  -->
                 </tbody>
             </table>
         </div>
@@ -193,6 +127,86 @@ $categories = [
             </div>
         </div>
     </div>
+
+    <script>
+        //Dùng .then xử lý bất đồng bộ
+        function getListProduct() {
+            let apiProduct = 'http://localhost:3000/WebPHP_DoAn_EC/api/products';
+
+            return fetch(apiProduct)
+                .then(response => response.json()) // Chuyển JSON thành Object
+                .then(product => {
+                    if (product.success && product.data.length > 0) {
+                        console.log("response", product);
+                        return product.data; // Trả về danh sách sản phẩm
+                    } else {
+                        throw new Error("No data available");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    return []; // Trả về mảng rỗng nếu có lỗi
+                });
+        }
+
+        // Gọi hàm với `.then()`
+        getListProduct().then(productList => {
+            console.log("Product List:", productList);
+
+            function fetchProductCategory() {
+                let apiProductCategory = 'http://localhost:3000/WebPHP_DoAn_EC/api/products/categories'; // API lấy tất cả danh mục sản phẩm
+
+                $.ajax({
+                    url: apiProductCategory, // Đường dẫn API lấy danh sách danh mục sản phẩm
+                    type: 'GET',
+                    dataType: "json",
+                    success: function(response) {
+                        console.log("Category list:", response.data);
+                        if (response.success && response.data.length > 0) {
+                            let tableBody = document.getElementById('data-table');
+                            let html = '';
+
+                            response.data.forEach(category => {
+                                let product_count = 0;
+
+                                productList.forEach(product => {
+                                    if (product.category_id === category.id) {
+                                        product_count++;
+                                    }
+                                });
+
+                                html += `
+                                <tr>
+                                    <td>${category.id}</td>
+                                    <td>${category.name}</td>
+                                    <td>${product_count}</td>
+                                    <td>${category.status}</td>
+                                    <td>
+                                        <button class="btn btn-info btn-view" data-id="${category.id}">Xem</button>
+                                        <button class="btn btn-warning btn-update" data-id="${category.id}">Sửa</button>
+                                        <button class="btn btn-danger btn-delete" data-id="${category.id}">Xóa</button>
+                                    </td>
+                                </tr>
+                            `;
+                            });
+
+                            tableBody.innerHTML = html; // Cập nhật nội dung bảng sau khi vòng lặp kết thúc
+                        } else {
+                            console.warn("Không có dữ liệu danh mục");
+                        }
+                    },
+                    error: function() {
+                        console.error("Lỗi khi tải danh sách danh mục");
+                    }
+                });
+            }
+
+            // Gọi hàm fetchProductCategory() ngay khi trang load
+            $(document).ready(function() {
+                fetchProductCategory();
+            });
+        });
+    </script>
 
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>

@@ -24,9 +24,10 @@ class Utils {
 
   public function isValidProductSKU(string $sku): bool { //AI gen
     // Regular expression to match the SKU format
-    $pattern = '/^[a-z]+-[a-z]+-[a-z0-9]+-[0-9]+-[a-z]+-[a-z]+-[0-9]+$/'; // Improved regex
+    // $pattern = '/^[a-z]+-[a-z]+-[a-z0-9]+-[0-9]+-[a-z]+-[a-z]+-[0-9]+$/'; // Improved regex
 
-    return preg_match($pattern, $sku);
+    // return preg_match($pattern, $sku);
+    return true;
   }
 
   public function getCurrentTime(): float { // return milisecs

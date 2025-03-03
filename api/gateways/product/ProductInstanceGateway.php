@@ -32,13 +32,13 @@ class ProductInstanceGateway {
       $variation["band_material"]
     );
     $sql = "INSERT INTO product_instances (
-      sku, 
-      product_variation_id, 
-      goods_receipt_note_id, 
+      sku,
+      product_variation_id,
+      goods_receipt_note_id,
       is_sold
     ) VALUES (
-      :sku, 
-      :product_variation_id, 
+      :sku,
+      :product_variation_id,
       :goods_receipt_note_id,
       :is_sold
     )";
@@ -59,7 +59,7 @@ class ProductInstanceGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM product_instances LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM product_instances OFFSET :offset";
+      $sql = "SELECT * FROM product_instances LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM product_instances";
     }
@@ -85,7 +85,7 @@ class ProductInstanceGateway {
   public function update(array $current, array $new): array | false {
     $sql = "UPDATE product_instances SET
       goods_receipt_note_id = :goods_receipt_note_id,
-      is_sold = :is_sold 
+      is_sold = :is_sold
     WHERE sku = :sku";
 
     $stmt = $this->conn->prepare($sql);
@@ -98,8 +98,8 @@ class ProductInstanceGateway {
   }
 
   public function delete(string $sku): bool {
-    $sql = $this->hasConstrain($sku) 
-      ? "UPDATE product_instances SET is_sold = true WHERE sku = :sku" 
+    $sql = $this->hasConstrain($sku)
+      ? "UPDATE product_instances SET is_sold = true WHERE sku = :sku"
       : "DELETE FROM product_instances WHERE sku = :sku";
 
     $stmt = $this->conn->prepare($sql);

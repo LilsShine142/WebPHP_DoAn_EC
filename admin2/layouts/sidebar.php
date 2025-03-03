@@ -91,33 +91,10 @@
          </li>
 
          <li class="nav-item">
-           <a href="#" class="nav-link">
+           <a href="index.php?page=pages/Order/list.php" class="nav-link">
              <i class="nav-icon fas fa-users"></i>
-             <p>
-               Order
-               <i class="right fas fa-angle-left"></i>
-             </p>
+             <p>Order</p>
            </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Pending</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Delivering</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Delivered</p>
-               </a>
-             </li>
-           </ul>
          </li>
 
          <li class="nav-item">
@@ -130,23 +107,24 @@
            </a>
            <ul class="nav nav-treeview">
              <li class="nav-item">
-               <a href="index.php?page=pages/Customer/create.php" class="nav-link">
+               <a href="index.php?page=pages/User/create.php" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>Create</p>
                </a>
              </li>
              <li class="nav-item">
-               <a href="index.php?page=pages/Customer/list.php" class="nav-link">
+               <a href="index.php?page=pages/User/list.php&type=employee" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>Employee</p>
                </a>
              </li>
              <li class="nav-item">
-               <a href="index.php?page=pages/Customer/list.php" class="nav-link">
+               <a href="index.php?page=pages/User/list.php&type=customer" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
                  <p>Customer</p>
                </a>
              </li>
+
            </ul>
          </li>
          <li class="nav-item">
@@ -173,27 +151,10 @@
            </ul>
          </li>
          <li class="nav-item">
-           <a href="#" class="nav-link">
-             <i class="nav-icon fas fa-users"></i>
-             <p>
-               Warehouse
-               <i class="right fas fa-angle-left"></i>
-             </p>
+           <a href="index.php?page=pages/Permission/role.php" class="nav-link">
+             <i class="nav-icon fas fa-user-shield"></i>
+             <p>Permission</p>
            </a>
-           <ul class="nav nav-treeview">
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>Import</p>
-               </a>
-             </li>
-             <li class="nav-item">
-               <a href="" class="nav-link">
-                 <i class="far fa-circle nav-icon"></i>
-                 <p>List</p>
-               </a>
-             </li>
-           </ul>
          </li>
          <li class="nav-item">
            <a href="#" class="nav-link">

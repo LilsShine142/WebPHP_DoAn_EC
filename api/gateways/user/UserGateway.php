@@ -2,9 +2,11 @@
 
 class UserGateway {
   private PDO $conn;
+  private UserRoleGateway $userRole;
 
   public function __construct(Database $db) {
     $this->conn = $db->getConnection();
+    $this->userRole = new UserRoleGateway($db);
   }
 
   public function getAll(?int $limit, ?int $offset): array | false {
@@ -13,7 +15,7 @@ class UserGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM users LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM users OFFSET :offset";
+      $sql = "SELECT * FROM users LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM users";
     }
@@ -22,14 +24,14 @@ class UserGateway {
     if($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
     if($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public function create(array $data): array | false {
     $sql = "INSERT INTO users (full_name, email, phone_number, password)
       VALUES (:full_name, :email, :phone_number, :password)";
-    
+
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":full_name", $data["full_name"], PDO::PARAM_STR);
     $stmt->bindValue(":email", $data["email"], PDO::PARAM_STR);
@@ -72,9 +74,11 @@ class UserGateway {
   }
 
   public function delete(int $id): bool {
-    $sql = $this->hasConstrain($id)
-      ? "UPDATE users SET stop_selling = true WHERE id = :id" //TODO delete user roles -> restricted
-      : "DELETE FROM users WHERE id = :id";
+    if($this->hasConstrain($id)) { //delete all user roles instead
+      return $this->userRole->deleteByUserId($id);
+    }
+
+    $sql = "DELETE FROM users WHERE id = :id";
 
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
@@ -86,7 +90,7 @@ class UserGateway {
       SELECT 1 FROM user_addresses WHERE user_id = :user_id
       UNION
       SELECT 1 FROM user_roles WHERE user_id = :user_id
-      UNION 
+      UNION
       SELECT 1 FROM carts WHERE user_id = :user_id
       UNION
       SELECT 1 FROM orders WHERE user_id = :user_id

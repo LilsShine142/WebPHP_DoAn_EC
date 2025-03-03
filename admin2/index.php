@@ -6,7 +6,7 @@
   $cssStack = [];
   $jsStack = [];
   $selectedContent = isset($_GET['page']) ? $_GET['page'] : 'index';
-  $contentPath = "$selectedContent";
+  $contentPath = strtok($selectedContent, '?'); // Loại bỏ query string
 
   include("layouts/head.php");
   ?>
@@ -28,9 +28,13 @@
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <?php
+      $baseDir = __DIR__;
+      $contentPath = $baseDir . "/" . $contentPath;
+
       if (file_exists($contentPath)) {
         include($contentPath);
       } else {
+        echo "<pre>File not found: " . htmlspecialchars($contentPath) . "</pre>";
         include("pages/Statistical.php");
       }
       ?>

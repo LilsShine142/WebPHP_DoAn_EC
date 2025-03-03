@@ -23,7 +23,7 @@ class ProductBrandGateway {
     } elseif($limit) {
       $sql = "SELECT * FROM product_brands LIMIT :limit";
     } elseif($offset) {
-      $sql = "SELECT * FROM product_brands OFFSET :offset";
+      $sql = "SELECT * FROM product_brands LIMIT 18446744073709551615 OFFSET: offset";
     } else {
       $sql = "SELECT * FROM product_brands";
     }

@@ -10,7 +10,7 @@ class UserRoleController extends ErrorHandler {
       return;
     }
 
-    $this->processCollectionRequest($method, $limit, $offset);
+    $this->processCollectionRequest($method, $limit, $offset, $role_id);
   }
 
   private function processResourceRequest(string $method, int $user_id, ?int $role_id): void {
@@ -50,10 +50,16 @@ class UserRoleController extends ErrorHandler {
 
   }
 
-  private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
+  private function processCollectionRequest(string $method, ?int $limit, ?int $offset, ?int $role_id = null): void {
     switch($method) {
       case "GET":
-        $data = $this->gateway->getAll($limit, $offset);
+        if ($role_id) {
+          // Lấy danh sách user theo role_id cụ thể, kèm thông tin user và role
+          $data = $this->gateway->getUsersByRoleID($role_id);
+        } else {
+          // Lấy tất cả user_roles
+          $data = $this->gateway->getAll($limit, $offset);
+        }
 
         echo json_encode([
           "success" => true,

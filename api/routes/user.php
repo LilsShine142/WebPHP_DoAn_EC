@@ -1,6 +1,6 @@
 <?php
 
-switch(true) {
+switch (true) {
   case $uri === SOURCE_URI . "/users":
     $gateway = new UserGateway($db);
     $controller = new UserController($gateway, $auths);
@@ -35,7 +35,7 @@ switch(true) {
     $controller->processRequest($method, $id, $limit, $offset);
     break;
 
-  case $uri === SOURCE_URI.  "/users/addresses":
+  case $uri === SOURCE_URI .  "/users/addresses":
     $gateway = new UserAddressGateway($db);
     $controller = new UserAddressController($gateway, $auths);
     $controller->processRequest($method, $id, $limit, $offset);

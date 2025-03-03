@@ -7,9 +7,9 @@ require_once "./config/settings.php";
 
 $classMap = require_once "./classmap.php";
 spl_autoload_register(function ($class) use ($classMap): void {
-    if (isset($classMap[$class])) {
-        require_once $classMap[$class];
-    }
+  if (isset($classMap[$class])) {
+    require_once $classMap[$class];
+  }
 });
 
 set_exception_handler("ErrorHandler::handleException");
@@ -20,7 +20,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allo
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allowed headers
 
 $method = $_SERVER["REQUEST_METHOD"];
-if($method === "OPTIONS") {
+if ($method === "OPTIONS") {
   http_response_code(200); // Respond with OK for preflight requests
   exit;
 }
@@ -33,11 +33,11 @@ $limit = isset($_GET["limit"]) ? abs((int) $_GET["limit"]) : null;
 $offset = isset($_GET["offset"]) ? abs((int) $_GET["offset"]) : null;
 $id = is_numeric(end($uri_parts)) ? (int) end($uri_parts) : null;
 
-$db = new Database("localhost", "ec", "root", "");
+$db = new Database("localhost:3307", "webphp_ec", "root", "");
 $auths = new Auths($db, $usr_email, $usr_pwd);
 
 $uri = preg_replace('/\/[0-9]+$/', '', $uri); //AI gen: remove {id} if exist
-switch(true) {
+switch (true) {
   case str_contains($uri, SOURCE_URI . "/products"):
     include_once "./routes/product.php";
     break;

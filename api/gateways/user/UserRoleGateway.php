@@ -69,4 +69,30 @@ class UserRoleGateway {
 
     return $stmt->rowCount();
   }
+  
+  //LẤY TẤT CẢ USER CÓ ROLE_ID CỤ THỂ
+  public function getUsersByRoleID(int $role_id): array | false {
+    $sql = "SELECT * FROM user_roles WHERE role_id = :role_id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":role_id", $role_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  // //LẤY TẤT CẢ USER CÓ ROLE_ID CỤ THỂ (CÓ TRUY VẤN CẢ NAME Ở BẢNG ROLES)
+  // public function getUsersWithRoleInfoByRoleID(int $role_id): array | false {
+  //   $sql = "SELECT u.id, u.full_name, u.email, r.name
+  //           FROM users u
+  //           JOIN user_roles ur ON u.id = ur.user_id
+  //           JOIN roles r ON ur.role_id = r.id
+  //           WHERE r.id = :role_id";
+
+  //   $stmt = $this->conn->prepare($sql);
+  //   $stmt->bindValue(":role_id", $role_id, PDO::PARAM_INT);
+  //   $stmt->execute();
+
+  //   return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  // }
 }

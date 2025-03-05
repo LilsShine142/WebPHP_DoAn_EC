@@ -54,24 +54,35 @@ class UserGateway {
   }
 
   public function update(array $current, array $new): array | false {
+    // Khởi tạo câu lệnh SQL động
     $sql = "UPDATE users SET
       full_name = :full_name,
       email = :email,
-      phone_number = :phone_number,
-      password = :password
-      WHERE id = :id
-    ";
+      phone_number = :phone_number";
+
+    // Chỉ thêm cột password nếu có mật khẩu mới
+    if (!empty($new["password"])) {
+        $sql .= ", password = :password";
+    }
+
+    $sql .= " WHERE id = :id";
 
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":full_name", $new["full_name"] ?? $current["full_name"], PDO::PARAM_STR);
     $stmt->bindValue(":email", $new["email"] ?? $current["email"], PDO::PARAM_STR);
     $stmt->bindValue(":phone_number", $new["phone_number"] ?? $current["phone_number"], PDO::PARAM_STR);
-    $stmt->bindValue(":password", $new["password"] ? password_hash($new["password"], PASSWORD_DEFAULT) : $current["password"], PDO::PARAM_STR);
+
+    // Chỉ bind password nếu có mật khẩu mới
+    if (!empty($new["password"])) {
+        $stmt->bindValue(":password", password_hash($new["password"], PASSWORD_DEFAULT), PDO::PARAM_STR);
+    }
+
     $stmt->bindValue(":id", $current["id"], PDO::PARAM_INT);
     $stmt->execute();
 
     return $this->get($current["id"]);
-  }
+}
+
 
   public function delete(int $id): bool {
     if($this->hasConstrain($id)) { //delete all user roles instead

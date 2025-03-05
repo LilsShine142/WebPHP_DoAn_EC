@@ -126,4 +126,16 @@ class UserAddressGateway {
 
     return (bool) $data["is_default"];
   }
+
+  // Lấy address theo user id
+  public function getByUserId(int $user_id): array | false
+  {
+    $sql = "SELECT * FROM user_addresses WHERE user_id = :user_id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
 }

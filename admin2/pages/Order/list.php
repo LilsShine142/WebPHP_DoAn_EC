@@ -125,10 +125,11 @@ $(document).ready(function() {
         let html = "";
         data.forEach(order => {
             var stateName = deliveryStateMap[order.delivery_state_id] || "Unknown";
+            let formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
             html += `<tr>
                         <td>${order.id}</td>
                         <td>${order.user_id}</td>
-                        <td>${order.total_cents.toLocaleString()}</td>
+                        <td>${formatCurrency(order.total_cents)}</td>
                         <td>${order.delivery_address}</td>
                         <td>${stateName}</td>
                         <td>${order.order_date}</td>

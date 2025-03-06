@@ -9,6 +9,7 @@ $orderId = $_GET['id'];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,13 +18,16 @@ $orderId = $_GET['id'];
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="container mt-5">
         <h2><i class="fas fa-receipt"></i> Order Details: <span id="orderIdText"></span></h2>
 
         <table class="table table-bordered mt-3">
             <tbody id="orderDetails">
-                <tr><td colspan="2" class="text-center">Loading...</td></tr>
+                <tr>
+                    <td colspan="2" class="text-center">Loading...</td>
+                </tr>
             </tbody>
         </table>
 
@@ -38,7 +42,9 @@ $orderId = $_GET['id'];
                 </tr>
             </thead>
             <tbody id="orderItemsTable">
-                <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                <tr>
+                    <td colspan="4" class="text-center">Loading...</td>
+                </tr>
             </tbody>
         </table>
 
@@ -46,18 +52,21 @@ $orderId = $_GET['id'];
     </div>
 
     <script>
-        $(document).ready(async function () {
+        $(document).ready(async function() {
             const orderId = "<?php echo $orderId; ?>";
             $("#orderIdText").text("#" + orderId);
 
-            const formatCurrency = (amount) => 
-                new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+            const formatCurrency = (amount) =>
+                new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(amount);
 
             let deliveryStateMap = {};
 
             try {
                 // 1. Lấy danh sách trạng thái giao hàng trước
-                const stateRes = await $.getJSON("http://localhost:81/WebPHP_DoAn_EC/api/orders/delivery_states");
+                const stateRes = await $.getJSON(`${BASE_API_URL}/api/orders/delivery_states`);
                 if (stateRes.success) {
                     stateRes.data.forEach(state => {
                         deliveryStateMap[state.id] = state.name;
@@ -65,15 +74,18 @@ $orderId = $_GET['id'];
                 }
 
                 // 2. Lấy thông tin đơn hàng
-                const orderRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/orders/${orderId}`);
+                const orderRes = await $.getJSON(`${BASE_API_URL}/api/orders/${orderId}`);
                 if (!orderRes.success) throw new Error("Order not found.");
 
                 const order = orderRes.data;
                 const deliveryState = deliveryStateMap[order.delivery_state_id] || "Unknown";
 
                 // 3. Lấy thông tin người dùng
-                const userRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/users/${order.user_id}`);
-                const user = userRes.success ? userRes.data : { full_name: "Unknown", phone_number: "N/A" };
+                const userRes = await $.getJSON(`${BASE_API_URL}/api/users/${order.user_id}`);
+                const user = userRes.success ? userRes.data : {
+                    full_name: "Unknown",
+                    phone_number: "N/A"
+                };
 
                 $("#orderDetails").html(`
                     <tr><th><i class="fas fa-user"></i> Customer Name</th><td>${user.full_name}</td></tr>
@@ -88,7 +100,7 @@ $orderId = $_GET['id'];
                 `);
 
                 // 4. Lấy danh sách sản phẩm
-                const itemsRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/orders/items?order_id=${orderId}`);
+                const itemsRes = await $.getJSON(`${BASE_API_URL}/api/orders/items?order_id=${orderId}`);
                 if (!itemsRes.success || !itemsRes.data.length) {
                     $("#orderItemsTable").html("<tr><td colspan='4' class='text-center'>No items found.</td></tr>");
                     return;
@@ -98,13 +110,13 @@ $orderId = $_GET['id'];
                 for (const item of itemsRes.data) {
                     const sku = item.product_instance_sku;
                     const price = formatCurrency(item.price_cents);
-                    let imagePath = "../backend/uploads/products/default.png"; 
+                    let imagePath = "../backend/uploads/products/default.png";
 
                     try {
-                        const productRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/products/instances/${sku}`);
+                        const productRes = await $.getJSON(`${BASE_API_URL}/api/products/instances/${sku}`);
                         if (productRes.success) {
                             const productVariationId = productRes.data.product_variation_id;
-                            const variationRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/products/variations/${productVariationId}`);
+                            const variationRes = await $.getJSON(`${BASE_API_URL}/api/products/variations/${productVariationId}`);
                             if (variationRes.success) {
                                 imagePath = `../backend/uploads/products/${variationRes.data.image_name}`;
                             }
@@ -132,4 +144,5 @@ $orderId = $_GET['id'];
         });
     </script>
 </body>
+
 </html>

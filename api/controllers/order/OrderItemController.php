@@ -67,36 +67,43 @@ class OrderItemController extends ErrorHandler {
 
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
     switch ($method) {
-      case "GET":
-        $data = $this->gateway->getAll($limit, $offset);
-        echo json_encode([
-          "success" => true,
-          "length" => count($data),
-          "data" => $data
-        ]);
-        break;
+        case "GET":
+            if (isset($_GET["order_id"]) && is_numeric($_GET["order_id"])) {
+                $order_id = (int) $_GET["order_id"];
+                $data = $this->gateway->getByOrderId($order_id, $limit, $offset);
+            } else {
+                $data = $this->gateway->getAll($limit, $offset);
+            }
 
-      case "POST":
-        $this->auths->verifyAction("CREATE_ORDER_ITEM");
-        $data = (array) json_decode(file_get_contents("php://input"));
-        $errors = $this->getValidationErrors($data);
-        if (!empty($errors)) {
-          $this->sendErrorResponse(422, $errors);
-          break;
-        }
-        $data = $this->gateway->create($data);
-        echo json_encode([
-          "success" => true,
-          "message" => "Order item created",
-          "data" => $data
-        ]);
-        break;
+            echo json_encode([
+                "success" => true,
+                "length" => count($data),
+                "data" => $data
+            ]);
+            break;
 
-      default:
-        $this->sendErrorResponse(405, "only allow GET, POST method");
-        header("Allow: GET, POST");
+        case "POST":
+            $this->auths->verifyAction("CREATE_ORDER_ITEM");
+            $data = (array) json_decode(file_get_contents("php://input"));
+            $errors = $this->getValidationErrors($data);
+            if (!empty($errors)) {
+                $this->sendErrorResponse(422, $errors);
+                break;
+            }
+            $data = $this->gateway->create($data);
+            echo json_encode([
+                "success" => true,
+                "message" => "Order item created",
+                "data" => $data
+            ]);
+            break;
+
+        default:
+            $this->sendErrorResponse(405, "Only allow GET, POST method");
+            header("Allow: GET, POST");
     }
   }
+
   private function getValidationErrors(array $data, bool $new = true): array
   {
     $errors = [];

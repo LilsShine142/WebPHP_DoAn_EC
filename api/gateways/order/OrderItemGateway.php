@@ -37,6 +37,26 @@ class OrderItemGateway {
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  public function getByOrderId(int $orderId, ?int $limit, ?int $offset): array | false {
+    $sql = "SELECT * FROM order_items WHERE order_id = :order_id";
+    
+    if ($limit && $offset) {
+        $sql .= " LIMIT :limit OFFSET :offset";
+    } elseif ($limit) {
+        $sql .= " LIMIT :limit";
+    } elseif ($offset) {
+        $sql .= " LIMIT 18446744073709551615 OFFSET :offset";
+    }
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":order_id", $orderId, PDO::PARAM_INT);
+    if ($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    if ($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function create(array $data): array | false {
     $sql = "INSERT INTO order_items (order_id, product_instance_sku, price_cents) VALUES (:order_id, :product_instance_sku, :price_cents)";
 

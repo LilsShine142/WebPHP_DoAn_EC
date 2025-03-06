@@ -53,11 +53,25 @@ $orderId = $_GET['id'];
             const formatCurrency = (amount) => 
                 new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
+            let deliveryStateMap = {};
+
             try {
+                // 1. Lấy danh sách trạng thái giao hàng trước
+                const stateRes = await $.getJSON("http://localhost:81/WebPHP_DoAn_EC/api/orders/delivery_states");
+                if (stateRes.success) {
+                    stateRes.data.forEach(state => {
+                        deliveryStateMap[state.id] = state.name;
+                    });
+                }
+
+                // 2. Lấy thông tin đơn hàng
                 const orderRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/orders/${orderId}`);
                 if (!orderRes.success) throw new Error("Order not found.");
 
                 const order = orderRes.data;
+                const deliveryState = deliveryStateMap[order.delivery_state_id] || "Unknown";
+
+                // 3. Lấy thông tin người dùng
                 const userRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/users/${order.user_id}`);
                 const user = userRes.success ? userRes.data : { full_name: "Unknown", phone_number: "N/A" };
 
@@ -66,13 +80,14 @@ $orderId = $_GET['id'];
                     <tr><th><i class="fas fa-phone"></i> Phone Number</th><td>${user.phone_number}</td></tr>
                     <tr><th><i class="fas fa-money-bill-wave"></i> Total</th><td>${formatCurrency(order.total_cents)}</td></tr>
                     <tr><th><i class="fas fa-map-marker-alt"></i> Delivery Address</th><td>${order.delivery_address}</td></tr>
+                    <tr><th><i class="fas fa-truck"></i> Delivery State</th><td>${deliveryState}</td></tr>
                     <tr><th><i class="fas fa-calendar-day"></i> Order Date</th><td>${order.order_date}</td></tr>
                     <tr><th><i class="fas fa-calendar-check"></i> Estimate Received Date</th><td>${order.estimate_received_date}</td></tr>
                     <tr><th><i class="fas fa-box"></i> Received Date</th><td>${order.received_date ?? 'N/A'}</td></tr>
                     <tr><th><i class="fas fa-credit-card"></i> Payment Method</th><td>${order.payment_method}</td></tr>
                 `);
 
-                // Lấy danh sách sản phẩm
+                // 4. Lấy danh sách sản phẩm
                 const itemsRes = await $.getJSON(`http://localhost:81/WebPHP_DoAn_EC/api/orders/items?order_id=${orderId}`);
                 if (!itemsRes.success || !itemsRes.data.length) {
                     $("#orderItemsTable").html("<tr><td colspan='4' class='text-center'>No items found.</td></tr>");

@@ -53,7 +53,7 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
             <div class="search" style="width: 80%; margin-right: 30px;">
                 <input type="text" class="form-control" placeholder="Search...">
             </div>
-            <a href="index.php?page=pages/User/create.php" class="btn btn-primary">
+            <a href="index.php?page=pages/User/create.php" class="btn btn-primary btn-add">
                 <i class="fas fa-plus"></i> Add User
             </a>
         </div>
@@ -106,7 +106,7 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
     </div>
     <!-- Modal cập nhật thông tin khách hàng -->
     <div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Cập nhật thông tin khách hàng</h5>
@@ -116,66 +116,71 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
                     <form id="updateForm" method="POST">
                         <input type="hidden" id="userId" name="userId">
 
-                        <div class="form-group">
-                            <label for="fullname">Họ và tên:</label>
-                            <input type="text" class="form-control" id="fullname" name="fullname" required>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fullname">Full name:</label>
+                                    <input type="text" class="form-control" id="fullname" name="fullname" required>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="phone">Số điện thoại:</label>
-                            <input type="text" class="form-control" id="phone" name="phone" required>
-                        </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone number:</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="phone">password:</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="role">Select role:</label>
-                            <select class="form-control" id="role" name="role" required></select>
-                        </div>
-                        <!-- =============================== Call API để lấy danh sách các role =============================== -->
-                        <script>
-                            $(document).ready(function() {
-                                // Gọi API lấy danh sách roles ngay khi trang load
-                                loadRoles(null);
-                            });
-                        </script>
+                                <div class="form-group">
+                                    <label for="role">Select role:</label>
+                                    <select class="form-control" id="role" name="role" required></select>
+                                </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="province">Tỉnh/Thành phố:</label>
-                            <select class="form-control" id="province" name="province" required></select>
-                        </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="city_province">City province:</label>
+                                    <select class="form-control" id="city_province" name="city_province" required></select>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="district">Quận/Huyện:</label>
-                            <select class="form-control" id="district" name="district" required></select>
-                        </div>
+                                <div class="form-group">
+                                    <label for="district">District:</label>
+                                    <select class="form-control" id="district" name="district" required></select>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="ward">Phường/Xã:</label>
-                            <select class="form-control" id="ward" name="ward" required></select>
-                        </div>
+                                <div class="form-group">
+                                    <label for="ward">Ward:</label>
+                                    <select class="form-control" id="ward" name="ward" required></select>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="address">Địa chỉ chi tiết:</label>
-                            <input type="text" class="form-control" id="address" name="address" required>
+                                <div class="form-group">
+                                    <label for="street">Street:</label>
+                                    <input type="text" class="form-control" id="street" name="street" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="apartment_number">Apartment number:</label>
+                                    <input type="text" class="form-control" id="apartment_number" name="apartment_number" required>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" id="saveCustomer">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-button">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="saveUser">Lưu</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- =============================== CALL API LẤY DANH SÁCH EMPLOYEE HOẶC CUSTOMER ================================================= -->
     <script>
@@ -491,7 +496,7 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
 
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
-    <script src="assets/js/Customer/validationCustomer.js"></script>
-    <script src="assets/js/Customer/customerActions.js"></script>
+    <script src="assets/js/Customer/validationUser.js"></script>
+    <script src="assets/js/Customer/userActions.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

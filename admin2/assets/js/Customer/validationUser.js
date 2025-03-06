@@ -10,8 +10,7 @@ function validatePhone(phone) {
 
 // Hiển thị lỗi ngay dưới ô nhập
 function showError(input, message) {
-    // Xóa lỗi cũ nếu có
-    clearError(input);
+    clearError(input); // Xóa lỗi cũ nếu có
 
     input.classList.add("is-invalid"); // Thêm class Bootstrap
     let errorDiv = document.createElement("div");
@@ -20,7 +19,7 @@ function showError(input, message) {
     input.parentElement.appendChild(errorDiv);
 }
 
-// Xóa thông báo lỗi khi nhập lại
+// Xóa thông báo lỗi của một input
 function clearError(input) {
     input.classList.remove("is-invalid");
     let existingError = input.parentElement.querySelector(".invalid-feedback");
@@ -28,6 +27,14 @@ function clearError(input) {
         existingError.remove();
     }
 }
+
+// Xóa toàn bộ thông báo lỗi và trạng thái input
+function clearAllErrors() {
+    document.querySelectorAll(".is-invalid").forEach(input => {
+        clearError(input);
+    });
+}
+
 
 // Hiển thị thông báo thành công bằng Bootstrap Toast
 function showSuccessMessage(message) {
@@ -47,8 +54,7 @@ function showSuccessMessage(message) {
     toast.show();
 }
 
-// Hàm kiểm tra form trước khi gửi
-function validateForm() {
+function validateForm(isUpdate = false) {
     let isValid = true;
 
     // Xóa thông báo lỗi cũ
@@ -59,6 +65,12 @@ function validateForm() {
     let email = $("#email");
     let phone = $("#phone");
     let password = $("#password");
+    let role = $("#role");
+    let city = $("#city_province");
+    let district = $("#district");
+    let ward = $("#ward");
+    let street = $("#street");
+    let apartment = $("#apartment_number");
 
     // Kiểm tra họ và tên
     if (fullname.val().trim() === "") {
@@ -78,12 +90,41 @@ function validateForm() {
         isValid = false;
     }
 
-    // Kiểm tra mật khẩu
-    if (password.val().trim().length < 8) {
-        showError(password[0], "Mật khẩu phải có ít nhất 8 ký tự.");
+    // Kiểm tra mật khẩu (Chỉ kiểm tra khi thêm mới hoặc khi cập nhật có nhập mật khẩu)
+    if (!isUpdate || password.val().trim() !== "") {
+        if (password.val().trim().length < 8) {
+            showError(password[0], "Mật khẩu phải có ít nhất 8 ký tự.");
+            isValid = false;
+        }
+    }
+
+    // Kiểm tra vai trò (Chỉ kiểm tra nếu là thêm mới)
+    if (!isUpdate && role.val() === "") {
+        showError(role[0], "Vui lòng chọn vai trò.");
+        isValid = false;
+    }
+
+    // Kiểm tra địa chỉ
+    if (city.val() === "") {
+        showError(city[0], "Vui lòng chọn tỉnh/thành phố.");
+        isValid = false;
+    }
+    if (district.val() === "") {
+        showError(district[0], "Vui lòng chọn quận/huyện.");
+        isValid = false;
+    }
+    if (ward.val() === "") {
+        showError(ward[0], "Vui lòng chọn phường/xã.");
+        isValid = false;
+    }
+    if (street.val().trim() === "") {
+        showError(street[0], "Vui lòng nhập tên đường.");
+        isValid = false;
+    }
+    if (apartment.val().trim() === "") {
+        showError(apartment[0], "Vui lòng nhập số nhà.");
         isValid = false;
     }
 
     return isValid;
 }
-

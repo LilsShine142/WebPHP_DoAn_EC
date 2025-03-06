@@ -79,10 +79,10 @@ class UserAddressController extends ErrorHandler
         if ($user_id) {
           $data = $this->gateway->getByUserId($user_id);
 
-          // Nếu không tìm thấy địa chỉ nào, trả về JSON báo lỗi
           if (!$data) {
             echo json_encode([
               "success" => false,
+              "message" => "No addresses found for user_id $user_id",
               "user_id" => $user_id
             ]);
             return;
@@ -104,27 +104,78 @@ class UserAddressController extends ErrorHandler
 
       case "POST":
         $this->auths->verifyAction("CREATE_USER_ADDRESS");
-        $data = (array) json_decode(file_get_contents("php://input"));
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (!is_array($data)) {
+          $this->sendErrorResponse(400, "Invalid JSON data");
+          return;
+        }
+
         $errors = $this->getValidationErrors($data);
         if (!empty($errors)) {
           $this->sendErrorResponse(422, $errors);
-          break;
+          return;
         }
-        $data = $this->gateway->create($data);
+
+        $newAddress = $this->gateway->create($data);
 
         http_response_code(201);
         echo json_encode([
           "success" => true,
-          "message" => "Address is created",
-          "data" => $data
+          "message" => "Address created successfully",
+          "data" => $newAddress
         ]);
         break;
 
+      case "PUT":
+        $this->auths->verifyAction("UPDATE_USER_ADDRESS");
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (!is_array($data) || empty($data)) {
+          $this->sendErrorResponse(400, "Invalid or missing user_id");
+          return;
+        }
+
+        // Kiểm tra xem user_id có tồn tại không
+        if ($user_id) {
+
+          // Kiểm tra xem user_id có địa chỉ hợp lệ không
+          $existingAddress = $this->gateway->getByUserId($user_id);
+          if (!$existingAddress) {
+            $this->sendErrorResponse(404, "No address found for user_id $user_id");
+            return;
+          }
+
+          // Kiểm tra lỗi dữ liệu đầu vào
+          $errors = $this->getValidationErrors($data, false);
+          if (!empty($errors)) {
+            $this->sendErrorResponse(422, $errors);
+            return;
+          }
+
+          // Cập nhật theo user_id
+          $updatedData = $this->gateway->updateAddressByUserId($existingAddress, $data);
+          echo json_encode([
+            "success" => true,
+            "message" => "Address for user_id $user_id updated",
+            "data" => $updatedData
+          ]);
+        } else {
+          // Nếu không có user_id, cập nhật theo id
+          $errors = $this->getValidationErrors($data, false);
+          if (!empty($errors)) {
+            $this->sendErrorResponse(422, $errors);
+            return;
+          }
+        }
+        break;
+
       default:
-        $this->sendErrorResponse(405, "only allow GET, POST method");
-        header("Allow: GET, POST");
+        $this->sendErrorResponse(405, "Only allow GET, POST, PUT methods");
+        header("Allow: GET, POST, PUT");
     }
   }
+
 
   private function getValidationErrors(array $data, bool $new = true): array
   {

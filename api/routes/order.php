@@ -19,6 +19,12 @@ switch(true) {
     $controller->processRequest($method, $id, $limit, $offset);
     break;
 
+    case preg_match("#^" . SOURCE_URI . "/order_items$#", $uri) ? true : false:
+      $gateway = new OrderItemGateway($db);
+      $controller = new OrderItemController($gateway, $auths);
+      $controller->processRequest($method, $id, $limit, $offset, $_GET["order_id"] ?? null);
+      break;  
+
   default:
     $errorHandler = new ErrorHandler();
     $errorHandler->sendErrorResponse(404, "Request not found!");

@@ -8,39 +8,13 @@ class OrderItemController extends ErrorHandler {
     $this->utils = new Utils();
   }
 
-  public function processRequest(string $method, ?int $id, ?int $limit, ?int $offset, ?int $orderId = null): void {
-    if ($orderId) {
-        $this->processOrderItemsByOrderId($method, $orderId, $limit, $offset);
-        return;
-    }
-
-    if ($id) {
-        $this->processResourceRequest($method, $id);
-        return;
+  public function processRequest(string $method, ?int $id, ?int $limit, ?int $offset): void {
+    if($id) {
+      $this->processResourceRequest($method, $id);
+      return;
     }
 
     $this->processCollectionRequest($method, $limit, $offset);
-  }
-
-  private function processOrderItemsByOrderId(string $method, int $orderId, ?int $limit, ?int $offset): void {
-      if ($method !== "GET") {
-          $this->sendErrorResponse(405, "Only GET method is allowed");
-          header("Allow: GET");
-          return;
-      }
-
-      $data = $this->gateway->getByOrderId($orderId, $limit, $offset);
-      
-      if (!$data) {
-          $this->sendErrorResponse(404, "No order items found for order_id $orderId");
-          return;
-      }
-
-      echo json_encode([
-          "success" => true,
-          "length" => count($data),
-          "data" => $data
-      ]);
   }
 
   private function processResourceRequest(string $method, ?int $id): void {
@@ -93,36 +67,43 @@ class OrderItemController extends ErrorHandler {
 
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
     switch ($method) {
-      case "GET":
-        $data = $this->gateway->getAll($limit, $offset);
-        echo json_encode([
-          "success" => true,
-          "length" => count($data),
-          "data" => $data
-        ]);
-        break;
+        case "GET":
+            if (isset($_GET["order_id"]) && is_numeric($_GET["order_id"])) {
+                $order_id = (int) $_GET["order_id"];
+                $data = $this->gateway->getByOrderId($order_id, $limit, $offset);
+            } else {
+                $data = $this->gateway->getAll($limit, $offset);
+            }
 
-      case "POST":
-        $this->auths->verifyAction("CREATE_ORDER_ITEM");
-        $data = (array) json_decode(file_get_contents("php://input"));
-        $errors = $this->getValidationErrors($data);
-        if (!empty($errors)) {
-          $this->sendErrorResponse(422, $errors);
-          break;
-        }
-        $data = $this->gateway->create($data);
-        echo json_encode([
-          "success" => true,
-          "message" => "Order item created",
-          "data" => $data
-        ]);
-        break;
+            echo json_encode([
+                "success" => true,
+                "length" => count($data),
+                "data" => $data
+            ]);
+            break;
 
-      default:
-        $this->sendErrorResponse(405, "only allow GET, POST method");
-        header("Allow: GET, POST");
+        case "POST":
+            $this->auths->verifyAction("CREATE_ORDER_ITEM");
+            $data = (array) json_decode(file_get_contents("php://input"));
+            $errors = $this->getValidationErrors($data);
+            if (!empty($errors)) {
+                $this->sendErrorResponse(422, $errors);
+                break;
+            }
+            $data = $this->gateway->create($data);
+            echo json_encode([
+                "success" => true,
+                "message" => "Order item created",
+                "data" => $data
+            ]);
+            break;
+
+        default:
+            $this->sendErrorResponse(405, "Only allow GET, POST method");
+            header("Allow: GET, POST");
     }
   }
+
   private function getValidationErrors(array $data, bool $new = true): array
   {
     $errors = [];

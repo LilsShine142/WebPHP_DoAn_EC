@@ -37,7 +37,7 @@ class OrderItemGateway {
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function getByOrderId(int $orderId, ?int $limit = null, ?int $offset = null): array | false {
+  public function getByOrderId(int $orderId, ?int $limit, ?int $offset): array | false {
     $sql = "SELECT * FROM order_items WHERE order_id = :order_id";
     
     if ($limit && $offset) {
@@ -54,7 +54,6 @@ class OrderItemGateway {
     if ($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     
     $stmt->execute();
-
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 

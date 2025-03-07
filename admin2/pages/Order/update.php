@@ -82,7 +82,7 @@ $orderId = $_GET['id'];
                         <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
                         `);
 
-                        $("#approveOrder").click(() => updateOrderStatus(orderId, 2)); // ID 2 cho "Approved"
+                        $("#approveOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
                     }
                     else {
                         $("#orderActions").html(`
@@ -90,8 +90,8 @@ $orderId = $_GET['id'];
                         <button class="btn btn-danger" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
                         `);
 
-                        $("#approveOrder").click(() => updateOrderStatus(orderId, 2)); // ID 2 cho "Approved"
-                        $("#cancelOrder").click(() => updateOrderStatus(orderId, 3)); // ID 3 cho "Canceled"
+                        $("#approveOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
+                        $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
                     }
                 }  
                 if (deliveryState.toLowerCase() === "approved" && order.payment_method.toLowerCase() === "cod") {
@@ -99,7 +99,14 @@ $orderId = $_GET['id'];
                         <button class="btn btn-warning" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
                     `);
 
-                    $("#cancelOrder").click(() => updateOrderStatus(orderId, 3)); // ID 3 cho "Canceled"
+                    $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
+                }
+                if (deliveryState.toLowerCase() === "Pending" && order.payment_method.toLowerCase() === "momo") {
+                    $("#orderActions").html(`
+                        <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                    `);
+
+                    $("#cancelOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
                 }
 
                 // Lấy thông tin người dùng
@@ -168,6 +175,13 @@ $orderId = $_GET['id'];
                 window.location.href = "index.php?page=pages/Order/list.php";
             }
         });
+
+        function confirmUpdate(orderId, newStateId) {
+            const action = newStateId === 2 ? "approve" : "cancel";
+            if (confirm(`Are you sure you want to ${action} this order?`)) {
+                updateOrderStatus(orderId, newStateId);
+            }
+        }
 
         async function updateOrderStatus(orderId, newStateId) {
             try {

@@ -21,7 +21,7 @@
 <body>
     <button type="button" class="btn btn-primary" style="margin: 15px 20px -20px;" onclick="window.location.href='index.php?page=pages/User/list.php'">Quay về</button>
     <div class="container mt-5">
-        <h2>Thêm Người dùng Mới</h2>
+        <h2>Add New User</h2>
         <form action="index.php?page=pages/User/create.php" method="POST" id="user-form" enctype="multipart/form-data">
             <input type="hidden" id="userId" name="userId">
 
@@ -288,8 +288,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script src="assets/js/Customer/validationUser.js"></script>
-    <script src="./assets/js/Customer/userActions.js"></script>
+    <script src="assets/js/User/validationUser.js"></script>
+    <script src="./assets/js/User/userActions.js"></script>
 </body>
 
 </html>

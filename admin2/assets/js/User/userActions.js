@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // =============================== HÀM LẤY THÔNG TIN USER ===============================
+    // =============================== HÀM LẤY THÔNG TIN USER (lấy địa chỉ để xem chi tiết)===============================
     function getUserAddressInfo(userId) {
         $.ajax({
             url: `${BASE_API_URL}/api/users/addresses?user_id=${userId}`,
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let userId = this.getAttribute("data-id");
         console.log("ID khách hàng cần cập nhật:", userId);
-// Nếu id click trước đó khác với id vừa click thì xóa thông báo lỗi cũ
+        // Nếu id click trước đó khác với id vừa click thì xóa thông báo lỗi cũ
         if (lastUserId !== userId) {
             // Xóa thông báo lỗi cũ
             clearAllErrors();
@@ -519,41 +519,135 @@ document.addEventListener("DOMContentLoaded", function () {
     // }
     // );
 
-
     //========================XÓA NGƯỜI DÙNG ========================
     // Lấy danh sách tất cả các nút có class "btn-delete
-    document.querySelectorAll(".btn-delete").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            let customerId = this.getAttribute("data-id");
-            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
-                $.ajax({
-                    //Gửi api xóa người dùng
-                    url: "api/controllers/user/UserController.php?id=" + customerId,
-                    type: "DELETE",
-                    success: function (response) {
-                        try {
-                            let res = JSON.parse(response);
-                            if (res.success) {
-                                alert("Xóa khách hàng thành công!");
-                                location.reload();
-                            } else {
-                                alert("Lỗi: " + res.message);
-                            }
-                        } catch (e) {
-                            alert("Lỗi phản hồi từ server!");
-                            console.error("JSON Error:", e);
-                        }
-                    },
-                    error: function (xhr) {
-                        alert("Có lỗi xảy ra khi xử lý yêu cầu!");
-                        console.error("AJAX Error:", xhr.responseText);
-                    }
-                });
-            }
-        });
-    });
-    // ============================== THÊM NGƯỜI DÙNG ==============================
-    // Lấy danh sách tất cả các nút có class "btn-add"
-    //====================================================================
+    $(document).on("click", ".btn-delete", function () {
+        let userId = this.getAttribute("data-id");
+        if (confirm("Bạn có chắc chắn muốn xóa mục này?")) {
+            $.ajax({
+                //Gửi api xóa người dùng
+                url: `${BASE_API_URL}/api/users/${userId}`,
+                type: "DELETE",
+                success: function (response) {
+                    try {
+                        if (response.success) {
+                            console.log("Xóa thành công:", response);
+                            toast("Xóa người dùng thành công!", "success");
+                            // Xóa dòng có id="cate-{id}"
+                            let rowToDelete = document.getElementById(`user-${userId}`);
+                            if (rowToDelete) rowToDelete.remove();
 
+                        } else {
+                            alert("Lỗi: " + res.message);
+                        }
+                    } catch (e) {
+                        alert("Lỗi phản hồi từ server!");
+                        console.error("JSON Error:", e);
+                    }
+                },
+                error: function (xhr) {
+                    alert("Có lỗi xảy ra khi xử lý yêu cầu!");
+                    console.error("AJAX Error:", xhr.responseText);
+                }
+            });
+        }
+
+    });
+
+    //======================== LỌC NGƯỜI DÙNG ========================
+    let searchTimeout;
+    //Tìm kiếm theo tên khi nhập vào ô input
+    $("#keyword").on("input", function () {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            let keyValue = $(this).val().trim();
+            console.log("Key value:", keyValue);
+            let urlParams = new URLSearchParams(window.location.search);
+            let type = urlParams.get('type');
+            let isEmployeeList = type === 'employee';
+            let paramsType = isEmployeeList ? 'type=employee' : 'type=customer';
+            console.log("isEmployeeList:", isEmployeeList);
+            filterData(keyValue, paramsType); // Gọi hàm lọc dữ liệu khi nhập tên
+        }, 200); // Đợi 300ms sau khi người dùng dừng nhập mới gọi API
+    });
+    // Lấy danh sách tất cả các nút có class "btn-delete
+    $(document).on("click", ".btn-filter", function () {
+        console.log("Click filter button");
+        let nameSearch = document.getElementById("keyword").value.trim();
+        console.log("Key value:", nameSearch);
+        //e.preventDefault();
+        let formData = $("#filterForm").serialize(); // Chuyển form thành chuỗi query string
+        console.log("Form data:", formData);
+        filterData(nameSearch, formData); // Gọi hàm lọc dữ liệu
+    });
+
+    // Xóa bộ lọc
+    $("#resetFilter").click(function () {
+        console.log("Click reset filter button");
+        $("#filterForm")[0].reset();    
+        console.log("keyword", keyValue);
+        filterData(keyValue); // Gọi hàm lọc dữ liệu
+    });
+
+    function filterData(keyValue = "", extraParams = "") {
+        let apiUrl = `${BASE_API_URL}/api/users?full_name=${encodeURIComponent(keyValue)}`;
+        console.log("API URL:", apiUrl);
+        if (extraParams) {
+            apiUrl += `&${extraParams}`;
+        }
+        console.log("API URL with extra params:", apiUrl);
+
+        $.ajax({
+            url: apiUrl,
+            type: "GET",
+            success: function (response) {
+                console.log("Filtered Data:", response);
+                renderUserList(response.data); // Hiển thị lại bảng với dữ liệu mới
+            },
+            error: function (err) {
+                console.error("Error fetching data:", err);
+            },
+        });
+    }
+
+    // Hàm cập nhật danh sách người dùng
+    function renderUserList(users) {
+        let tableBody = document.getElementById('data-table');
+        console.log("Danh sách người dùng:", users);
+        console.log("table", tableBody);
+        // Xóa nội dung cũ
+        tableBody.innerHTML = "";
+        let urlParams = new URLSearchParams(window.location.search);
+        let type = urlParams.get('type');
+        let isEmployeeList = type === 'employee';
+        console.log("isEmployeeList:", isEmployeeList);
+        if (users.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan='8' class='text-center'>No data available</td></tr>`;
+        } else {
+            tableBody.innerHTML = users.map(user => `
+        <tr id="user-${user.id}">
+            <td>${user.id}</td>
+            <td class="user-name">${user.full_name}</td>
+            <td class="user-email">${user.email}</td>
+            <td class="user-phone">${user.phone_number}</td>
+            ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''}  
+            <td class="user-status">${user.status}</td>
+            <td>${user.created_at}</td>
+            <td>
+                <button class="btn btn-info btn-view" data-id="${user.id}">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-warning btn-update" data-id="${user.id}">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-delete" data-id="${user.id}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+        }
+    }
 });
+
+

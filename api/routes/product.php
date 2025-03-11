@@ -1,18 +1,18 @@
 <?php
 
-switch(true) {
+switch (true) {
   case $uri === SOURCE_URI . "/products":
     $gateway = new ProductGateway($db);
     $controller = new ProductController($gateway, $auths);
     $controller->processRequest($method, $id, $limit, $offset);
     break;
-    
+
   case $uri === SOURCE_URI . "/products/os":
     $gateway = new ProductOSGateway($db);
     $controller = new ProductOSController($gateway, $auths);
     $controller->processRequest($method, $id, $limit, $offset);
     break;
-  
+
   case $uri === SOURCE_URI . "/products/brands":
     $gateway = new ProductBrandGateway($db);
     $controller = new ProductBrandController($gateway, $auths);
@@ -24,6 +24,7 @@ switch(true) {
     $controller = new ProductCategoryController($gateway, $auths);
     $controller->processRequest($method, $id, $limit, $offset);
     break;
+
 
   case strpos($uri, SOURCE_URI . "/products/instances") === 0:
     $utils = new Utils();

@@ -49,14 +49,125 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
             }
             ?>
         </div>
-        <div class="card-search" style="display: flex; margin: 15px;">
-            <div class="search" style="width: 80%; margin-right: 30px;">
-                <input type="text" class="form-control" placeholder="Search...">
+        <div class="card-search d-flex align-items-center gap-4 p-4">
+            <!-- Ô tìm kiếm -->
+            <div class="position-relative w-75">
+                <input type="text" id="keyword" name="keyword" formcontrolname="keyword"
+                    placeholder="Enter the user name you want to search......"
+                    class="form-control ps-4">
+                <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor:pointer"></i>
             </div>
-            <a href="index.php?page=pages/User/create.php" class="btn btn-primary btn-add">
+
+            <!-- Nút filter -->
+            <button id="toggleFilter" class="btn d-flex align-items-center justify-content-center rounded"
+                style="width: 40px; height: 40px; background-color: #d5e2d2; border: none;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.249995 1.61C2.56999 4.59 5.99999 9 5.99999 9V14C5.99999 15.1 6.89999 16 7.99999 16C9.09999 16 10 15.1 10 14V9C10 9 13.43 4.59 15.75 1.61C16.26 0.95 15.79 0 14.95 0H1.03999C0.209995 0 -0.260005 0.95 0.249995 1.61Z" fill="#00A64F"></path>
+                </svg>
+            </button>
+
+            <!-- Nút Add User -->
+            <a href="index.php?page=pages/User/create.php" class="btn btn-primary btn-sm btn-add btn-lg px-4 py-2">
                 <i class="fas fa-plus"></i> Add User
             </a>
         </div>
+        <!-- Bộ lọc -->
+        <div id="filterContainer" class="card p-3 my-4 mx-4" style="display: none;"> <!-- my-3: margin trên/dưới, mx-4: margin trái/phải -->
+            <div _ngcontent-obg-c192="" class="d-flex align-items-center justify-content-between" bis_skin_checked="1">
+                <h6 _ngcontent-obg-c192="">Filter</h6>
+                <span id="closeIcon" class="btn-close" disabled aria-label="Close" style="cursor:pointer"></span>
+            </div>
+            <form id="filterForm" method="GET">
+                <input type="hidden" name="type" value="<?= $type ?>">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">User ID</label>
+                        <input type="text" name="id" class="form-control" placeholder="Enter User ID"  value="<?= $_GET['id'] ?? '' ?>">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Contact information</label>
+                        <input type="text" name="contact" class="form-control" placeholder="Enter phone number or email" value="<?= $_GET['contact'] ?? '' ?>">
+                    </div>
+                    <?php
+                    // if ($type == 'employee') {
+                    //     echo '
+                    //     <div class="col-md-3">
+                    //         <label for="role">Select role:</label>
+                    //         <select class="form-control" id="role" name="role" required></select>
+                    //     </div>
+                    //     <!-- =============================== Call API để lấy danh sách các role =============================== -->
+                    //     <script>
+                    //         $(document).ready(function() {
+                    //             $.ajax({
+                    //                 url: `${BASE_API_URL}/api/users/roles`,
+                    //                 type: "GET",
+                    //                 contentType: "application/json",
+                    //                 dataType: "json",
+                    //                 success: function(response) {
+                    //                     if (response.success) {
+                    //                         let roles = response.data;
+                    //                         let roleSelect = $("#role");
+                    //                         roles.forEach(role => {
+                    //                             roleSelect.append(`<option value="${role.id}">${role.name}</option>`);
+                    //                         });
+                    //                     } else {
+                    //                         alert("Lỗi khi lấy danh sách role: " + response.message);
+                    //                     }
+                    //                 },
+                    //                 error: function(xhr, status, error) {
+                    //                     console.error("Lỗi:", xhr.responseText);
+                    //                     alert("Có lỗi xảy ra: " + xhr.responseText);
+                    //                 }
+                    //             });
+                    //         });
+                    //     </script>
+                    //     ';
+                    // }
+                    ?>
+
+                    <div class="col-md-3">
+                        <label class="form-label">From date</label>
+                        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To day</label>
+                        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" class="btn btn-success btn-filter">Apply</button>
+                    <button type="button" id="resetFilter" class="btn btn-secondary resetFilter">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- JS ẩn hiện bộ lọc khi bấm nút lọc -->
+        <script>
+            document.getElementById("toggleFilter").addEventListener("click", function() {
+                toggleFilter();
+            });
+
+            document.getElementById("closeIcon").addEventListener("click", function() {
+                toggleFilter();
+            });
+
+            function toggleFilter() {
+                let filterContainer = document.getElementById("filterContainer");
+                let filterIcon = document.getElementById("filterIcon");
+                let closeIcon = document.getElementById("closeIcon");
+
+                if (filterContainer.style.display === "none") {
+                    filterContainer.style.display = "block";
+                    filterIcon.style.display = "none";
+                    closeIcon.style.display = "inline";
+                } else {
+                    filterContainer.style.display = "none";
+                    filterIcon.style.display = "inline";
+                    closeIcon.style.display = "none";
+                }
+            }
+        </script>
         <div class="card-body">
             <table id="customerTable" class="table table-bordered table-striped table-hover">
                 <thead id="table-head">
@@ -180,136 +291,8 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
             </div>
         </div>
     </div>
-
-
     <!-- =============================== CALL API LẤY DANH SÁCH EMPLOYEE HOẶC CUSTOMER ================================================= -->
     <script>
-        // function fetchUsersByType(type) {
-        //     let apiUserRoles = `${BASE_API_URL}/api/users/user_roles`; // API user theo role
-        //     console.log("API user roles:", apiUserRoles);
-        //     let apiRoles = `${BASE_API_URL}/api/users/roles`; // API roles
-        //     //let apiUserAddress = `${BASE_API_URL}/api/users/addresses?user_id=${userid}`; // API user theo address
-        //     let isEmployeeList = type !== 'customer'; // Xác định là nhân viên hay khách hàng
-        //     //Call API user_roles và roles trước để lấy thông tin user và role
-        //     //Gọi cả 2 API cùng lúc
-        //     Promise.all([
-        //         $.ajax({
-        //             url: apiUserRoles,
-        //             type: 'GET',
-        //             dataType: "json"
-        //         }).catch(err => console.error("Lỗi API user_roles", err)),
-        //         $.ajax({
-        //             url: apiRoles,
-        //             type: 'GET',
-        //             dataType: "json"
-        //         }).catch(err => console.error("Lỗi API roles", err))
-        //     ]).then(([userRolesRes, rolesRes]) => {
-        //         if (!userRolesRes || !userRolesRes.success || !rolesRes || !rolesRes.success) {
-        //             console.error("Lỗi khi lấy thông tin user_roles hoặc roles");
-        //             return;
-        //         }
-
-        //         let userRoles = userRolesRes.data; //user_id - role_id
-        //         let roles = rolesRes.data; //role_id - name
-        //         console.log("Roles:", roles);
-        //         //Tạo roleMap để lấy tên role dựa vào role_id
-        //         let roleMap = {};
-        //         roles.forEach(role => {
-        //             roleMap[role.id] = role.name;
-        //         });
-        //         console.log("rolmap", roleMap);
-        //         //Lọc danh sách user theo type
-        //         let filteredUsers = isEmployeeList ?
-        //             userRoles.filter(user => user.role_id != 3) // Nhân viên (không phải role_id=3)
-        //             :
-        //             userRoles.filter(user => user.role_id == 3); // Khách hàng (role_id=3)
-        //         console.log("Filtered users:", filteredUsers);
-        //         // Call API lấy thông tin chi tiết của từng user theo user_id
-        //         let userPromises = filteredUsers.map(user => {
-        //             return $.ajax({
-        //                 url: `${BASE_API_URL}/api/users/${user.user_id}`, // Gọi API user theo user_id
-        //                 type: 'GET',
-        //                 dataType: "json"
-        //             });
-        //         });
-        //         console.log("User promises:", userPromises);
-        //         return Promise.all(userPromises).then(userDetails => {
-        //             // Cập nhật thông tin user với role_name
-        //             let userWithDetails = userDetails.map((detail) => {
-        //                 console.log("roleMap[detail.data.role_id]", roleMap[detail.data.id]);
-        //                 if (detail && detail.success && detail.data) {
-        //                     console.log("Detail data:", detail.data);
-        //                     return {
-        //                         ...detail.data,
-        //                         role_name: roleMap[detail.data.id] || "Không xác định" // Lấy role_name từ role_id đúng cách
-        //                     };
-        //                     console.log("role name", roleMap[detail.data.id]);
-        //                 }
-        //                 return null;
-        //             }).filter(user => user !== null);
-
-        //             console.log("User with details:", userWithDetails);
-        //             renderTable(userWithDetails, isEmployeeList);
-        //         });
-
-
-        //     }).catch(error => {
-        //         console.error("Lỗi khi lấy thông tin chi tiết người dùng", error);
-        //     });
-        // }
-
-        // Hàm render bảng
-        // function renderTable(users, isEmployeeList) {
-        //     let tableBody = document.getElementById('data-table');
-        //     let tableHead = document.getElementById('table-head');
-
-        //     let tableHeadHtml = `
-        //         <tr>
-        //             <th>ID</th>
-        //             <th>Fullname</th>
-        //             <th>Email</th>
-        //             <th>Status</th>
-        //             <th>Phone</th>
-        //             ${isEmployeeList ? '<th>Role</th>' : ''} 
-        //             <th>Address</th>
-        //             <th>Create At</th>
-        //             <th>Actions</th>
-        //         </tr>
-        //     `;
-        //     tableHead.innerHTML = tableHeadHtml;
-
-        //     let html = '';
-        //     users.forEach(user => {
-        //         html += `
-        //             <tr id="user-${user.id}">
-        //                 <td>${user.id}</td>
-        //                 <td class="user-name">${user.full_name}</td>
-        //                 <td class="user-email">${user.email}</td>
-        //                 <td class="user-status">${user.status}</td>
-        //                 <td class="user-phone">${user.phone_number}</td>
-        //                 ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''} <!-- Hiển thị role nếu là nhân viên -->
-        //                 <td class="user-address">${user.address}</td>
-        //                 <td>${user.created_at}</td>
-        //                 <td>
-        //                     <button class="btn btn-info btn-view" data-id="${user.id}">Xem</button>
-        //                     <button class="btn btn-warning btn-update" data-id="${user.id}">Sửa</button>
-        //                     <button class="btn btn-danger btn-delete" data-id="${user.id}">Xóa</button>
-        //                 </td>
-        //             </tr>
-        //         `;
-        //     });
-
-        //     tableBody.innerHTML = html;
-        // }
-
-        // // Gọi hàm loadUsers() ngay khi trang load
-        // $(document).ready(function() {
-        //     let urlParams = new URLSearchParams(window.location.search);
-        //     let type = urlParams.get('type'); // Lấy type từ URL (employee hoặc customer)
-        //     console.log("Type:", type);
-        //     fetchUsersByType(type);
-        // });
-
         function fetchUsersByType(type) {
             fetchUserData().then(({
                 userRoles,
@@ -478,9 +461,15 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
             <td class="user-status">${user.status}</td>
             <td>${user.created_at}</td>
             <td>
-                <button class="btn btn-info btn-view" data-id="${user.id}">View</button>
-                <button class="btn btn-warning btn-update" data-id="${user.id}">Update</button>
-                <button class="btn btn-danger btn-delete" data-id="${user.id}">Delete</button>
+                <button class="btn btn-info btn-view" data-id="${user.id}">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-warning btn-update" data-id="${user.id}">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-delete" data-id="${user.id}">
+                    <i class="fas fa-trash"></i>
+                </button>
             </td>
         </tr>
     `).join('');
@@ -496,7 +485,7 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
 
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
-    <script src="assets/js/Customer/validationUser.js"></script>
-    <script src="assets/js/Customer/userActions.js"></script>
+    <script src="assets/js/User/validationUser.js"></script>
+    <script src="assets/js/User/userActions.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

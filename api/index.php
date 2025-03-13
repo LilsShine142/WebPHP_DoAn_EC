@@ -33,7 +33,7 @@ $limit = isset($_GET["limit"]) ? abs((int) $_GET["limit"]) : null;
 $offset = isset($_GET["offset"]) ? abs((int) $_GET["offset"]) : null;
 $id = is_numeric(end($uri_parts)) ? (int) end($uri_parts) : null;
 
-$db = new Database("localhost:3306", "webphp_ec", "root", "");
+$db = new Database("localhost:3307", "webphp_ec", "root", "");
 $auths = new Auths($db, $usr_email, $usr_pwd);
 
 $uri = preg_replace('/\/[0-9]+$/', '', $uri); //AI gen: remove {id} if exist
@@ -60,6 +60,10 @@ switch (true) {
 
   case str_contains($uri, SOURCE_URI . "/goods_receipt_notes"):
     include_once "./routes/goodsReceiptNote.php";
+    break;
+
+  case str_contains($uri, SOURCE_URI . "/statistics"):
+    include_once "./routes/statistics.php";
     break;
 
   default:

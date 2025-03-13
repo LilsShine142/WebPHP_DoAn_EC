@@ -1,6 +1,6 @@
 <?php
 
-switch(true) {
+switch (true) {
   case $uri === SOURCE_URI . "/orders":
     $gateway = new OrderGateway($db);
     $controller = new OrderController($gateway, $auths);

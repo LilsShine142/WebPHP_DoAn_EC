@@ -568,7 +568,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let paramsType = isEmployeeList ? 'type=employee' : 'type=customer';
             console.log("isEmployeeList:", isEmployeeList);
             filterData(keyValue, paramsType); // Gọi hàm lọc dữ liệu khi nhập tên
-        }, 200); // Đợi 300ms sau khi người dùng dừng nhập mới gọi API
+        }, 100); // Đợi 100ms sau khi người dùng dừng nhập mới gọi API
     });
     // Lấy danh sách tất cả các nút có class "btn-delete
     $(document).on("click", ".btn-filter", function () {

@@ -53,14 +53,14 @@ array_push($jsStack, '<script src="plugins/overlayScrollbars/js/jquery.overlaySc
         <!-- small box -->
         <div class="small-box bg-info">
           <div class="inner">
-            <h3>150</h3>
-
-            <p>New Orders</p>
+            <h3 class="totalOrders">
+            </h3>
+            <p>Total Orders</p>
           </div>
           <div class="icon">
             <i class="ion ion-bag"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="index.php?page=pages/Order/list.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <!-- ./col -->
@@ -68,14 +68,14 @@ array_push($jsStack, '<script src="plugins/overlayScrollbars/js/jquery.overlaySc
         <!-- small box -->
         <div class="small-box bg-success">
           <div class="inner">
-            <h3>53<sup style="font-size: 20px">%</sup></h3>
+            <h3 class="totalProducts">53<sup style="font-size: 20px">%</sup></h3>
 
-            <p>Bounce Rate</p>
+            <p>Total Product</p>
           </div>
           <div class="icon">
-            <i class="ion ion-stats-bars"></i>
+            <i class="fas fa-box-open"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="index.php?page=pages/Product/list.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <!-- ./col -->
@@ -83,14 +83,14 @@ array_push($jsStack, '<script src="plugins/overlayScrollbars/js/jquery.overlaySc
         <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3>44</h3>
+            <h3 class="totalUsers">44</h3>
 
             <p>User Registrations</p>
           </div>
           <div class="icon">
             <i class="ion ion-person-add"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="index.php?page=pages/User/list.php&type=customer" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <!-- ./col -->
@@ -98,14 +98,13 @@ array_push($jsStack, '<script src="plugins/overlayScrollbars/js/jquery.overlaySc
         <!-- small box -->
         <div class="small-box bg-danger">
           <div class="inner">
-            <h3>65</h3>
-
-            <p>Unique Visitors</p>
+            <h3 class="totalRevenue">150.000.000 VNĐ</h3> <!-- Giả sử tổng doanh thu là 65,000 USD -->
+            <p>Total Revenue</p>
           </div>
           <div class="icon">
-            <i class="ion ion-pie-graph"></i>
+            <i class="ion ion-cash"></i> <!-- Đổi icon thành biểu tượng tiền tệ -->
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="index.php?page=pages/Order/list.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <!-- ./col -->
@@ -208,3 +207,5 @@ array_push($jsStack, '<script src="plugins/overlayScrollbars/js/jquery.overlaySc
     <!-- /.row (main row) -->
   </div><!-- /.container-fluid -->
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/js/Statistics/statisticsActions.js"></script>

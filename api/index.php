@@ -62,6 +62,10 @@ switch (true) {
     include_once "./routes/goodsReceiptNote.php";
     break;
 
+  case str_contains($uri, SOURCE_URI . "/statistics"):
+    include_once "./routes/statistics.php";
+    break;
+
   default:
     $errorHandler = new ErrorHandler();
     $errorHandler->sendErrorResponse(404, "Request not found!");

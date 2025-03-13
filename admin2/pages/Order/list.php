@@ -65,7 +65,7 @@
                             <th>User ID</th>
                             <th>Total (cents)</th>
                             <th>Delivery Address</th>
-                            <th>Delivery State</th>
+                            <th>State</th>
                             <th>Order Date</th>
                             <th>Received Date</th>
                             <th>Payment</th>

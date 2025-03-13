@@ -41,7 +41,7 @@
         include($contentPath);
       } else {
         echo "<pre>File not found: " . htmlspecialchars($contentPath) . "</pre>";
-        include("pages/Statistical.php");
+        include("pages/Statistics/Statistical.php");
       }
       ?>
       <!-- /.content -->

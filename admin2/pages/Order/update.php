@@ -19,7 +19,10 @@ $orderId = $_GET['id'];
 </head>
 <body>
     <div class="container mt-5">
-        <h2><i class="fas fa-receipt"></i> Order Details: <span id="orderIdText"></span></h2>
+        <h2>
+            <i class="fas fa-receipt"></i> Order Details: <span id="orderIdText"></span>
+            <span id="orderActions" class="ms-3"></span>
+        </h2>
 
         <table class="table table-bordered mt-3">
             <tbody id="orderDetails">
@@ -32,9 +35,9 @@ $orderId = $_GET['id'];
             <thead class="table-dark">
                 <tr>
                     <th style="min-width: 100px;">Item ID</th>
-                    <th style="min-width:500px;">Product SKU</th>
-                    <th style="width:80px;">Image</th>
-                    <th style="min-width:150px;">Price (VND)</th>
+                    <th style="min-width:400px;">Product SKU</th>
+                    <th style="width:60px;">Image</th>
+                    <th style="min-width:200px;">Price (VND)</th>
                 </tr>
             </thead>
             <tbody id="orderItemsTable">
@@ -54,7 +57,7 @@ $orderId = $_GET['id'];
                 new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
             try {
-                // Gọi tất cả API bằng Promise.all để tăng tốc độ tải
+                // Lấy thông tin đơn hàng & trạng thái giao hàng song song
                 const [stateRes, orderRes] = await Promise.all([
                     $.getJSON(`${BASE_API_URL}/api/orders/delivery_states`),
                     $.getJSON(`${BASE_API_URL}/api/orders/${orderId}`)
@@ -62,7 +65,6 @@ $orderId = $_GET['id'];
 
                 if (!orderRes.success) throw new Error("Order not found.");
 
-                // Xử lý dữ liệu trạng thái giao hàng
                 let deliveryStateMap = {};
                 if (stateRes.success) {
                     stateRes.data.forEach(state => {
@@ -72,6 +74,40 @@ $orderId = $_GET['id'];
 
                 const order = orderRes.data;
                 const deliveryState = deliveryStateMap[order.delivery_state_id] || "Unknown";
+
+                // Hiển thị nút Approve & Cancel nếu trạng thái là Pending
+                if (deliveryState.toLowerCase() === "pending") {
+                    if(order.payment_method.toLowerCase() === "momo"){
+                        $("#orderActions").html(`
+                        <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                        `);
+
+                        $("#approveOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
+                    }
+                    else {
+                        $("#orderActions").html(`
+                        <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                        <button class="btn btn-danger" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
+                        `);
+
+                        $("#approveOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
+                        $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
+                    }
+                }  
+                if (deliveryState.toLowerCase() === "approved" && order.payment_method.toLowerCase() === "cod") {
+                    $("#orderActions").html(`
+                        <button class="btn btn-warning" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
+                    `);
+
+                    $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
+                }
+                if (deliveryState.toLowerCase() === "Pending" && order.payment_method.toLowerCase() === "momo") {
+                    $("#orderActions").html(`
+                        <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                    `);
+
+                    $("#cancelOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
+                }
 
                 // Lấy thông tin người dùng
                 const userRes = await $.getJSON(`${BASE_API_URL}/api/users/${order.user_id}`);
@@ -104,7 +140,6 @@ $orderId = $_GET['id'];
                     const price = formatCurrency(item.price_cents);
                     let imagePath = "../backend/uploads/products/default.png"; 
 
-                    // Đẩy các promise lấy sản phẩm vào mảng
                     productPromises.push(
                         $.getJSON(`${BASE_API_URL}/api/products/instances/${sku}`)
                             .then(productRes => {
@@ -121,7 +156,7 @@ $orderId = $_GET['id'];
                         <tr>
                             <td>${item.id}</td>
                             <td>${sku}</td>
-                            <td class="product-image"><img src="${imagePath}" alt="Product Image" width="80" height="80"></td>
+                            <td class="product-image"><img src="${imagePath}" alt="Product Image" width="60" height="60"></td>
                             <td>${price}</td>
                         </tr>
                     `;
@@ -129,7 +164,7 @@ $orderId = $_GET['id'];
 
                 $("#orderItemsTable").html(itemsHtml);
 
-                // Cập nhật ảnh sản phẩm sau khi lấy dữ liệu
+                // Cập nhật ảnh sản phẩm
                 const images = await Promise.all(productPromises);
                 $(".product-image img").each((index, img) => {
                     $(img).attr("src", images[index]);
@@ -140,6 +175,34 @@ $orderId = $_GET['id'];
                 window.location.href = "index.php?page=pages/Order/list.php";
             }
         });
+
+        function confirmUpdate(orderId, newStateId) {
+            const action = newStateId === 2 ? "approve" : "cancel";
+            if (confirm(`Are you sure you want to ${action} this order?`)) {
+                updateOrderStatus(orderId, newStateId);
+            }
+        }
+
+        async function updateOrderStatus(orderId, newStateId) {
+            try {
+                const response = await fetch(`http://localhost:81/WebPHP_DoAn_EC/api/orders/${orderId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ delivery_state_id: newStateId })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("Order status updated successfully!");
+                    location.reload(); // Reload trang để cập nhật giao diện
+                } else {
+                    alert("Failed to update order status.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while updating the status.");
+            }
+        }
     </script>
 </body>
 </html>

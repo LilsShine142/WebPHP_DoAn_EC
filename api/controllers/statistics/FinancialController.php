@@ -30,20 +30,30 @@ class FinancialController extends ErrorHandler
 
         $year = $_GET["year"] ?? null;
         $month = $_GET["month"] ?? null;
-        $type = $_GET["type"] ?? "revenue"; // Mặc định là doanh thu
 
         if (!$year) {
             $this->sendErrorResponse(400, "Year parameter is required");
             return;
         }
 
-        // Xác định lấy doanh thu hay chi phí
-        if ($type === "revenue") {
-            echo $this->gateway->getTotalRevenue($month, $year);
-        } elseif ($type === "expense") {
-            echo $this->gateway->getTotalExpense($month, $year);
-        } else {
-            $this->sendErrorResponse(400, "Invalid type parameter. Use 'revenue' or 'expense'.");
-        }
+        // Lấy dữ liệu từ Gateway
+        $revenueData = json_decode($this->gateway->getTotalRevenue($month, $year), true);
+        $expenseData = json_decode($this->gateway->getTotalExpense($month, $year), true);
+
+        // Chuẩn hóa dữ liệu
+        $formattedRevenue = $revenueData["success"] ? $revenueData["data"] : [];
+        $formattedExpense = $expenseData["success"] ? $expenseData["data"] : [];
+
+        // Gộp dữ liệu vào một JSON duy nhất
+        $response = [
+            "success" => true,
+            "data" => [
+                "revenue" => $formattedRevenue,
+                "expense" => $formattedExpense
+            ]
+        ];
+
+        header("Content-Type: application/json");
+        echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }

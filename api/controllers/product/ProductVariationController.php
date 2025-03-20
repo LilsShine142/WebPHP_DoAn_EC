@@ -67,8 +67,12 @@ class ProductVariationController extends ErrorHandler {
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
     switch($method) {
       case "GET":
-        $data = $this->gateway->getAll($limit, $offset);
-
+        if (isset($_GET["product_id"]) && is_numeric($_GET["product_id"])) {
+          $product_id = (int) $_GET["product_id"];
+          $data = $this->gateway->getByProductId($product_id, $limit, $offset);
+        } else {
+          $data = $this->gateway->getAll($limit, $offset);
+        }
         echo json_encode([
           "success" => true,
           "length" => count($data),

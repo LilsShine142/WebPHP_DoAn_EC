@@ -5,24 +5,16 @@
 		<div class="top-bar">
 			<div class="content-topbar flex-sb-m h-full container">
 				<div class="left-top-bar">
-					Free shipping for standard order over $100
+					Garmin - Engineered on the inside for life on the outside.
 				</div>
 
 				<div class="right-top-bar flex-w h-full">
 					<a href="#" class="flex-c-m trans-04 p-lr-25">
-						Help & FAQs
+						Chatbot
 					</a>
 
 					<a href="./pages/login.php" class="flex-c-m trans-04 p-lr-25">
 						My Account
-					</a>
-
-					<a href="#" class="flex-c-m trans-04 p-lr-25">
-						EN
-					</a>
-
-					<a href="#" class="flex-c-m trans-04 p-lr-25">
-						USD
 					</a>
 				</div>
 			</div>
@@ -33,7 +25,7 @@
 
 				<!-- Logo desktop -->
 				<a href="index.php" class="logo">
-					<img src="images/icons/logo-01.png" alt="IMG-LOGO">
+					<img src="images/icons/logo-garmin.png" alt="IMG-LOGO">
 				</a>
 
 				<!-- Menu desktop -->
@@ -41,11 +33,6 @@
 					<ul class="main-menu">
 						<li class="active-menu">
 							<a href="index.php">Home</a>
-							<!-- <ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul> -->
 						</li>
 
 						<li>
@@ -53,19 +40,19 @@
 						</li>
 
 						<li class="label1" data-label1="hot">
-							<a href="?content=pages/shopping-cart.php">Features</a>
+							<a href="?content=pages/shopping-cart.php">Smartwatch</a>
 						</li>
 
 						<li>
-							<a href="?content=pages/blog.php">Blog</a>
+							<a href="?content=pages/blog.php">Cables</a>
 						</li>
 
 						<li>
-							<a href="?content=pages/about.php">About</a>
+							<a href="?content=pages/about.php">Chargers</a>
 						</li>
 
 						<li>
-							<a href="?content=pages/contact.php">Contact</a>
+							<a href="?content=pages/contact.php">Bands</a>
 						</li>
 					</ul>
 				</div>

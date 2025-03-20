@@ -122,6 +122,24 @@ class ProductVariationGateway {
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  public function getByProductId(int $productId, ?int $limit, ?int $offset): array | false {
+    $sql = "SELECT * FROM product_variations WHERE product_id = :product_id";
+    if ($limit && $offset) {
+      $sql .= " LIMIT :limit OFFSET :offset";
+    } elseif ($limit) {
+        $sql .= " LIMIT :limit";
+    } elseif ($offset) {
+        $sql .= " LIMIT 18446744073709551615 OFFSET :offset";
+    }
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":product_id", $productId, PDO::PARAM_INT);
+    if ($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    if ($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function update(array $current, array $new): array | false {
     $sql = "UPDATE product_variations SET
       product_id = :product_id,

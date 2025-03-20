@@ -142,16 +142,16 @@
 
     // init Isotope
     $(window).on('load', function () {
-        var $grid = $topeContainer.each(function () {
-            $(this).isotope({
+        var $grid = $('.isotope-grid');
+        $grid.imagesLoaded(function () {
+            $grid.isotope({
                 itemSelector: '.isotope-item',
                 layoutMode: 'fitRows',
                 percentPosition: true,
-                animationEngine : 'best-available',
-                masonry: {
-                    columnWidth: '.isotope-item'
-                }
             });
+
+            // Force Isotope to relayout
+            $grid.isotope('layout');
         });
     });
 

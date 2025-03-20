@@ -20,14 +20,16 @@ include("layouts/header.php");
     <?php include("layouts/viewcart.php") ?>
 
 	<!-- Product -->
-    <?php 
+     <main>
+        <?php 
         if (file_exists($contentPath)) {
             include($contentPath);
         } else {
             include("layouts/showproduct.php");
         }
         ?>
-
+     </main>
+    
 	<!-- Footer -->
 	<?php include("layouts/footer.php") ?>
 

@@ -282,6 +282,7 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   -o-transition: height 0.3s, background-color 0.3s;
   -moz-transition: height 0.3s, background-color 0.3s;
   transition: height 0.3s, background-color 0.3s;
+  background-color: rgba(255,255,255,1);
 }
 
 .header-v2 .wrap-menu-desktop {
@@ -2042,6 +2043,12 @@ input.num-product::-webkit-inner-spin-button {
 [ Block2 ]*/
 .block2-pic {
   position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden; /* Đảm bảo ảnh không vượt quá khung */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .block2-btn {
@@ -2053,6 +2060,12 @@ input.num-product::-webkit-inner-spin-button {
   -ms-transform: translateX(-50%);
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
+}
+
+.block2-pic img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
 }
 
 .block2-pic:hover .block2-btn {
@@ -2641,7 +2654,7 @@ input.num-product::-webkit-inner-spin-button {
 ==================================================================*/
 .bg-none {background-color: transparent;}
 .bg0 {background-color: #fff;}
-.bg1 {background-color: #717fe0;}
+.bg1 {background-color: #057262;}
 .bg2 {background-color: #e6e6e6;}
 .bg3 {background-color: #222;}
 .bg5 {background-color: rgba(0,0,0,0.5);}
@@ -3330,3 +3343,20 @@ input.num-product::-webkit-inner-spin-button {
   }
 
 }
+
+#pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+.pagination-btn {
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: white;
+}
+.pagination-btn.active {
+  background-color: #333;
+  color: white;
+}
+

@@ -37,20 +37,24 @@ $(document).ready(function () {
     // Xử lý đăng nhập bằng AJAX
     $("#login-form").submit(function (e) {
         e.preventDefault();
+        let email = $("input[name='email']").val();
+        let password = $("input[name='pass']").val();
+    
         $.ajax({
-            type: "POST",
-            url: "../backend/controllers/LoginController.php",
-            data: $(this).serialize(),
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/users?email=${email}&password=${password}`,
+            method: "GET",
+            dataType: "json",
             success: function (response) {
-                if (response.trim() === "success") {
-                    window.location.href = "dashboard.php";
-                } else {
-                    alert("Sai tài khoản hoặc mật khẩu!");
-                }
+                alert(response.message); // Hiển thị thông báo đăng nhập thành công
+                // Lưu thông tin user vào localStorage
+                localStorage.setItem("user", JSON.stringify(response.data));
+                // Chuyển hướng về trang chủ
+                window.location.href = "../index.php";
             },
-            error: function () {
-                alert("Có lỗi xảy ra khi đăng nhập!");
+            error: function (xhr) {
+                let error = JSON.parse(xhr.responseText);
+                alert("Error: " + error.message);
             }
         });
-    });
+    });           
 });

@@ -10,7 +10,7 @@ class Database
 
     public function __construct()
     {
-        $this->host = "localhost:3307";
+        $this->host = "localhost:3306";
         $this->username = "root";
         $this->password = "";
         $this->database = "webphp_ec";

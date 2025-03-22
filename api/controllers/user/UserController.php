@@ -81,59 +81,85 @@ class UserController extends ErrorHandler
 
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void
   {
-    switch ($method) {
-      case "GET":
-        // Lấy tham số lọc từ request
-        $id = $_GET['id'] ?? null;
-        $name = trim($_GET['full_name'] ?? '') ?: null;
-        $contact = trim($_GET['contact'] ?? '') ?: null;   //Lấy cả email và phone
-        $from_date = trim($_GET['from_date'] ?? '') ?: null;
-        $to_date = trim($_GET['to_date'] ?? '') ?: null;
-        $type = $_GET['type'] ?? null;
-        // Kiểm tra nếu có ít nhất một tham số lọc thì gọi `getByFilters()`, ngược lại gọi `getAll()`
-        if ($id || $type ||  $name || $contact || $from_date || $to_date) {
-          $data = $this->gateway->getByFilters($id, $name, $contact, $from_date, $to_date, $type);
-        } else {
-          $data = $this->gateway->getAll($limit, $offset);
-        }
+      switch ($method) {
+          case "GET":
+              $email = $_GET['email'] ?? null;
+              $password = $_GET['password'] ?? null;
 
-        // Lọc bỏ password trước khi trả về
-        $dataFiltered = [];
-        foreach ($data as $user) {
-          unset($user["password"]);
-          $dataFiltered[] = $user;
-        }
+              // ✅ Kiểm tra đăng nhập
+              if ($email && $password) {
+                  $user = $this->gateway->getByEmail($email);
+                  if (!$user) {
+                      $this->sendErrorResponse(404, "User with email $email not found");
+                      return;
+                  }
 
-        echo json_encode([
-          "success" => true,
-          "length" => count($dataFiltered),
-          "data" => $dataFiltered
-        ]);
-        break;
+                  // So sánh mật khẩu nhập vào với mật khẩu hash trong DB
+                  if (!password_verify($password, $user["password"])) {
+                      $this->sendErrorResponse(401, "Incorrect password");
+                      return;
+                  }
 
-      case "POST":
-        $this->auths->verifyAction("CREATE_USER");
-        $data = (array) json_decode(file_get_contents("php://input"));
-        $errors = $this->getValidationErrors($data);
-        if (!empty($errors)) {
-          $this->sendErrorResponse(422, $errors);
-          break;
-        }
-        $data = $this->gateway->create($data);
-        unset($data["password"]);
+                  unset($user["password"]); // Xóa password trước khi trả về
+                  
+                  echo json_encode([
+                      "success" => true,
+                      "message" => "Login successful",
+                      "data" => $user
+                  ]);
+                  return;
+              }
 
-        http_response_code(201);
-        echo json_encode([
-          "success" => true,
-          "message" => "User created",
-          "data" => $data
-        ]);
-        break;
+              // ✅ Nếu không có email và password, thực hiện các thao tác lấy danh sách người dùng
+              $id = $_GET['id'] ?? null;
+              $name = trim($_GET['full_name'] ?? '') ?: null;
+              $contact = trim($_GET['contact'] ?? '') ?: null;
+              $from_date = trim($_GET['from_date'] ?? '') ?: null;
+              $to_date = trim($_GET['to_date'] ?? '') ?: null;
+              $type = $_GET['type'] ?? null;
 
-      default:
-        $this->sendErrorResponse(405, "only allow GET, POST method");
-        header("Allow: GET, POST");
-    }
+              if ($id || $type || $name || $contact || $from_date || $to_date) {
+                  $data = $this->gateway->getByFilters($id, $name, $contact, $from_date, $to_date, $type);
+              } else {
+                  $data = $this->gateway->getAll($limit, $offset);
+              }
+
+              $dataFiltered = [];
+              foreach ($data as $user) {
+                  unset($user["password"]);
+                  $dataFiltered[] = $user;
+              }
+
+              echo json_encode([
+                  "success" => true,
+                  "length" => count($dataFiltered),
+                  "data" => $dataFiltered
+              ]);
+              break;
+
+          case "POST":
+              $this->auths->verifyAction("CREATE_USER");
+              $data = (array) json_decode(file_get_contents("php://input"));
+              $errors = $this->getValidationErrors($data);
+              if (!empty($errors)) {
+                  $this->sendErrorResponse(422, $errors);
+                  break;
+              }
+              $data = $this->gateway->create($data);
+              unset($data["password"]);
+
+              http_response_code(201);
+              echo json_encode([
+                  "success" => true,
+                  "message" => "User created",
+                  "data" => $data
+              ]);
+              break;
+
+          default:
+              $this->sendErrorResponse(405, "only allow GET, POST method");
+              header("Allow: GET, POST");
+      }
   }
 
   private function getValidationErrors(array $data, bool $new = true): array

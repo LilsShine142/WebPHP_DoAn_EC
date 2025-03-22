@@ -20,15 +20,17 @@ include("layouts/header.php");
     <?php include("layouts/viewcart.php") ?>
 
 	<!-- Product -->
-     <main>
+    <main>
         <?php 
         if (file_exists($contentPath)) {
+            echo $contentPath;
             include($contentPath);
         } else {
             include("layouts/showproduct.php");
         }
         ?>
-     </main>
+    </main>
+
     
 	<!-- Footer -->
 	<?php include("layouts/footer.php") ?>
@@ -44,4 +46,5 @@ include("layouts/header.php");
     <?php include("layouts/js.php") ?>
 
 </body>
+<script src="../client/js/logout.js"></script>
 </html>

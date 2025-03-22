@@ -30,7 +30,7 @@
                 <!-- Form đăng nhập -->
                 <form id="login-form" class="login100-form validate-form" action="login?form=" method="POST">
                     <span class="login100-form-title">
-                        Member Login
+                        Login
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
@@ -122,7 +122,7 @@
     <!--===============================================================================================-->
     <script src="../js/mainlogin.js"></script>
     <script src="../js/auth.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
 </body>
 
 </html>

@@ -16,19 +16,19 @@
 						All Products
 					</button>
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".1">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".smartwatch">
 						Smartwatch
 					</button>
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".2">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".cable">
 						Cable
 					</button>
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".3">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".charger">
 						Charger
 					</button>
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".4">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".band">
 						Band
 					</button>
 
@@ -210,28 +210,59 @@
 		let currentPage = 1;
 		let productsPerPage = 16;
 		let totalProducts = 0;
-		let allProducts = []; // Lưu tất cả sản phẩm để tìm kiếm
+		let allProducts = []; // Lưu trữ toàn bộ sản phẩm
+		let categoriesMap = {}; // Lưu trữ danh mục sản phẩm
+		let activeCategory = "*"; // Lưu danh mục đang được chọn
 
+		/** 📌 Gọi API lấy danh mục sản phẩm */
+		function fetchCategories() {
+			return $.ajax({
+				url: `http://localhost:81/WebPHP_DoAn_EC/api/products/categories`,
+				type: "GET"
+			}).then(response => {
+				if (response.success) {
+					response.data.forEach(category => {
+						let categoryKey = category.name.replace(/\s+/g, "-").toLowerCase();
+						categoriesMap[category.id] = categoryKey;
+					});
+				}
+			});
+		}
+
+		/** 📌 Gọi API lấy toàn bộ sản phẩm */
 		function fetchAllProducts() {
 			return $.ajax({
 				url: `http://localhost:81/WebPHP_DoAn_EC/api/products`,
 				type: "GET"
 			}).then(response => {
 				if (response.success) {
-					allProducts = response.data; // Lưu toàn bộ sản phẩm vào biến
+					allProducts = response.data;
 					totalProducts = allProducts.length;
-					return totalProducts;
 				}
-				return 0;
 			});
 		}
 
-		function loadProducts(page, filteredProducts = null) {
+		/** 📌 Hiển thị danh sách sản phẩm theo phân trang */
+		function loadProducts(page, categoryFilter = "*", searchKeyword = "") {
+			let filteredProducts = allProducts;
+
+			// 🔹 Lọc theo danh mục nếu không phải "All Products"
+			if (categoryFilter !== "*") {
+				filteredProducts = filteredProducts.filter(product => categoriesMap[product.category_id] === categoryFilter);
+			}
+
+			// 🔹 Lọc theo từ khóa tìm kiếm
+			if (searchKeyword) {
+				filteredProducts = filteredProducts.filter(product =>
+					product.name.toLowerCase().includes(searchKeyword)
+				);
+			}
+
 			let start = (page - 1) * productsPerPage;
 			let end = start + productsPerPage;
-			let productsToShow = filteredProducts ? filteredProducts.slice(start, end) : allProducts.slice(start, end);
-			let totalPages = Math.ceil((filteredProducts ? filteredProducts.length : totalProducts) / productsPerPage);
-			let productHtml = '';
+			let productsToShow = filteredProducts.slice(start, end);
+			let totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+			let productHtml = "";
 
 			let variationPromises = productsToShow.map(product => {
 				return $.ajax({
@@ -248,19 +279,19 @@
 					let firstVariation = variations.length > 0 ? variations[0] : null;
 					let imageName = firstVariation ? firstVariation.image_name : "default.webp";
 					let price = firstVariation ? firstVariation.price_cents : "N/A";
+					let categoryName = categoriesMap[product.category_id] || "uncategorized";
 
 					productHtml += `
-						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${product.category_id}">
+						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${categoryName}">
 							<div class="block2">
 								<div class="block2-pic hov-img0">
-									<img src="../backend/uploads/products/${imageName}" alt="${product.name}">
-									<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-										Quick View
+									<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="js-show-modal1">
+										<img src="../backend/uploads/products/${imageName}" alt="${product.name}">
 									</a>
 								</div>
 								<div class="block2-txt flex-w flex-t p-t-14">
 									<div class="block2-txt-child1 flex-col-l">
-										<a href="product-detail.html?id=${product.id}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+										<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 											${product.name}
 										</a>
 										<span class="stext-105 cl3">
@@ -273,49 +304,49 @@
 				});
 
 				$("#product-list").html(productHtml);
-				renderPagination(totalPages, page, filteredProducts);
+				renderPagination(totalPages, page);
 			});
 		}
 
-		function renderPagination(totalPages, currentPage, filteredProducts = null) {
-			let paginationHtml = '';
+		/** 📌 Hiển thị phân trang */
+		function renderPagination(totalPages, currentPage) {
+			let paginationHtml = "";
 			for (let i = 1; i <= totalPages; i++) {
-				paginationHtml += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" data-page="${i}" data-filtered="${filteredProducts ? 'true' : 'false'}">${i}</button>`;
+				paginationHtml += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
 			}
 			$("#pagination").html(paginationHtml);
 		}
 
+		/** 📌 Xử lý sự kiện phân trang */
 		$(document).on("click", ".pagination-btn", function () {
-			let page = $(this).data("page");
-			let isFiltered = $(this).data("filtered") === "true";
-			currentPage = page;
-
-			if (isFiltered) {
-				let keyword = $("input[name='search-product']").val().toLowerCase();
-				let filteredProducts = allProducts.filter(product => product.name.toLowerCase().includes(keyword));
-				loadProducts(currentPage, filteredProducts);
-			} else {
-				loadProducts(currentPage);
-			}
+			currentPage = $(this).data("page");
+			let searchKeyword = $("input[name='search-product']").val().toLowerCase();
+			loadProducts(currentPage, activeCategory, searchKeyword);
 		});
 
-		// Tìm kiếm bằng JavaScript (lọc toàn bộ danh sách sản phẩm đã tải về)
-		$("input[name='search-product']").on("input", function () {
-			let keyword = $(this).val().toLowerCase();
+		/** 📌 Xử lý sự kiện lọc theo danh mục */
+		$(".filter-tope-group button").on("click", function () {
+			$(".filter-tope-group button").removeClass("how-active1");
+			$(this).addClass("how-active1");
+
+			activeCategory = $(this).data("filter").replace(".", ""); // Loại bỏ dấu `.`
 			currentPage = 1;
-
-			if (keyword.trim() === "") {
-				loadProducts(currentPage);
-			} else {
-				let filteredProducts = allProducts.filter(product => product.name.toLowerCase().includes(keyword));
-				loadProducts(currentPage, filteredProducts);
-			}
+			let searchKeyword = $("input[name='search-product']").val().toLowerCase();
+			loadProducts(currentPage, activeCategory, searchKeyword);
 		});
 
-		// Gọi API để lấy toàn bộ sản phẩm và hiển thị trang đầu tiên
-		fetchAllProducts().then(() => {
-			loadProducts(currentPage);
+		/** 📌 Xử lý sự kiện tìm kiếm */
+		$("input[name='search-product']").on("input", function () {
+			let searchKeyword = $(this).val().toLowerCase();
+			currentPage = 1;
+			loadProducts(currentPage, activeCategory, searchKeyword);
+		});
+
+		/** 📌 Gọi API danh mục trước, sau đó tải sản phẩm */
+		fetchCategories().then(() => {
+			fetchAllProducts().then(() => {
+				loadProducts(currentPage);
+			});
 		});
 	});
-
 </script>

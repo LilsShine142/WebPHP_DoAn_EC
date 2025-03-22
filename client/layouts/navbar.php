@@ -13,9 +13,15 @@
 						Chatbot
 					</a>
 
-					<a href="./pages/login.php" class="flex-c-m trans-04 p-lr-25">
-						My Account
+					<a href="#" class="flex-c-m trans-04 p-lr-25 account-menu">
+						Account
 					</a>
+					<div class="dropdown-account">
+						<a href="./pages/login.php">Login</a>
+						<a href="./pages/profile.php">Profile</a>
+						<a href="./pages/orders.php">Order</a>
+						<a id="logout-btn" href="#">Logout</a>
+					</div>
 				</div>
 			</div>
 		</div>

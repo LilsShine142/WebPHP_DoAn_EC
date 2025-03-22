@@ -11,6 +11,16 @@ class UserGateway
     $this->userRole = new UserRoleGateway($db);
   }
 
+  public function getByEmail(string $email): ?array{
+      $sql = "SELECT * FROM users WHERE email = :email";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindParam(":email", $email);
+      $stmt->execute();
+
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $user ?: null;
+  }
+
   public function getAll(?int $limit, ?int $offset): array | false
   {
     if ($limit && $offset) {

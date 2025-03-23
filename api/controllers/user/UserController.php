@@ -137,24 +137,44 @@ class UserController extends ErrorHandler
               ]);
               break;
 
-          case "POST":
-              $this->auths->verifyAction("CREATE_USER");
-              $data = (array) json_decode(file_get_contents("php://input"));
-              $errors = $this->getValidationErrors($data);
-              if (!empty($errors)) {
-                  $this->sendErrorResponse(422, $errors);
-                  break;
-              }
-              $data = $this->gateway->create($data);
-              unset($data["password"]);
-
-              http_response_code(201);
-              echo json_encode([
-                  "success" => true,
-                  "message" => "User created",
-                  "data" => $data
-              ]);
-              break;
+              case "POST":
+                // Lấy dữ liệu từ JSON body thay vì $_POST
+                $data = json_decode(file_get_contents("php://input"), true);
+            
+                $newEmail = $data['email'] ?? null;
+                $newPassword = $data['password'] ?? null;
+            
+                if ($newEmail && $newPassword) {
+                    $user = $this->gateway->getByEmail($newEmail);
+                    if ($user) {
+                        $this->sendErrorResponse(409, "User with email $newEmail already exists.");
+                        return;
+                    }
+            
+                    $userData = [
+                        "email" => $newEmail,
+                        "password" => $newPassword
+                    ];
+            
+                    $errors = $this->getValidationErrors($userData, true);
+                    if (!empty($errors)) {
+                        $this->sendErrorResponse(422, $errors);
+                        break;
+                    }
+            
+                    $createdUser = $this->gateway->create($userData);
+                    unset($createdUser["password"]); // Không trả về password
+            
+                    echo json_encode([
+                        "success" => true,
+                        "message" => "User created successfully",
+                        "data" => $createdUser
+                    ]);
+                    break;
+                } else {
+                    $this->sendErrorResponse(400, "Email and password are required.");
+                }
+              break;            
 
           default:
               $this->sendErrorResponse(405, "only allow GET, POST method");
@@ -167,20 +187,13 @@ class UserController extends ErrorHandler
     $errors = [];
 
     if ($new) { //check all fields for new user
-      if (empty($data["full_name"])) $errors[] = "full_name is required";
       if (empty($data["email"]) || !$this->utils->isValidEmailRobust($data["email"])) $errors[] = "valid email is required";
-      if (empty($data["phone_number"]) || !$this->utils->isValidVNPhoneNumber($data["phone_number"])) $errors[] = "valid phone_number is required";
       if (empty($data["password"]) || !$this->utils->isValidPassword($data["password"])) $errors[] = "valid password is required (hint: password must contain at least one letter and one number with min length = 8)";
     } else { //check fields that exist
-      if (array_key_exists("full_name", $data) && empty($data["full_name"])) $errors[] = "full_name is empty";
       if (
         array_key_exists("email", $data) &&
         (empty($data["email"]) || !$this->utils->isValidEmail($data["email"]))
       ) $errors[] = "email is empty or not a valid email";
-      if (
-        array_key_exists("phone_number", $data) &&
-        (empty($data["phone_number"]) || !$this->utils->isValidVNPhoneNumber($data["phone_number"]))
-      ) $errors[] = "phone_number is empty or not a valid phone number";
       if (
         array_key_exists("password", $data) &&
         (empty($data["password"]) || !$this->utils->isValidPassword($data["password"]))

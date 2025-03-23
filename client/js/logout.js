@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Kiểm tra trạng thái đăng nhập
     let user = localStorage.getItem("user");
     if (!user) {
-        // Nếu chưa đăng nhập, hiển thị "Login" thay vì "Account"
         document.querySelector(".dropdown-account").innerHTML = '<a href="./pages/login.php">Login</a>';
     }
 });

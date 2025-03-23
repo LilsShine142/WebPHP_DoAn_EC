@@ -43,13 +43,10 @@ class UserGateway
 
   public function create(array $data): array | false
   {
-    $sql = "INSERT INTO users (full_name, email, phone_number, password)
-      VALUES (:full_name, :email, :phone_number, :password)";
+    $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
 
     $stmt = $this->conn->prepare($sql);
-    $stmt->bindValue(":full_name", $data["full_name"], PDO::PARAM_STR);
     $stmt->bindValue(":email", $data["email"], PDO::PARAM_STR);
-    $stmt->bindValue(":phone_number", $data["phone_number"], PDO::PARAM_STR);
     $stmt->bindValue(":password", password_hash($data["password"], PASSWORD_DEFAULT), PDO::PARAM_STR);
     $stmt->execute();
 

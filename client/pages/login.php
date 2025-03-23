@@ -77,18 +77,13 @@
                 <form id="register-form" class="login100-form validate-form" action="register?form=" method="POST" style="display: none;">
                     <span class="login100-form-title">Create Account</span>
 
-                    <div class="wrap-input100 validate-input" data-validate="Username is required">
-                        <input class="input100" type="text" name="username" placeholder="Username">
-                        <span class="symbol-input100"><i class="fa fa-user" aria-hidden="true"></i></span>
-                    </div>
-
                     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" name="email" placeholder="Email">
+                        <input class="input100" type="text" name="newEmail" placeholder="Email">
                         <span class="symbol-input100"><i class="fa fa-envelope" aria-hidden="true"></i></span>
                     </div>
 
                     <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input class="input100" type="password" name="password" placeholder="Password">
+                        <input class="input100" type="password" name="newPassword" placeholder="Password">
                         <span class="symbol-input100"><i class="fa fa-lock" aria-hidden="true"></i></span>
                     </div>
 

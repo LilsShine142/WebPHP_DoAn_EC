@@ -17,31 +17,52 @@ $(document).ready(function () {
     // Xử lý đăng ký bằng AJAX
     $("#register-form").submit(function (e) {
         e.preventDefault();
+        
+        let email = $("input[name='newEmail']").val().trim();
+        let password = $("input[name='newPassword']").val().trim();
+        if (!email || !password) {
+            alert("Email and password are required.");
+            return;
+        }
+    
         $.ajax({
-            type: "POST",
-            url: "../backend/controllers/RegisterController.php",
-            data: $(this).serialize(),
+            url: "http://localhost:81/WebPHP_DoAn_EC/api/users",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ email: email, password: password }),
+            dataType: "json",
             success: function (response) {
-                alert(response);
-                if (response.trim() === "success") {
-                    $("#register-form").hide();
-                    $(".login100-form.validate-form").fadeIn();
-                }
+                alert("Registration successful! You can now log in.");
+                $("#register-form").hide();
+                $("#login-form").fadeIn();
+                document.title = "Login";
             },
-            error: function () {
-                alert("Có lỗi xảy ra khi đăng ký!");
-            }
+            error: function (xhr) {
+                try {
+                    let error = xhr.responseText ? JSON.parse(xhr.responseText) : { message: "Unknown error" };
+                    alert("Error: " + error.message);
+                } catch (e) {
+                    alert("Error: Invalid JSON response from server.");
+                    console.error("Parsing error:", e, "Response:", xhr.responseText);
+                }
+            }            
         });
-    });
+    });    
 
     // Xử lý đăng nhập bằng AJAX
     $("#login-form").submit(function (e) {
         e.preventDefault();
-        let email = $("input[name='email']").val();
-        let password = $("input[name='pass']").val();
+        let email = $("input[name='email']").val().trim();
+        let password = $("input[name='pass']").val().trim();
+    
+        // Kiểm tra nếu email hoặc password bị trống
+        if (!email || !password) {
+            alert("Vui lòng nhập đầy đủ email và mật khẩu.");
+            return; // Không gửi request
+        }
     
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/users?email=${email}&password=${password}`,
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
             method: "GET",
             dataType: "json",
             success: function (response) {
@@ -56,5 +77,5 @@ $(document).ready(function () {
                 alert("Error: " + error.message);
             }
         });
-    });           
+    });             
 });

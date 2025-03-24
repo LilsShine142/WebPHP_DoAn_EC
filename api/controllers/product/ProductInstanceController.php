@@ -5,6 +5,7 @@ class ProductInstanceController extends ErrorHandler {
   public function __construct(private ProductInstanceGateway $gateway, private Auths $auths) {}
 
   public function processRequest(string $method, ?string $sku, ?int $limit, ?int $offset): void {
+
     if($sku) {
       $this->processResourceRequest($method, $sku);
       return;

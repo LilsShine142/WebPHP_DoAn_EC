@@ -1,0 +1,22 @@
+Array
+(
+    [METHOD] => PUT
+    [POST] => Array
+        (
+        )
+
+    [FILES] => Array
+        (
+        )
+
+    [INPUT] => ----------------------------646137028935384745561478
+Content-Disposition: form-data; name="name"
+
+ehrh
+----------------------------646137028935384745561478
+Content-Disposition: form-data; name="model"
+
+fbf
+----------------------------646137028935384745561478--
+
+)

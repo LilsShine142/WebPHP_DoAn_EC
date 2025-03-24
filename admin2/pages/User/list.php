@@ -82,49 +82,13 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
                 <div class="row">
                     <div class="col-md-3">
                         <label class="form-label">User ID</label>
-                        <input type="text" name="id" class="form-control" placeholder="Enter User ID"  value="<?= $_GET['id'] ?? '' ?>">
+                        <input type="text" name="id" class="form-control" placeholder="Enter User ID" value="<?= $_GET['id'] ?? '' ?>">
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label">Contact information</label>
                         <input type="text" name="contact" class="form-control" placeholder="Enter phone number or email" value="<?= $_GET['contact'] ?? '' ?>">
                     </div>
-                    <?php
-                    // if ($type == 'employee') {
-                    //     echo '
-                    //     <div class="col-md-3">
-                    //         <label for="role">Select role:</label>
-                    //         <select class="form-control" id="role" name="role" required></select>
-                    //     </div>
-                    //     <!-- =============================== Call API để lấy danh sách các role =============================== -->
-                    //     <script>
-                    //         $(document).ready(function() {
-                    //             $.ajax({
-                    //                 url: `${BASE_API_URL}/api/users/roles`,
-                    //                 type: "GET",
-                    //                 contentType: "application/json",
-                    //                 dataType: "json",
-                    //                 success: function(response) {
-                    //                     if (response.success) {
-                    //                         let roles = response.data;
-                    //                         let roleSelect = $("#role");
-                    //                         roles.forEach(role => {
-                    //                             roleSelect.append(`<option value="${role.id}">${role.name}</option>`);
-                    //                         });
-                    //                     } else {
-                    //                         alert("Lỗi khi lấy danh sách role: " + response.message);
-                    //                     }
-                    //                 },
-                    //                 error: function(xhr, status, error) {
-                    //                     console.error("Lỗi:", xhr.responseText);
-                    //                     alert("Có lỗi xảy ra: " + xhr.responseText);
-                    //                 }
-                    //             });
-                    //         });
-                    //     </script>
-                    //     ';
-                    // }
-                    ?>
 
                     <div class="col-md-3">
                         <label class="form-label">From date</label>
@@ -355,30 +319,6 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
         }
 
         // Gọi API lấy chi tiết từng user
-        // function fetchUserDetails(users) {
-        //     console.log("users", users);
-        //     let userPromises = users.map(user => {
-        //         return $.ajax({
-        //             url: `${BASE_API_URL}/api/users/${user.user_id}`,
-        //             type: 'GET',
-        //             dataType: "json"
-        //         }).then(response => {
-        //             if (response.success) {
-        //                 return {
-        //                     ...response.data,
-        //                     role_id: user.role_id
-        //                 }; // Thêm role_id vào kết quả
-        //             }
-        //             return null;
-        //         }).catch(error => {
-        //             console.error("Error fetching user:", error);
-        //             return null;
-        //         });
-        //     });
-
-        //     return Promise.all(userPromises).then(userDetails => userDetails.filter(user => user !== null));
-        // }
-
         //Thay vì gọi API từng user, lất tất cả user từ API rồi lọc ra user cần thiết
         function fetchUserDetails(user_roles) {
             console.log("user_roles", user_roles);

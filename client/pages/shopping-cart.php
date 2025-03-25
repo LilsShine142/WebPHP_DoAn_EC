@@ -258,6 +258,14 @@
 
         if (newQuantity <= 0 || isNaN(newQuantity)) {
             $input.val(1);
+            updateCartItem(productVariationId, 1, $input);
+            return;
+        }
+        // nếu newQuantity > max thì newQuantity = max
+        const maxValue = parseInt($input.attr("max")) || Infinity;
+        if (newQuantity > maxValue) {
+            $input.val(maxValue);        
+            updateCartItem(productVariationId, maxValue, $input);
             return;
         }
         updateCartItem(productVariationId, newQuantity, $input);

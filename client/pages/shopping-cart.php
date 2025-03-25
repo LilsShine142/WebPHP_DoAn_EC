@@ -1,313 +1,360 @@
-<!-- Cart -->
-<div class="wrap-header-cart js-panel-cart">
-    <div class="s-full js-hide-cart"></div>
-
-    <div class="header-cart flex-col-l p-l-65 p-r-25">
-        <div class="header-cart-title flex-w flex-sb-m p-b-8">
-            <span class="mtext-103 cl2">
-                Your Cart
-            </span>
-
-            <div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
-                <i class="zmdi zmdi-close"></i>
-            </div>
-        </div>
-
-        <div class="header-cart-content flex-w js-pscroll">
-            <ul class="header-cart-wrapitem w-full">
-                <li class="header-cart-item flex-w flex-t m-b-12">
-                    <div class="header-cart-item-img">
-                        <img src="img/item-cart-01.jpg" alt="IMG">
-                    </div>
-
-                    <div class="header-cart-item-txt p-t-8">
-                        <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                            White Shirt Pleat
-                        </a>
-
-                        <span class="header-cart-item-info">
-                            1 x $19.00
-                        </span>
-                    </div>
-                </li>
-
-                <li class="header-cart-item flex-w flex-t m-b-12">
-                    <div class="header-cart-item-img">
-                        <img src="img/item-cart-02.jpg" alt="IMG">
-                    </div>
-
-                    <div class="header-cart-item-txt p-t-8">
-                        <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                            Converse All Star
-                        </a>
-
-                        <span class="header-cart-item-info">
-                            1 x $39.00
-                        </span>
-                    </div>
-                </li>
-
-                <li class="header-cart-item flex-w flex-t m-b-12">
-                    <div class="header-cart-item-img">
-                        <img src="img/item-cart-03.jpg" alt="IMG">
-                    </div>
-
-                    <div class="header-cart-item-txt p-t-8">
-                        <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                            Nixon Porter Leather
-                        </a>
-
-                        <span class="header-cart-item-info">
-                            1 x $17.00
-                        </span>
-                    </div>
-                </li>
-            </ul>
-
-            <div class="w-full">
-                <div class="header-cart-total w-full p-tb-40">
-                    Total: $75.00
-                </div>
-
-                <div class="header-cart-buttons flex-w w-full">
-                    <a href="index.php?a=shopcart"
-                        class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-                        View Cart
-                    </a>
-
-                    <a href="index.php?a=shopcart"
-                        class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
-                        Check Out
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- breadcrumb -->
-<div class="container">
-    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-        <a href="index.php" class="stext-109 cl8 hov-cl1 trans-04">
-            Home
-            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-        </a>
-
-        <span class="stext-109 cl4">
-            Shoping Cart
-        </span>
-    </div>
-</div>
-
-
-<!-- Shoping Cart -->
+<!-- Shopping Cart -->
 <form class="bg0 p-t-75 p-b-85">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                <div class="m-l-25 m-r--38 m-lr-0-xl">
-                    <div class="wrap-table-shopping-cart">
-                        <table class="table-shopping-cart">
-                            <tr class="table_head">
-                                <th class="column-1">Product</th>
-                                <th class="column-2"></th>
-                                <th class="column-3">Price</th>
-                                <th class="column-4">Quantity</th>
-                                <th class="column-5">Total</th>
-                            </tr>
-
-                            <tr class="table_row">
-                                <td class="column-1">
-                                    <div class="how-itemcart1">
-                                        <img src="img/item-cart-04.jpg" alt="IMG">
-                                    </div>
-                                </td>
-                                <td class="column-2">Fresh Strawberries</td>
-                                <td class="column-3">$ 36.00</td>
-                                <td class="column-4">
-                                    <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-minus"></i>
-                                        </div>
-
-                                        <input class="mtext-104 cl3 txt-center num-product" type="number"
-                                            name="num-product1" value="1">
-
-                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-plus"></i>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="column-5">$ 36.00</td>
-                            </tr>
-
-                            <tr class="table_row">
-                                <td class="column-1">
-                                    <div class="how-itemcart1">
-                                        <img src="img/item-cart-05.jpg" alt="IMG">
-                                    </div>
-                                </td>
-                                <td class="column-2">Lightweight Jacket</td>
-                                <td class="column-3">$ 16.00</td>
-                                <td class="column-4">
-                                    <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-minus"></i>
-                                        </div>
-
-                                        <input class="mtext-104 cl3 txt-center num-product" type="number"
-                                            name="num-product2" value="1">
-
-                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                            <i class="fs-16 zmdi zmdi-plus"></i>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="column-5">$ 16.00</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-                        <div class="flex-w flex-m m-r-20 m-tb-5">
-                            <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"
-                                name="coupon" placeholder="Coupon Code">
-
-                            <div
-                                class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-                                Apply coupon
-                            </div>
-                        </div>
-
-                        <div
-                            class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-                            Update Cart
-                        </div>
-                    </div>
-                </div>
+        <div class="m-lr-0-xl">
+            <div class="wrap-table-shopping-cart">
+                <table class="table-shopping-cart">
+                    <tr class="table_head">
+                        <th class="column-0"><input type="checkbox" class="select-all"></th>
+                        <th class="column-1">Product</th>
+                        <th class="column-2">Name</th>
+                        <th class="column-3">Variant</th>
+                        <th class="column-4">Price</th>
+                        <th class="column-5">Quantity</th>
+                        <th class="column-6">Total</th>
+                        <th class="column-7">Action</th>
+                    </tr>
+                </table>
             </div>
 
-            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                    <h4 class="mtext-109 cl2 p-b-30">
-                        Cart Totals
-                    </h4>
-
-                    <div class="flex-w flex-t bor12 p-b-13">
-                        <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Subtotal:
-                            </span>
-                        </div>
-
-                        <div class="size-209">
-                            <span class="mtext-110 cl2">
-                                $79.65
-                            </span>
-                        </div>
+            <!-- Fixed Purchase Bar -->
+            <div class="purchase-bar">
+                <div class="purchase-container">
+                    <!-- cột Select -->
+                    <div class="purchase-column">
+                        <input type="checkbox" class="select-all">
+                        <label class="select-all-label" style="font-size: 18px;">Select All</label>
                     </div>
-
-                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
-                        <div class="size-208 w-full-ssm">
-                            <span class="stext-110 cl2">
-                                Shipping:
-                            </span>
-                        </div>
-
-                        <div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
-                            <p class="stext-111 cl6 p-t-2">
-                                There are no shipping methods available. Please double check your address, or contact us
-                                if you need any help.
-                            </p>
-
-                            <div class="p-t-15">
-                                <span class="stext-112 cl8">
-                                    Calculate Shipping
-                                </span>
-
-                                <div class="bor8 bg0 m-b-12">
-                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
-                                        placeholder="Họ và tên">
-                                </div>
-                                <div class="bor8 bg0 m-b-12">
-                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
-                                        placeholder="Email">
-                                </div>
-                                <div class="bor8 bg0 m-b-12">
-                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
-                                        placeholder="Số điện thoại">
-                                </div>
-                                <div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
-                                    <select class="js-select2" name="time">
-                                        <option>Chọn tỉnh/thành phố</option>
-                                        <option>HCM</option>
-                                        <option>HN</option>
-                                    </select>
-                                    <div class="dropDownSelect2"></div>
-                                </div>
-
-                                <div class="bor8 bg0 m-b-12">
-                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state"
-                                        placeholder="Địa chỉ cụ thể">
-                                </div>
-
-                                <div class="bor8 bg0 m-b-22">
-                                    <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="postcode"
-                                        placeholder="Postcode / Zip">
-                                </div>
-
-                                <div class="flex-w">
-                                    <div
-                                        class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
-                                        Update Totals
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="">
-                                <span class="mtext-101 cl2">
-                                    Phương thức thanh toán
-                                </span>
-                            </div>
-
-                            <div class="">
-                                <div type="checkbox" class="">
-                                    <div>
-                                        <label for="cod">Thanh toán khi nhận hàng</label>
-                                        <input type="radio" id="cod" name="payment" value="cod">
-                                    </div>
-                                    <div>
-                                        <label for="cod">Thanh toán momo</label>
-                                        <input type="radio" id="cod" name="payment" value="cod">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <!-- cột Total -->
+                    <div class="purchase-column">
+                        <span class="mtext-106 cl2">Total (0 product):</span>
+                        <span class="mtext-106 cl2 total-amount">$ 36.00</span>
                     </div>
-
-                    <div class="flex-w flex-t ">
-                        <div class="size-208">
-                            <span class="mtext-101 cl2">
-                                Total:
-                            </span>
-                        </div>
-
-                        <div class="size-209 p-t-1">
-                            <span class="mtext-110 cl2">
-                                $79.65
-                            </span>
-                        </div>
+                    <!-- cột Purchase -->
+                    <div class="purchase-column">
+                        <a href="?content=pages/cart-checkout.php">
+                            <button class="purchase-button">Purchase</button>
+                        </a>
                     </div>
-
-                    <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-                        Proceed to Checkout
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 </form>
+
+
+
+<style>
+    .variant-select {
+        padding: 5px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        /* test color */
+        color: #057262;
+    }
+    .purchase-bar {
+        width: 100%;
+        background: #0be7c7;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .purchase-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: auto;
+    }
+    .purchase-column {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .purchase-button {
+        background: #057262;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .purchase-button:hover {
+        background: rgb(8, 182, 156);
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        const userData = localStorage.getItem("user");
+
+        if (userData) {
+            const userObject = JSON.parse(userData);
+            const user_id = userObject.id;
+
+            // Gọi API để lấy danh sách sản phẩm trong giỏ hàng
+            $.ajax({
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+                type: "GET",
+                success: function (cartResponse) {
+                    if (cartResponse.success && cartResponse.length > 0) {
+                        // $(".table-shopping-cart").find(".table_row").remove(); // Xóa dữ liệu cũ
+                        let totalAmount = 0; // Tổng tiền
+
+                        cartResponse.data.forEach((cartItem) => {
+                            // Gọi API để lấy chi tiết sản phẩm
+                            $.ajax({
+                                url: `http://localhost:81/WebPHP_DoAn_EC/api/products/variations/${cartItem.product_variation_id}`,
+                                type: "GET",
+                                success: function (productResponse) {
+                                    if (productResponse.success) {
+                                        const product = productResponse.data;
+                                        const productTotal = cartItem.quantity * product.price_cents;
+                                        totalAmount += productTotal;
+
+                                        // Thêm sản phẩm vào bảng giỏ hàng
+                                        $(".table-shopping-cart").append(`
+                                            <tr class="table_row">
+                                                <td class="column-0"><input type="checkbox" class="item-checkbox"></td>
+                                                <td class="column-1">
+                                                    <a href="../backend/uploads/products/${product.image_name}">
+                                                       <div class="how-itemcart1">
+                                                            <img src="../backend/uploads/products/${product.image_name}" alt="${product.product_id}">
+                                                        </div> 
+                                                    </a>
+                                                </td><td class="column-2" data-product-id="${product.product_id}">Loading...</td>
+                                                <td class="column-3">${product.watch_color} - ${product.watch_size_mm}mm</td>
+                                                <td class="column-4">${formatCurrency(product.price_cents)}</td>
+                                                <td class="column-5">
+                                                    <div class="wrap-num-product wrap-num-product-grey flex-w m-l-auto m-r-0">
+                                                        <div class="inside-num-product">
+                                                            <div class="btn-num-product-down btn-num-product-down-grey cl8 hov-btn3 trans-04 flex-c-m">
+                                                                <i class="fs-16 zmdi zmdi-minus"></i>
+                                                            </div>
+                                                            <input class="mtext-104 cl3 txt-center num-product" type="number"
+                                                                value="${cartItem.quantity}" min="1" max="${product.stock_quantity}">
+                                                            <div class="btn-num-product-up btn-num-product-up-grey cl8 hov-btn3 trans-04 flex-c-m">
+                                                                <i class="fs-16 zmdi zmdi-plus"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="column-6">${formatCurrency(productTotal)}</td>
+                                                <td class="column-7"><button class="delete-item" data-id="${cartItem.product_variation_id}">Delete</button></td>
+                                            </tr>
+                                        `);
+                                        // Gọi hàm để cập nhật tên sản phẩm
+                                        getNameOfVariation(product.product_id, `.table-shopping-cart [data-product-id='${product.product_id}']`);
+
+                                        // Cập nhật tổng tiền
+                                        $(".total-amount").text(formatCurrency(0));
+                                    }
+                                },
+                                error: function () {
+                                    console.log("Lỗi khi lấy thông tin sản phẩm.");
+                                }
+                            });
+                        });
+                    }
+                },
+                error: function () {
+                    console.log("Lỗi khi lấy giỏ hàng.");
+                }
+            });
+        } else {
+            console.log("Không tìm thấy dữ liệu user trong localStorage.");
+        }
+        // Khi nhấn vào checkbox "Select All"
+        $(".select-all").on("change", function () {
+            $(".select-all").prop("checked", this.checked);
+            $(".item-checkbox").prop("checked", this.checked);
+            updateTotalAmount();
+        });
+
+        // Khi nhấn vào nhãn "Select All"
+        $(".select-all-label").on("click", function () {
+            const selectAllCheckbox = $(".select-all");
+            selectAllCheckbox.prop("checked", !selectAllCheckbox.prop("checked")).trigger("change");
+        });
+
+        // Khi chọn/bỏ chọn từng sản phẩm
+        $(document).on("change", ".item-checkbox", function () {
+            const allChecked = $(".item-checkbox").length === $(".item-checkbox:checked").length;
+            $(".select-all").prop("checked", allChecked);
+            updateTotalAmount();
+        });
+    });
+
+    // func getNameOfVariation
+    function getNameOfVariation(product_id, element) {
+        $.ajax({
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/products/${product_id}`,
+            type: "GET",
+            success: function (response) {
+                if (response.success && response.data) {
+                    $(element).text(response.data.name); // Cập nhật trực tiếp vào ô cột column-2
+                }
+            },
+            error: function () {
+                console.error("Error loading product details.");
+            }
+        });
+    }
+
+    $(document).on("click", ".delete-item", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const productVariationId = $(this).data("id");
+        const userData = localStorage.getItem("user");
+
+        if (!userData) return;
+
+        const userObject = JSON.parse(userData);
+        const userId = userObject.id;
+
+        if (!confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?")) return;
+
+        $.ajax({
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+            type: "DELETE",
+            success: function (response) {
+                if (response.success) {
+                    $(`.delete-item[data-id='${productVariationId}']`).closest("tr").remove();
+                        updateCartCount();
+                }
+            }
+        });
+    });
+    
+    function updateCartCount() {
+        const userData = localStorage.getItem("user");
+
+        if (userData) {
+            const userObject = JSON.parse(userData);
+            const user_id = userObject.id;
+
+            $.ajax({
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+                type: "GET",
+                success: function(response) {
+                    const cartCount = response.length > 0 ? response.length : 0;
+                    $(".icon-header-noti").attr("data-notify", cartCount);
+                },
+                error: function() {
+                    $(".icon-header-noti").attr("data-notify", 0);
+                }
+            });
+        }
+    }
+
+    $(document).on("input", ".num-product", function () {
+        const $input = $(this);
+        const newQuantity = parseInt($input.val());
+        const productVariationId = $input.closest("tr").find(".delete-item").data("id");
+
+        if (newQuantity <= 0 || isNaN(newQuantity)) {
+            $input.val(1);
+            return;
+        }
+        updateCartItem(productVariationId, newQuantity, $input);
+    });
+
+    // Hàm gọi API cập nhật số lượng sản phẩm
+    function updateCartItem(productVariationId, quantity, $input) {
+        const userData = localStorage.getItem("user");
+
+        if (!userData) return;
+
+        const userObject = JSON.parse(userData);
+        const userId = userObject.id;
+
+        $.ajax({
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({ quantity: quantity }),
+            success: function (response) {
+                if (response.success) {
+                    updateCartUI($input, quantity);
+                } else {
+                    console.error("Cập nhật giỏ hàng thất bại.");
+                }
+            },
+            error: function () {
+                console.error("Lỗi khi gửi yêu cầu cập nhật giỏ hàng.");
+            }
+        });
+    }
+
+    // Hàm cập nhật giao diện giỏ hàng
+    function updateCartUI($input, quantity) {
+        const $row = $input.closest("tr");
+        const pricePerItem = 1000*parseFloat($row.find(".column-4").text().replace(/[^\d.]/g, ""));
+        const totalPrice = quantity * pricePerItem;
+
+        $row.find(".column-6").text(formatCurrency(totalPrice));
+
+        updateTotalAmount();
+    }
+
+    // Cập nhật tổng tiền của giỏ hàng
+    function updateTotalAmount() {
+        let totalAmount = 0;
+        let totalProducts = 0;
+
+        $(".table-shopping-cart .table_row").each(function () {
+            const $checkbox = $(this).find(".item-checkbox");
+            
+            if ($checkbox.prop("checked")) { // Kiểm tra checkbox có được tick không
+                const itemTotal = parseFloat($(this).find(".column-6").text().replace(/[^\d.]/g, ""));
+                totalAmount += itemTotal;
+                totalProducts++;
+            }
+        });
+
+        $(".total-amount").text(formatCurrency(totalAmount*1000));
+        $(".purchase-container .mtext-106").first().text(`Total (${totalProducts} product):`);
+    }
+
+    // Hàm định dạng tiền VND
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+    }
+
+    $(document).on("click", ".btn-num-product-up", function () {
+        const $input = $(this).closest(".wrap-num-product").find(".num-product");
+        let currentValue = parseInt($input.val());
+        const maxValue = parseInt($input.attr("max")) || Infinity; // Giới hạn tối đa
+
+        if (currentValue < maxValue) {
+            const newQuantity = currentValue + 1;
+            $input.val(newQuantity);
+
+            // Lấy productVariationId
+            const productVariationId = $input.closest("tr").find(".delete-item").data("id");
+
+            // Gọi hàm cập nhật giỏ hàng
+            updateCartItem(productVariationId, newQuantity, $input);
+        }
+    });
+
+    $(document).on("click", ".btn-num-product-down", function () {
+        const $input = $(this).closest(".wrap-num-product").find(".num-product");
+        let currentValue = parseInt($input.val());
+
+        if (currentValue > 1) {
+            const newQuantity = currentValue - 1;
+            $input.val(newQuantity);
+
+            // Lấy productVariationId
+            const productVariationId = $input.closest("tr").find(".delete-item").data("id");
+
+            // Gọi hàm cập nhật giỏ hàng
+            updateCartItem(productVariationId, newQuantity, $input);
+        }
+    });
+</script>

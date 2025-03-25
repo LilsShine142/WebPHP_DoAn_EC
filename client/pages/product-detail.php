@@ -131,7 +131,8 @@ if (!$product_id) {
                         let thumbPath = `../backend/uploads/products/${variation.image_name}`;
 
                         thumbnailsHtml += `<img src="${thumbPath}" class="thumbnail-img ${activeClass}" 
-                            onclick='changeMainImage(${JSON.stringify(variation)}, this)'>`;
+                        data-variation-id="${variation.id}"
+                        onclick='changeMainImage(${JSON.stringify(variation)}, this)'>`;
                     });
 
                     $("#thumbnail-list").html(thumbnailsHtml);
@@ -142,10 +143,74 @@ if (!$product_id) {
                 console.error("Error loading product variations.");
             }
         });
+
+        $(".addcart").on("click", function () {
+            addToCart();
+        });
     });
+
+    function addToCart() {
+        let userData = localStorage.getItem("user");
+        let userObject = JSON.parse(userData);
+        let userId = userObject.id;
+
+        if (!userId) {
+            alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+            return;
+        }
+
+        let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46; // Mặc định ID 46 nếu không có
+        let quantity = parseInt($(".num-product").val()) || 1;
+
+        let requestBody = {
+            user_id: userId,
+            product_variation_id: productVariationId,
+            quantity: quantity
+        };
+
+        $.ajax({
+            url: "http://localhost:81/WebPHP_DoAn_EC/api/carts",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestBody),
+            success: function (response) {
+                if (response.success) {
+                    alert("Sản phẩm đã được thêm vào giỏ hàng!");
+                    updateCartCount();
+                } else {
+                    alert("Không thể thêm vào giỏ hàng. Vui lòng thử lại.");
+                }
+            },
+            error: function () {
+                alert("Lỗi kết nối, vui lòng thử lại.");
+            }
+        });
+    }
+
+    function updateCartCount() {
+        const userData = localStorage.getItem("user");
+
+        if (userData) {
+            const userObject = JSON.parse(userData);
+            const user_id = userObject.id;
+
+            $.ajax({
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+                type: "GET",
+                success: function(response) {
+                    const cartCount = response.length > 0 ? response.length : 0;
+                    $(".icon-header-noti").attr("data-notify", cartCount);
+                },
+                error: function() {
+                    $(".icon-header-noti").attr("data-notify", 0);
+                }
+            });
+        }
+    }
 
     function changeMainImage(variation, element) {
         $("#product-image").attr("src", `../backend/uploads/products/${variation.image_name}`);
+        $("#product-image-link").attr("href", `../backend/uploads/products/${variation.image_name}`);
         $("#product-price").text(new Intl.NumberFormat("vi-VN").format(variation.price_cents) + " VND");
         $("#stock-quantity").text(`${variation.stock_quantity} products available`);
 

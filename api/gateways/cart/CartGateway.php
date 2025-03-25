@@ -27,7 +27,6 @@ class CartGateway {
   }
 
   public function create(array $data): array | false {
-    echo "run";
     $user_id = $data["user_id"];
     $product_variation_id = $data["product_variation_id"];
 
@@ -42,19 +41,6 @@ class CartGateway {
     $stmt->execute();
 
     return $this->get($user_id, $product_variation_id);
-  }
-
-  public function get(int $user_id, ?int $product_variation_id): array | false {
-    $sql = $user_id && $product_variation_id
-      ? "SELECT * FROM carts WHERE user_id = :user_id AND product_variation_id = :product_variation_id"
-      : "SELECT * FROM carts WHERE user_id = :user_id";
-
-    $stmt = $this->conn->prepare($sql);
-    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
-    if($product_variation_id) $stmt->bindValue(":product_variation_id", $product_variation_id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public function update(array $current, array $new): array | false {
@@ -76,6 +62,19 @@ class CartGateway {
     $stmt->execute();
 
     return $this->get($user_id, $product_variation_id);
+  }
+
+  public function get(int $user_id, ?int $product_variation_id): array | false {
+    $sql = $user_id && $product_variation_id
+      ? "SELECT * FROM carts WHERE user_id = :user_id AND product_variation_id = :product_variation_id"
+      : "SELECT * FROM carts WHERE user_id = :user_id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+    if($product_variation_id) $stmt->bindValue(":product_variation_id", $product_variation_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public function delete(int $user_id, ?int $product_variation_id): bool {

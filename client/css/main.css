@@ -1921,30 +1921,55 @@ input.num-product::-webkit-inner-spin-button {
   border-bottom: 1px solid #e6e6e6;
 }
 
+.table-shopping-cart .column-0 {
+  text-align: center;
+  width: 40px;
+  vertical-align: middle;
+}
+
+.table-shopping-cart .column-0 input{
+  display: block;
+  margin: 0 auto;
+}
+
+
 .table-shopping-cart .column-1 {
   width: 133px;
-  padding-left: 50px;
+  text-align: center;
 }
 
 .table-shopping-cart .column-2 {
   width: 220px;
-  font-size: 15px;
+  font-size: 16px;
+  text-align: center;
 }
 
 .table-shopping-cart .column-3 {
   width: 120px;
   font-size: 16px;
+  text-align: center;
 }
 
 .table-shopping-cart .column-4 {
   width: 145px;
-  text-align: right;
+  text-align: center;
 }
 
 .table-shopping-cart .column-5 {
-  width: 172px;
-  padding-right: 50px;
-  text-align: right;
+  width: 140px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.table-shopping-cart .column-6 {
+  width: 200px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.table-shopping-cart .column-7 {
+  width: 100px;
+  text-align: center;
   font-size: 16px;
 }
 
@@ -1954,10 +1979,6 @@ input.num-product::-webkit-inner-spin-button {
 
 .table-shopping-cart .table_row td {
   padding-bottom: 20px;
-}
-
-.table-shopping-cart .table_row td.column-1 {
-  padding-bottom: 30px;
 }
 
 .table-shopping-cart .table_head th {
@@ -2967,9 +2988,7 @@ input.num-product::-webkit-inner-spin-button {
 
 /*---------------------------------------------*/
 .how-itemcart1 {
-  width: 60px;
   position: relative;
-  margin-right: 20px;
   cursor: pointer;
 }
 
@@ -3538,6 +3557,15 @@ input.num-product::-webkit-inner-spin-button {
     width: 120px !important;
     margin-left: 10px !important;
     margin-right: 10px !important;
+    justify-content: center;
+}
+
+.inside-num-product{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  text-align: center;
 }
 
 .btn-num-product-down,
@@ -3602,4 +3630,18 @@ input.num-product::-webkit-inner-spin-button {
 .account-menu:hover + .dropdown-account,
 .dropdown-account:hover {
   display: block;
+}
+
+.btn-num-product-down-grey, .btn-num-product-up-grey {
+  background: #057262 !important;
+  color: #fff4f4 !important;
+}
+
+.btn-num-product-down-grey:hover,
+.btn-num-product-up-grey:hover {
+    background: #079c86 !important;
+}
+
+.wrap-num-product-grey {
+  border: 2px solid #057262 !important;
 }

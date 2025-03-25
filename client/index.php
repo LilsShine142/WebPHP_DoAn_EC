@@ -47,4 +47,5 @@ include("layouts/header.php");
 
 </body>
 <script src="../client/js/logout.js"></script>
+
 </html>

@@ -2,40 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // =================================LẤY THÔNG TIN SẢN PHẨM =================================
     // CALL API LẤY THÔNG TIN SẢN PHẨM
-
-    // function fetchAPIProductsAndVariations(productId) {
-    //     let productsAPI = productId ? `${BASE_API_URL}/api/products/${productId}` : `${BASE_API_URL}/api/products`;
-    //     let variationsAPI = productId ? `${BASE_API_URL}/api/products/variations?product_id=${productId}` : `${BASE_API_URL}/api/products/variations`;
-
-    //     // Gọi API song song bằng Promise.all
-    //     Promise.all([
-    //         $.ajax({ url: productsAPI, type: "GET", dataType: "json" }),
-    //         $.ajax({ url: variationsAPI, type: "GET", dataType: "json" })
-    //     ])
-    //         .then(([productsResponse, variationsResponse]) => {
-    //             if (productsResponse.success && variationsResponse.success) {
-    //                 let products = productsResponse.data;
-    //                 let variations = variationsResponse.data;
-
-    //                 // Gộp variations vào products dựa trên product_id
-    //                 let mergedProducts = products.map(product => {
-    //                     return {
-    //                         ...product,
-    //                         variations: variations.filter(v => v.product_id === product.id) // Lọc variations theo product_id
-    //                     };
-    //                 });
-
-    //                 console.log("Merged Products:", mergedProducts);
-    //                 loadProductDataToTable(mergedProducts);
-    //             } else {
-    //                 console.error("Lỗi khi tải dữ liệu sản phẩm hoặc biến thể");
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error("Lỗi API:", error);
-    //         });
-    // }
-
     function fetchAPIProducts(productId) {
         let productsAPI = productId ? `${BASE_API_URL}/api/products/${productId}` : `${BASE_API_URL}/api/products`;
         let brandsAPI = `${BASE_API_URL}/api/products/brands`;

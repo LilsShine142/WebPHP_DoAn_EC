@@ -144,24 +144,46 @@ if (!$product_id) {
             }
         });
 
-        $(".addcart").on("click", function () {
-            addToCart();
+        $(".addcart").on("click", async function () {
+            let userData = localStorage.getItem("user");
+            
+            let userObject = JSON.parse(userData);
+            let userId = userObject?.id;  // Dùng optional chaining để tránh lỗi nếu userObject null
+            let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46;
+            let newQuantity = parseInt($(".num-product").val()) || 1;
+            let existingQuantity = parseInt(await getQuantityOfProductInCartByUserIdAndVariationId(userId, productVariationId));
+            let maxQuantity = parseInt($(".num-product").attr("max"));
+            if ((existingQuantity + newQuantity) > maxQuantity) {
+                updateItemToCart(userId, productVariationId, maxQuantity);
+                return;
+            }
+            addNewItemToCart(userId, productVariationId, newQuantity);
         });
     });
 
-    function addToCart() {
-        let userData = localStorage.getItem("user");
-        let userObject = JSON.parse(userData);
-        let userId = userObject.id;
-
-        if (!userId) {
-            alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
-            return;
+    async function getQuantityOfProductInCartByUserIdAndVariationId(userId, productVariationId) {
+        if (!userId || !productVariationId) {
+            return 0;
         }
 
-        let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46; // Mặc định ID 46 nếu không có
-        let quantity = parseInt($(".num-product").val()) || 1;
+        try {
+            let response = await $.ajax({
+                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+                type: "GET"
+            });
 
+            if (response.success && response.data.length > 0) {
+                return response.data[0].quantity;  // Nếu data là mảng, lấy phần tử đầu tiên
+            } else {
+                return 0;
+            }
+        } catch (error) {
+            console.error("Error fetching cart data.", error);
+            return 0;
+        }
+    }
+
+    function addNewItemToCart(userId, productVariationId, quantity) {
         let requestBody = {
             user_id: userId,
             product_variation_id: productVariationId,
@@ -175,7 +197,6 @@ if (!$product_id) {
             data: JSON.stringify(requestBody),
             success: function (response) {
                 if (response.success) {
-                    alert("Sản phẩm đã được thêm vào giỏ hàng!");
                     updateCartCount();
                 } else {
                     alert("Không thể thêm vào giỏ hàng. Vui lòng thử lại.");
@@ -183,6 +204,25 @@ if (!$product_id) {
             },
             error: function () {
                 alert("Lỗi kết nối, vui lòng thử lại.");
+            }
+        });
+    }
+
+    function updateItemToCart(userId, productVariationId, quantity){
+        $.ajax({
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({ quantity: quantity }),
+            success: function (response) {
+                if (response.success) {
+                    console.log(response.message);
+                } else {
+                    console.error("Cập nhật giỏ hàng thất bại.");
+                }
+            },
+            error: function () {
+                console.error("Lỗi khi gửi yêu cầu cập nhật giỏ hàng.");
             }
         });
     }

@@ -77,7 +77,7 @@ class UserAddressController extends ErrorHandler
     switch ($method) {
       case "GET":
         if ($user_id) {
-          $data = $this->gateway->getByUserId($user_id);
+          $data = $this->gateway->getAddressByUserId($user_id);
 
           if (!$data) {
             echo json_encode([
@@ -140,7 +140,7 @@ class UserAddressController extends ErrorHandler
         if ($user_id) {
 
           // Kiểm tra xem user_id có địa chỉ hợp lệ không
-          $existingAddress = $this->gateway->getByUserId($user_id);
+          $existingAddress = $this->gateway->getAddressByUserId($user_id);
           if (!$existingAddress) {
             $this->sendErrorResponse(404, "No address found for user_id $user_id");
             return;

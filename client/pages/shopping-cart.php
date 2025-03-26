@@ -1,9 +1,15 @@
+<?php
+session_start();
+?>
+
+
 <!-- Shopping Cart -->
-<form class="bg0 p-t-75 p-b-85">
-    <div class="container">
+<form action="?content=pages/cart-checkout.php" method="POST" class="bg0 p-t-75 p-b-85">
+    <input type="hidden" name="selected_products" id="selected_products">
+    <div class="container bg0 p-t-75 p-b-85">
         <div class="m-lr-0-xl">
             <div class="wrap-table-shopping-cart">
-                <table class="table-shopping-cart">
+                <table id="cartTable" class="table-shopping-cart">
                     <tr class="table_head">
                         <th class="column-0"><input type="checkbox" class="select-all"></th>
                         <th class="column-1">Product</th>
@@ -32,9 +38,7 @@
                     </div>
                     <!-- cột Purchase -->
                     <div class="purchase-column">
-                        <a href="?content=pages/cart-checkout.php">
-                            <button class="purchase-button">Purchase</button>
-                        </a>
+                        <button type="submit" class="purchase-button" disabled>Purchase</button>
                     </div>
                 </div>
             </div>
@@ -120,7 +124,7 @@
                                             <tr class="table_row">
                                                 <td class="column-0"><input type="checkbox" class="item-checkbox"></td>
                                                 <td class="column-1">
-                                                    <a href="../backend/uploads/products/${product.image_name}">
+                                                    <a href="index.php?content=pages/product-detail.php&id=${product.product_id}">
                                                        <div class="how-itemcart1">
                                                             <img src="../backend/uploads/products/${product.image_name}" alt="${product.product_id}">
                                                         </div> 
@@ -172,6 +176,7 @@
             $(".select-all").prop("checked", this.checked);
             $(".item-checkbox").prop("checked", this.checked);
             updateTotalAmount();
+            updatePurchaseButton();
         });
 
         // Khi nhấn vào nhãn "Select All"
@@ -185,8 +190,48 @@
             const allChecked = $(".item-checkbox").length === $(".item-checkbox:checked").length;
             $(".select-all").prop("checked", allChecked);
             updateTotalAmount();
+            updatePurchaseButton();
         });
     });
+
+    $(".purchase-button").click(function (e) {
+        e.preventDefault(); // Ngăn form submit ngay lập tức
+
+        let selectedProducts = [];
+        $(".item-checkbox:checked").each(function () {
+            let row = $(this).closest("tr");
+            // lấy image link
+            let image = row.find(".how-itemcart1 img").attr("src");
+            // lấy tên sản phẩm
+            let name = row.find(".column-2").text();
+            // lấy variant
+            let variant = row.find(".column-3").text();
+            // lấy giá không còn formatCurrency
+            let price = unformatCurrency(row.find(".column-4").text());
+            // lấy số lượng
+            let quantity = row.find(".num-product").val();
+            // lấy tổng tiền
+            let total = unformatCurrency(row.find(".column-6").text());
+
+            selectedProducts.push({
+                image: image,
+                name: name,
+                variant: variant,
+                price: price,
+                quantity: quantity,
+                total: total
+            });
+        });
+        $("#selected_products").val(JSON.stringify(selectedProducts));
+        $(this).closest("form").submit();
+        sessionStorage.setItem('selected_products', JSON.stringify(selectedProducts));
+    });
+
+
+    function updatePurchaseButton() {
+        let hasCheckedItem = $(".item-checkbox:checked").length > 0;
+        $(".purchase-button").prop("disabled", !hasCheckedItem);
+    }
 
     // func getNameOfVariation
     function getNameOfVariation(product_id, element) {
@@ -326,6 +371,11 @@
 
         $(".total-amount").text(formatCurrency(totalAmount*1000));
         $(".purchase-container .mtext-106").first().text(`Total (${totalProducts} product):`);
+    }
+
+    // unformatCurrency
+    function unformatCurrency(currency) {
+        return parseFloat(currency.replace(/[^\d.]/g, ""));
     }
 
     // Hàm định dạng tiền VND

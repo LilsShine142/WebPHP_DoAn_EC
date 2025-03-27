@@ -1,8 +1,3 @@
-<?php
-session_start();
-?>
-
-
 <!-- Shopping Cart -->
 <form action="?content=pages/cart-checkout.php" method="POST" class="bg0 p-t-75 p-b-85">
     <input type="hidden" name="selected_products" id="selected_products">

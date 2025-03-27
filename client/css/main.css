@@ -2351,7 +2351,7 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .mtext-110 {
-  font-family: Poppins-Regular;
+  /* font-family: Poppins-Regular; */
   font-size: 18px;
   line-height: 1.222222;
 }

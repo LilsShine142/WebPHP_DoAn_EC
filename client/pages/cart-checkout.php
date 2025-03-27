@@ -86,7 +86,6 @@
 <!-- Modal chọn địa chỉ -->
 <div id="addressModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
         <h2 class="m-b-20">Delivery address</h2>
         <div id="addressList">
             <!-- Danh sách địa chỉ sẽ được đổ vào đây -->
@@ -94,23 +93,82 @@
         </div>
         <div class="buttons">
             <!-- btn cancel -->
-            <button class="close-btn">Cancel</button>
+            <button class="closeSwitchAddressModal">Cancel</button>
             <!-- btn confirm -->
-            <button id="confirmAddress">Confirm</button>
+            <button id="confirmSwitchAddress">Confirm</button>
         </div>
     </div>
 </div>
 
+<!-- Modal Update Address -->
+<div id="updateAddressModal" class="modal">
+    <div class="modal-content update-address-modal-content">
+        <h2 class="m-b-20">Update Address</h2>
+        <div id="addressUpdate">
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="fullName">Name</label>
+                    <input type="text" id="fullName" value="Đào Thanh Tú">
+                </div>
+                <div class="input-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" value="(+84) 886 766 143">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="prov-dist-ward">Province/City, District, Ward/Commune</label>
+                <input id="pdw-address" type="text">
+                <div class="prov-dist-ward" style="display: none;">
+                    <div class="pdw-container">
+                        <div class="switch-active province-btn pdw-active">Provinve</div>
+                        <div class="switch-active district-btn">District</div>
+                        <div class="switch-active ward-btn">Ward</div> 
+                    </div>
+                    <div class="p-w-r-choices">
+                        <div class="choices">
+                            <!-- Danh sách tỉnh/thành phố sẽ được đổ vào đây -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="specificAddress">Specific Address</label>
+                <input type="text" id="specificAddress" value="Tạp Quá Cô Huế">
+            </div>
+            <div class="address-type">
+                <!-- checkbox Set as default address -->
+                <input type="checkbox" id="defaultAddress" name="defaultAddress">
+                <label style="margin-bottom: 0;" for="defaultAddress">Set as default address</label>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="closeUpdateAddressModal">Back</button>
+            <button id="confirmChangeAddress">Confirm</button>
+        </div>
+    </div>
+</div>
+
+
 <!-- CSS cho modal -->
 <style>
+    .choice {
+        cursor: pointer;
+        padding: 0px 10px;
+        text-align: start;
+    }   
+    .choice span {    
+        color: rgb(76 48 48);
+    }
+    .choice:hover {
+        background-color: #f9f9f9;
+    }
     .modal {
         display: none;
         position: fixed;
         z-index: 1000;
         left: 0;
         top: 0;
-        width: 100%;
-        height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
     }
 
@@ -119,19 +177,46 @@
         margin: 10% auto;
         padding: 20px;
         border-radius: 8px;
-        width: 50%;
+        width: 60%;
         text-align: center;
         position: relative;
     }
 
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 24px;
-        cursor: pointer;
+    .input-group {
+        flex: 1; /* Chia đều không gian */
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
     }
-    #confirmAddress {
+
+    .input-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .input-group input{
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .input-group select {
+        width: 100%;
+    }
+
+    .address-type {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+
+
+    #confirmSwitchAddress, #confirmChangeAddress{
         padding: 10px 20px;
         background-color: #007bff;
         color: #fff;
@@ -140,7 +225,7 @@
         cursor: pointer;
         margin-top: 20px;
     }
-    .close-btn {
+    .closeUpdateAddressModal, .closeSwitchAddressModal {
         padding: 10px 20px;
         background-color:rgb(255, 219, 222);
         color: #333;
@@ -149,7 +234,7 @@
         cursor: pointer;
         margin-top: 20px;
     }
-    .close-btn:hover {
+    .closeUpdateAddressModal:hover, .closeSwitchAddressModal:hover {
         background-color:rgb(200, 101, 101);
         color: #fff;
     }
@@ -159,16 +244,243 @@
         gap: 20px;
         margin-top: 20px;
     }
+    .input-row {
+        display: flex;
+        gap: 20px; /* Khoảng cách giữa các ô nhập */
+    }
+
+    .update-address-modal-content { 
+        margin: 4% auto;
+        width: 36%;
+    }
+
+    .prov-dist-ward {
+        display: flex;
+        margin-bottom: 20px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        flex-direction: column;
+    }
+    .pdw-container {
+        width: 100%;
+        display: flex;
+        border-bottom: 1px solid #ccc;
+        justify-content: space-between;
+    }
+
+    .p-w-r-choices {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .choices{
+        width: 100%;
+        max-height: 100px; /* Giới hạn chiều cao để kích hoạt thanh cuộn */
+        overflow-y: auto; /* Bật thanh cuộn theo chiều dọc */
+    }
+
+    /* Thiết lập kiểu thanh cuộn cho trình duyệt WebKit (Chrome, Edge, Safari) */
+    .choices::-webkit-scrollbar {
+        width: 8px; /* Độ rộng thanh cuộn */
+    }
+
+    .choices::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Màu nền của thanh cuộn */
+        border-radius: 5px;
+    }
+
+    .choices::-webkit-scrollbar-thumb {
+        background: #888; /* Màu của thanh cuộn */
+        border-radius: 5px;
+    }
+
+    .choices::-webkit-scrollbar-thumb:hover {
+        background: #555; /* Màu thanh cuộn khi hover */
+    }
+
+    .pdw-container div {
+        width: 33.33%;        
+        padding: 8px 0;
+    }
+
+    .pdw-active {
+        color: #ff6b6b;
+        border-bottom: 3px solid #ff6b6b;
+        font-weight: bold;
+    }
 </style>
 
 
 <script>
+    
+    let selectedProvince = "";
+    let selectedDistrict = "";
+    let selectedWard = "";
+    let selectedProvinceCode = null;
+    let selectedDistrictCode = null;
+
+    // load dự liệu tỉnh huyện xã Việt Nam
+    document.addEventListener("DOMContentLoaded", function () {
+        const choicesContainer = document.querySelector(".choices");
+        const provinceBtn = document.querySelector(".province-btn");
+        const districtBtn = document.querySelector(".district-btn");
+        const wardBtn = document.querySelector(".ward-btn");
+        const pdwAddressInput = document.getElementById("pdw-address");
+
+        function loadProvinces(selectedCode = null) {
+            fetch("https://provinces.open-api.vn/api/p/")
+                .then(response => response.json())
+                .then(data => {
+                    renderChoices(data, "province", selectedCode);
+                })
+                .catch(error => console.error("Lỗi khi lấy danh sách tỉnh:", error));
+        }
+
+        function loadDistricts(provinceCode, selectedCode = null) {
+            fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+                .then(response => response.json())
+                .then(data => {
+                    renderChoices(data.districts, "district", selectedCode);
+                })
+                .catch(error => console.error("Lỗi khi lấy danh sách huyện:", error));
+        }
+
+        function loadWards(districtCode, selectedCode = null) {
+            fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
+                .then(response => response.json())
+                .then(data => {
+                    renderChoices(data.wards, "ward", selectedCode);
+                })
+                .catch(error => console.error("Lỗi khi lấy danh sách xã:", error));
+        }
+
+        function renderChoices(data, type, selectedCode = null) {
+            choicesContainer.innerHTML = "";
+
+            data.forEach(item => {
+                const choiceDiv = document.createElement("div");
+                choiceDiv.classList.add("choice");
+
+                const spanElement = document.createElement("span");
+                spanElement.textContent = item.name;
+                choiceDiv.appendChild(spanElement);
+                choicesContainer.appendChild(choiceDiv);
+
+                if (selectedCode && item.code === selectedCode) {
+                    choiceDiv.classList.add("selected");
+                }
+
+                choiceDiv.addEventListener("click", function () {
+                    if (type === "province") {
+                        selectedProvince = item.name;
+                        selectedProvinceCode = item.code;
+                        selectedDistrict = "";
+                        selectedWard = "";
+                        pdwAddressInput.value = selectedProvince;
+                        switchTab(districtBtn, () => loadDistricts(selectedProvinceCode));
+                    } else if (type === "district") {
+                        selectedDistrict = item.name;
+                        selectedDistrictCode = item.code;
+                        selectedWard = "";
+                        pdwAddressInput.value = `${selectedProvince}, ${selectedDistrict}`;
+                        switchTab(wardBtn, () => loadWards(selectedDistrictCode));
+                    } else if (type === "ward") {
+                        selectedWard = item.name;
+                        pdwAddressInput.value = `${selectedProvince}, ${selectedDistrict}, ${selectedWard}`;
+                        document.querySelector(".prov-dist-ward").style.display = "none";
+                    }
+                });
+            });
+        }
+
+        function switchTab(targetBtn, loadFunction) {
+            document.querySelectorAll(".switch-active").forEach(btn => btn.classList.remove("pdw-active"));
+            targetBtn.classList.add("pdw-active");
+            loadFunction();
+        }
+
+        provinceBtn.addEventListener("click", function () {
+            switchTab(provinceBtn, () => loadProvinces(selectedProvinceCode));
+        });
+
+        districtBtn.addEventListener("click", function () {
+            if (selectedProvinceCode) {
+                switchTab(districtBtn, () => loadDistricts(selectedProvinceCode, selectedDistrictCode));
+            } else {
+                alert("Vui lòng chọn tỉnh/thành trước!");
+            }
+        });
+
+        wardBtn.addEventListener("click", function () {
+            if (selectedDistrictCode) {
+                switchTab(wardBtn, () => loadWards(selectedDistrictCode));
+            } else {
+                alert("Vui lòng chọn quận/huyện trước!");
+            }
+        });
+
+        pdwAddressInput.addEventListener("click", function () {
+            document.querySelector(".prov-dist-ward").style.display = "block";
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest("#pdw-address, .prov-dist-ward")) {
+                document.querySelector(".prov-dist-ward").style.display = "none";
+            }
+        });
+
+        function initializeAddressSelection() {
+            if (selectedProvince) {
+                pdwAddressInput.value = `${selectedProvince}${selectedDistrict ? ", " + selectedDistrict : ""}${selectedWard ? ", " + selectedWard : ""}`;
+                loadProvinces(selectedProvinceCode);
+                if (selectedDistrict) {
+                    loadDistricts(selectedProvinceCode, selectedDistrictCode);
+                }
+                if (selectedWard) {
+                    loadWards(selectedDistrictCode);
+                }
+            } else {
+                loadProvinces();
+            }
+        }
+
+        initializeAddressSelection();
+    });
+
+    // Xử lý sự kiện switch-active cho tỉnh huyện xã btn
+    document.addEventListener("DOMContentLoaded", function () {
+        const switchButtons = document.querySelectorAll(".switch-active");
+
+        switchButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                // Xóa class "pdw-active" khỏi tất cả các nút
+                switchButtons.forEach(btn => btn.classList.remove("pdw-active"));
+
+                // Thêm class "pdw-active" cho nút được nhấn
+                this.classList.add("pdw-active");
+            });
+        });
+    });
+
     $(document).ready(function () {
+        $("#pdw-address").on("click", function (event) {
+            $(".prov-dist-ward").show(); // Hiển thị danh sách
+            event.stopPropagation(); // Ngăn sự kiện lan ra ngoài
+        });
+
+        // Ẩn khi click ra ngoài
+        $(document).on("click", function (event) {
+            if (!$(event.target).closest("#pdw-address, .prov-dist-ward").length) {
+                $(".prov-dist-ward").hide();
+            }
+        });
+
         const userData = localStorage.getItem("user");
         if (userData) {
             const userObject = JSON.parse(userData);
             const user_id = userObject.id;
-            const user_name = userObject.full_name;
             let addressOutId = null;
             $.ajax({
                 url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
@@ -177,7 +489,7 @@
                     if (response.success === true) {
                         response.data.forEach(address => {
                             if (parseInt(address.is_default) === 1) {
-                                $(".address-out").text(`${user_name}, ${address.phone_number}, ${address.name}, ${address.apartment_number} ${address.street}, ${address.ward}, ${address.district}, ${address.city_province}`);
+                                $(".address-out").text(`${address.name}, ${address.phone_number}, ${address.apartment_number} ${address.street}, ${address.ward}, ${address.district}, ${address.city_province}`);
                                 $(".default-tag").show();
                                 addressOutId = address.id;
                             }
@@ -201,12 +513,9 @@
                                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
                                         <input type="radio" id="${address.id}" name="selectedAddress" value="${address.id}" ${address.id == addressOutId ? "checked" : ""}>
                                         <label class="address-in" for="${address.id}" style="cursor: pointer; margin-bottom: 0;">
-                                            ${user_name}, ${address.phone_number}, ${address.apartment_number} ${address.street}, ${address.ward}, ${address.district}, ${address.city_province}
+                                            ${address.name}, ${address.phone_number}, ${address.apartment_number} ${address.street}, ${address.ward}, ${address.district}, ${address.city_province}
                                         </label>
                                         ${defaultTag}
-                                        <span style="background-color:rgb(231, 227, 214); color: #333; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px;">
-                                            ${address.name}
-                                        </span>
                                         <button class="edit-address" style="background-color: #007bff; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px; cursor: pointer;">
                                             Update
                                         </button>
@@ -220,10 +529,10 @@
                         });
 
                         // address-out = address-in khi nhấn nút "Confirm"
-                        $("#confirmAddress").on("click", function () {
+                        $("#confirmSwitchAddress").on("click", function () {
                             const selectedAddressId = $("input[name='selectedAddress']:checked").val();
                             const selectedAddress = response.data.find(address => address.id == selectedAddressId);
-                            $(".address-out").text(`${user_name}, ${selectedAddress.phone_number}, ${selectedAddress.name}, ${selectedAddress.apartment_number} ${selectedAddress.street}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city_province}`);
+                            $(".address-out").text(`${selectedAddress.name}, ${selectedAddress.phone_number}, ${selectedAddress.name}, ${selectedAddress.apartment_number} ${selectedAddress.street}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city_province}`);
                             addressOutId = selectedAddressId;
                             // don't show default tag if selectedAddress.is_default = 0
                             if (parseInt(selectedAddress.is_default) === 1) {
@@ -234,12 +543,7 @@
                             modal.hide();
                         });
 
-                        // Đóng modal khi nhấn nút X
-                        $(".close").on("click", function () {
-                            modal.hide();
-                        });
-
-                        $(".close-btn").on("click", function () {
+                        $(".closeSwitchAddressModal").on("click", function () {
                             modal.hide();
                         });
 
@@ -247,6 +551,88 @@
                         $(window).on("click", function (event) {
                             if ($(event.target).is(modal)) {
                                 modal.hide();
+                            }
+                        });
+
+                        $(document).on("click", ".edit-address", function () {
+                            // lấy thông tin address cần update
+                            const selectedAddressId = $(this).siblings("input[name='selectedAddress']").val();
+                            const selectedAddress = response.data.find(address => address.id == selectedAddressId);
+                            // đóng modal address
+                            modal.hide();
+                            // cập nhật biến tỉnh, huyện, xã toàn cục
+                            selectedProvince = selectedAddress.city_province;
+                            selectedDistrict = selectedAddress.district;
+                            selectedWard = selectedAddress.ward;
+                            // hiển thị modal update
+                            $("#updateAddressModal").show();
+                            // hiển thị dữ liệu của address cần update
+                            $("#fullName").val(selectedAddress.name);
+                            $("#phoneNumber").val(selectedAddress.phone_number);
+                            // pdw-address
+                            $("#pdw-address").val(`${selectedAddress.city_province}, ${selectedAddress.district}, ${selectedAddress.ward}`);
+                            // specificAddress
+                            $("#specificAddress").val(`${selectedAddress.apartment_number} ${selectedAddress.street}`);
+                            // defaultAddress
+                            if (parseInt(selectedAddress.is_default) === 1) {
+                                $("#defaultAddress").prop("checked", true);
+                            } else {
+                                $("#defaultAddress").prop("checked", false);
+                            }
+
+                            // Xử lý khi nhấn nút Confirm Change Address trong updateAddressModal
+                            $("#confirmChangeAddress").on("click", function () {
+                                
+                                // Tạo body dữ liệu từ các input trong modal
+                                const updatedAddressData = {
+                                    name: $("#fullName").val(),
+                                    street: $("#specificAddress").val().split(" ")[1], // Lấy tên đường
+                                    apartment_number: $("#specificAddress").val().split(" ")[0], // Lấy số nhà
+                                    ward: selectedWard,
+                                    district: selectedDistrict,
+                                    city_province: selectedProvince,
+                                    phone_number: $("#phoneNumber").val(),
+                                    is_default: $("#defaultAddress").is(":checked") ? true : false
+                                };
+
+                                // Gọi API cập nhật địa chỉ
+                                $.ajax({
+                                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses/${selectedAddressId}`,
+                                    type: "PUT",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(updatedAddressData),
+                                    success: function (response) {
+                                        if (response.success) {
+                                            alert("Cập nhật địa chỉ thành công!");
+                                            $("#updateAddressModal").hide();
+                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                            modal.show();
+                                        } else {
+                                            alert("Có lỗi xảy ra khi cập nhật địa chỉ.");
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log("Dữ liệu gửi lên:", updatedAddressData);
+
+                                        alert("Không thể kết nối đến server.");
+                                    }
+                                });
+                            });
+
+                        });
+
+                        // Đóng modal khi nhấn nút X hoặc nút Cancel
+                        $("#updateAddressModal .closeUpdateAddressModal").on("click", function () {
+                            $("#updateAddressModal").hide();
+                            // Hiển thị lại modal chọn địa chỉ
+                            modal.show();
+                        });
+
+                        // Ẩn modal khi click ra ngoài
+                        $(window).on("click", function (event) {
+                            if ($(event.target).is("#updateAddressModal")) {
+                                $("#updateAddressModal").hide();
+                                modal.show();
                             }
                         });
                     }

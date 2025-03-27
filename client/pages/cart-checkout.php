@@ -12,11 +12,15 @@
             </div>
 
             <div class="size-209">
-                <span class="mtext-110 cl2 address">
+                <span id="" class="mtext-110 cl2 address-out">
                     address..
                 </span>
-                <!-- tag Default and btn Change -->
-                 
+                <span class="default-tag" style="background-color: #ffcc00; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px; display: none;">
+                    Default
+                </span>
+                <button class="change-address" style="margin-left: 10px; padding: 5px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 3px; cursor: pointer;">
+                    Change
+                </button>
             </div>
         </div>
 
@@ -47,12 +51,12 @@
                         <div class="flex-w flex-t p-l-20" style="display: flex;
     align-items: center;">
                             <input class="m-r-10" type="radio" id="cod" name="payment" value="cod">
-                            <label class="m-b-0" for="cod">Thanh toán khi nhận hàng</label>
+                            <label class="m-b-0" for="cod">Payment on Receipt</label>
                         </div>
                         <div class="flex-w flex-t p-l-20" style="display: flex;
     align-items: center;">
                             <input class="m-r-10" type="radio" id="momo" name="payment" value="momo">
-                            <label class="m-b-0" for="cod">Thanh toán Momo</label>
+                            <label class="m-b-0" for="cod">Momo Payment</label>
                         </div>
                     </div>
                 </div>
@@ -79,36 +83,184 @@
     </div>
 </div>
 
+<!-- Modal chọn địa chỉ -->
+<div id="addressModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 class="m-b-20">Delivery address</h2>
+        <div id="addressList">
+            <!-- Danh sách địa chỉ sẽ được đổ vào đây -->
+             
+        </div>
+        <div class="buttons">
+            <!-- btn cancel -->
+            <button class="close-btn">Cancel</button>
+            <!-- btn confirm -->
+            <button id="confirmAddress">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- CSS cho modal -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 50%;
+        text-align: center;
+        position: relative;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    #confirmAddress {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .close-btn {
+        padding: 10px 20px;
+        background-color:rgb(255, 219, 222);
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .close-btn:hover {
+        background-color:rgb(200, 101, 101);
+        color: #fff;
+    }
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+</style>
+
+
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const userData = localStorage.getItem("user");
         if (userData) {
             const userObject = JSON.parse(userData);
             const user_id = userObject.id;
             const user_name = userObject.full_name;
+            let addressOutId = null;
             $.ajax({
                 url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
                 type: "GET",
-                success: function(response) {
+                success: function (response) {
                     if (response.success === true) {
-                        // if response.data[i].is_default === 1 then display that address
                         response.data.forEach(address => {
                             if (parseInt(address.is_default) === 1) {
-                                $(".address").text(`${user_name}, ${address.phone_number}, ${address.street}, ${address.apartment_number}, ${address.ward}, ${address.district}, ${address.city_province}`);
+                                $(".address-out").text(`${user_name}, ${address.phone_number}, ${address.name}, ${address.apartment_number} ${address.street}, ${address.ward}, ${address.district}, ${address.city_province}`);
+                                $(".default-tag").show();
+                                addressOutId = address.id;
+                            }
+                        });
+                        // Hiển thị modal khi nhấn nút "Change address"
+                        const modal = $("#addressModal");
+                        const addressList = $("#addressList");
+
+                        $(".change-address").on("click", function () {
+                            modal.show();
+                            addressList.empty(); // Xóa danh sách cũ
+
+                            response.data.forEach((address, index) => {
+                                let isDefault = parseInt(address.is_default) === 1;
+                                let defaultTag = isDefault 
+                                    ? `<span style="background-color: #ffcc00; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px;">
+                                        Default
+                                    </span>` 
+                                    : "";
+                                addressList.append(`
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                                        <input type="radio" id="${address.id}" name="selectedAddress" value="${address.id}" ${address.id == addressOutId ? "checked" : ""}>
+                                        <label class="address-in" for="${address.id}" style="cursor: pointer; margin-bottom: 0;">
+                                            ${user_name}, ${address.phone_number}, ${address.apartment_number} ${address.street}, ${address.ward}, ${address.district}, ${address.city_province}
+                                        </label>
+                                        ${defaultTag}
+                                        <span style="background-color:rgb(231, 227, 214); color: #333; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px;">
+                                            ${address.name}
+                                        </span>
+                                        <button class="edit-address" style="background-color: #007bff; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px; cursor: pointer;">
+                                            Update
+                                        </button>
+                                    </div>
+                                `);
+                            });
+                        });
+                        // ckeck radio when click on address-in 
+                        $(document).on("click", ".address-in", function () {
+                            $(this).prev("input[type='radio']").prop("checked", true);
+                        });
+
+                        // address-out = address-in khi nhấn nút "Confirm"
+                        $("#confirmAddress").on("click", function () {
+                            const selectedAddressId = $("input[name='selectedAddress']:checked").val();
+                            const selectedAddress = response.data.find(address => address.id == selectedAddressId);
+                            $(".address-out").text(`${user_name}, ${selectedAddress.phone_number}, ${selectedAddress.name}, ${selectedAddress.apartment_number} ${selectedAddress.street}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city_province}`);
+                            addressOutId = selectedAddressId;
+                            // don't show default tag if selectedAddress.is_default = 0
+                            if (parseInt(selectedAddress.is_default) === 1) {
+                                $(".default-tag").show();
+                            } else {
+                                $(".default-tag").hide();
+                            }
+                            modal.hide();
+                        });
+
+                        // Đóng modal khi nhấn nút X
+                        $(".close").on("click", function () {
+                            modal.hide();
+                        });
+
+                        $(".close-btn").on("click", function () {
+                            modal.hide();
+                        });
+
+                        // Ẩn modal khi click ra ngoài
+                        $(window).on("click", function (event) {
+                            if ($(event.target).is(modal)) {
+                                modal.hide();
                             }
                         });
                     }
                 },
-                error: function() {
+                error: function () {
                     console.log("Có lỗi xảy ra.");
                 }
             });
         } else {
             console.log("Không tìm thấy dữ liệu user trong localStorage.");
         }
-        // session storage
+
+        // Xử lý sessionStorage và hiển thị giỏ hàng
         const selected_products = JSON.parse(sessionStorage.getItem("selected_products"));
-        // hiển thị lên giao diện
         if (selected_products.length > 0) {
             let productHTML = "";
             let total = 0;
@@ -137,6 +289,7 @@
             $(".total").text(formatCurrency(1000 * total));
         }
     });
+    
     function formatCurrency(amount) {
         return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
     }

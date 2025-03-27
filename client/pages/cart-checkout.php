@@ -95,7 +95,7 @@
             <!-- btn cancel -->
             <button class="closeSwitchAddressModal">Cancel</button>
             <!-- btn confirm -->
-            <button id="confirmAddress">Confirm</button>
+            <button id="confirmSwitchAddress">Confirm</button>
         </div>
     </div>
 </div>
@@ -216,7 +216,7 @@
 
 
 
-    #confirmAddress, #confirmChangeAddress{
+    #confirmSwitchAddress, #confirmChangeAddress{
         padding: 10px 20px;
         background-color: #007bff;
         color: #fff;
@@ -529,10 +529,10 @@
                         });
 
                         // address-out = address-in khi nhấn nút "Confirm"
-                        $("#confirmAddress").on("click", function () {
+                        $("#confirmSwitchAddress").on("click", function () {
                             const selectedAddressId = $("input[name='selectedAddress']:checked").val();
                             const selectedAddress = response.data.find(address => address.id == selectedAddressId);
-                            $(".address-out").text(`${address.name}, ${selectedAddress.phone_number}, ${selectedAddress.name}, ${selectedAddress.apartment_number} ${selectedAddress.street}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city_province}`);
+                            $(".address-out").text(`${selectedAddress.name}, ${selectedAddress.phone_number}, ${selectedAddress.name}, ${selectedAddress.apartment_number} ${selectedAddress.street}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city_province}`);
                             addressOutId = selectedAddressId;
                             // don't show default tag if selectedAddress.is_default = 0
                             if (parseInt(selectedAddress.is_default) === 1) {

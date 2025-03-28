@@ -60,6 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
             <td>${product.stock_quantity}</td>
             <td>${product.stop_selling}</td>
             <td>
+                <a href="index.php?page=pages/Product/productVariationsList.php&product_id=${product.id}" 
+                    class="btn btn-primary">
+                    <i class="bi bi-boxes"></i>
+                </a>
+            </td>
+            <td>
                 <button class="btn btn-info btn-view" data-id="${product.id}">
                     <i class="fas fa-eye"></i>
                 </button>

@@ -55,7 +55,7 @@ if (!$product_id) {
                                         Buy now
                                     </button>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,37 +85,37 @@ if (!$product_id) {
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let productId = <?php echo json_encode($product_id); ?>;
         let maxStock = 1;
 
         // Fetch product details
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/products/${productId}`,
+            url: `${BASE_API_URL}/api/products/${productId}`,
             type: "GET",
-            success: function (response) {
+            success: function(response) {
                 if (response.success && response.data) {
                     let product = response.data;
                     $("#product-name").text(product.name);
                     $("#product-description").text(product.description);
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Error loading product details.");
             }
         });
 
         // Fetch product variations
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/products/variations?product_id=${productId}`,
+            url: `${BASE_API_URL}/api/products/variations?product_id=${productId}`,
             type: "GET",
-            success: function (response) {
+            success: function(response) {
                 if (response.success && response.data.length > 0) {
                     let variations = response.data;
                     let firstVariation = variations[0];
@@ -139,16 +139,16 @@ if (!$product_id) {
                     updateQuantityControls();
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Error loading product variations.");
             }
         });
 
-        $(".addcart").on("click", async function () {
+        $(".addcart").on("click", async function() {
             let userData = localStorage.getItem("user");
-            
+
             let userObject = JSON.parse(userData);
-            let userId = userObject?.id;  // Dùng optional chaining để tránh lỗi nếu userObject null
+            let userId = userObject?.id; // Dùng optional chaining để tránh lỗi nếu userObject null
             let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46;
             let newQuantity = parseInt($(".num-product").val()) || 1;
             let existingQuantity = parseInt(await getQuantityOfProductInCartByUserIdAndVariationId(userId, productVariationId));
@@ -168,12 +168,12 @@ if (!$product_id) {
 
         try {
             let response = await $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+                url: `${BASE_API_URL}/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
                 type: "GET"
             });
 
             if (response.success && response.data.length > 0) {
-                return response.data[0].quantity;  // Nếu data là mảng, lấy phần tử đầu tiên
+                return response.data[0].quantity; // Nếu data là mảng, lấy phần tử đầu tiên
             } else {
                 return 0;
             }
@@ -191,37 +191,39 @@ if (!$product_id) {
         };
 
         $.ajax({
-            url: "http://localhost:81/WebPHP_DoAn_EC/api/carts",
+            url: `${BASE_API_URL}/api/carts`,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(requestBody),
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     updateCartCount();
                 } else {
                     alert("Không thể thêm vào giỏ hàng. Vui lòng thử lại.");
                 }
             },
-            error: function () {
+            error: function() {
                 alert("Lỗi kết nối, vui lòng thử lại.");
             }
         });
     }
 
-    function updateItemToCart(userId, productVariationId, quantity){
+    function updateItemToCart(userId, productVariationId, quantity) {
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+            url: `${BASE_API_URL}/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
             type: "PUT",
             contentType: "application/json",
-            data: JSON.stringify({ quantity: quantity }),
-            success: function (response) {
+            data: JSON.stringify({
+                quantity: quantity
+            }),
+            success: function(response) {
                 if (response.success) {
                     console.log(response.message);
                 } else {
                     console.error("Cập nhật giỏ hàng thất bại.");
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Lỗi khi gửi yêu cầu cập nhật giỏ hàng.");
             }
         });
@@ -235,7 +237,7 @@ if (!$product_id) {
             const user_id = userObject.id;
 
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+                url: `${BASE_API_URL}/api/carts?user_id=${user_id}`,
                 type: "GET",
                 success: function(response) {
                     const cartCount = response.length > 0 ? response.length : 0;
@@ -275,7 +277,7 @@ if (!$product_id) {
         $("#weight").text(variation.weight_milligrams / 1000);
         $("#release-date").text(new Date(variation.release_date).toLocaleDateString());
 
-        fetchOSName(variation.os_id, function (osName) {
+        fetchOSName(variation.os_id, function(osName) {
             $("#os-name").text(osName);
         });
 
@@ -287,16 +289,16 @@ if (!$product_id) {
 
     function fetchOSName(osId, callback) {
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/products/os/${osId}`,
+            url: `${BASE_API_URL}/api/products/os/${osId}`,
             type: "GET",
-            success: function (response) {
+            success: function(response) {
                 if (response.success && response.data) {
                     callback(response.data.name);
                 } else {
                     callback("Unknown OS");
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Error loading OS name.");
                 callback("Unknown OS");
             }
@@ -304,7 +306,7 @@ if (!$product_id) {
     }
 
     function updateQuantityControls() {
-        $(".btn-num-product-down, .btn-num-product-up").off("click").on("click", function (event) {
+        $(".btn-num-product-down, .btn-num-product-up").off("click").on("click", function(event) {
             event.preventDefault();
             let input = $(this).closest(".wrap-num-product").find(".num-product");
             let currentValue = parseInt(input.val()) || 1;
@@ -316,7 +318,7 @@ if (!$product_id) {
             }
         });
 
-        $(".num-product").off("change blur").on("change blur", function () {
+        $(".num-product").off("change blur").on("change blur", function() {
             let value = parseInt($(this).val()) || 1;
             $(this).val(Math.max(1, Math.min(value, maxStock)));
         });

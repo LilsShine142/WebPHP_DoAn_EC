@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-
+    // Lấy id từ URL
+    function getParameterByName(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
     // =================================LẤY THÔNG TIN  BIẾN THỂ SẢN PHẨM (variations) =================================
     // CALL API LẤY THÔNG TIN PHIÊN BẢN SẢN PHẨM
 
     function fetchAPIProductsVariations(productId) {
-        let productsVariationsAPI = productId
-            ? `${BASE_API_URL}/api/products/variations/${productId}`
-            : `${BASE_API_URL}/api/products/variations`;
+        let productsVariationsAPI = `${BASE_API_URL}/api/products/variations?product_id=${productId}`
 
         let productInstanceAPI = `${BASE_API_URL}/api/products/instances`;
 
@@ -48,6 +50,10 @@ document.addEventListener("DOMContentLoaded", function () {
         let productVariationTable = document.getElementById("product-variations-table");
         productVariationTable.innerHTML = "";
         let index = 0;
+        if (!productVariationData || productVariationData.length === 0) {
+            productVariationTable.innerHTML = `<tr><td colspan="11" class="text-center">No data available</td></tr>`;
+            return;
+        }
         productVariationData.forEach((variation) => {
             console.log("index:", index);
             console.log("watch_size_mm:", variation.watch_size_mm);
@@ -85,7 +91,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     $(document).ready(function () {
-        fetchAPIProductsVariations(); // Gọi API để load danh sách sản phẩm
+        let productId = getParameterByName('product_id'); // Lấy ID từ URL
+        console.log("Product ID:", productId);
+
+        if (productId) {
+            fetchAPIProductsVariations(productId);
+        }
+        loadProductVariationsDataToTable(null); // Gọi API để load danh sách sản phẩm
     });
 
     // ================================= CHI TIẾT PHIÊN BẢN SẢN PHẨM =================================

@@ -1,3 +1,25 @@
+<!-- notice when cart is empty -->
+<div class="alert alert-warning" role="alert" style="display: none;">
+    <strong>Your cart is empty!</strong> Please add product into your cart.
+    <!-- btn chuyển hướng qua trang chủ -->
+    <a href="index.php?content=pages/home.php" class="btn btn-primary">Back to shopping page</a>
+</div>  
+
+<style>
+    .alert-warning {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: 80%;
+        max-width: 600px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }   
+</style>
+
 <!-- Shopping Cart -->
 <form action="?content=pages/cart-checkout.php" method="POST" class="bg0 p-t-75 p-b-85">
     <input type="hidden" name="selected_products" id="selected_products">
@@ -29,7 +51,7 @@
                     <!-- cột Total -->
                     <div class="purchase-column">
                         <span class="mtext-106 cl2">Total (0 product):</span>
-                        <span class="mtext-106 cl2 total-amount">$ 36.00</span>
+                        <span class="mtext-106 cl2 total-amount">0</span>
                     </div>
                     <!-- cột Purchase -->
                     <div class="purchase-column">
@@ -118,15 +140,15 @@
                                         const product = productResponse.data;
                                         const productTotal = cartItem.quantity * product.price_cents;
                                         totalAmount += productTotal;
-
+                                        const product_variation_id = cartItem.product_variation_id;
                                         // Thêm sản phẩm vào bảng giỏ hàng
                                         $(".table-shopping-cart").append(`
                                             <tr class="table_row">
                                                 <td class="column-0"><input type="checkbox" class="item-checkbox"></td>
-                                                <td class="column-1">
+                                                <td id="${product_variation_id}" class="column-1">
                                                     <a href="index.php?content=pages/product-detail.php&id=${product.product_id}">
                                                        <div class="how-itemcart1">
-                                                            <img src="../backend/uploads/products/${product.image_name}" alt="${product.product_id}">
+                                                            <img src="../backend/uploads/products/${product.image_name}" alt="${product_variation_id}">
                                                         </div> 
                                                     </a>
                                                 </td><td class="column-2" data-product-id="${product.product_id}">Loading...</td>
@@ -200,6 +222,8 @@
         let selectedProducts = [];
         $(".item-checkbox:checked").each(function () {
             let row = $(this).closest("tr");
+            // lấy product_variation_id
+            let product_variation_id = row.find(".column-1").attr("id");
             // lấy image link
             let image = row.find(".how-itemcart1 img").attr("src");
             // lấy tên sản phẩm
@@ -214,6 +238,7 @@
             let total = unformatCurrency(row.find(".column-6").text());
 
             selectedProducts.push({
+                product_variation_id: product_variation_id,
                 image: image,
                 name: name,
                 variant: variant,
@@ -294,6 +319,27 @@
                 }
             });
         }
+    }
+
+    function isEmptyCartAlert() {
+        const userData = localStorage.getItem("user");
+
+        if (userData) {
+            const userObject = JSON.parse(userData);
+            const user_id = userObject.id;
+
+            $.ajax({
+                url: `${BASE_API_URL}/api/carts?user_id=${user_id}`,
+                type: "GET",
+                success: function(response) {
+                    if (response.success && response.length > 0) {
+                        $(".alert-warning").hide();
+                    } else {
+                        $(".alert-warning").show();
+                    }
+                }
+            });
+        } 
     }
 
     $(document).on("input", ".num-product", function() {

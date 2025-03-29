@@ -47,16 +47,16 @@
                 </div>
 
                 <div class="p-l-40">
-                    <div type="checkbox" class="flex-w flex-t">
+                    <div class="flex-w flex-t">
                         <div class="flex-w flex-t p-l-20" style="display: flex;
     align-items: center;">
-                            <input class="m-r-10" type="radio" id="cod" name="payment" value="cod">
+                            <input class="m-r-10" type="radio" id="cod" name="payment" value="COD">
                             <label class="m-b-0" for="cod">Payment on Receipt</label>
                         </div>
                         <div class="flex-w flex-t p-l-20" style="display: flex;
     align-items: center;">
-                            <input class="m-r-10" type="radio" id="momo" name="payment" value="momo">
-                            <label class="m-b-0" for="cod">Momo Payment</label>
+                            <input class="m-r-10" type="radio" id="momo" name="payment" value="Momo">
+                            <label class="m-b-0" for="momo">Momo Payment</label>
                         </div>
                     </div>
                 </div>
@@ -680,6 +680,104 @@
         return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
     }
     $(".checkout-button").click(function() {
-        sessionStorage.removeItem("selected_products");
+        const userData = localStorage.getItem("user");
+        if (userData) {
+            const userObject = JSON.parse(userData);
+            const user_id = userObject.id;
+            const total = $(".total").text().replace(/[^0-9]/g, "");
+            const deliveryAddress = $(".address-out").text();
+            const orderDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+            const paymentMethod = $("input[name='payment']:checked").val();
+            const estimateReceivedDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace("T", " ");
+            const receivedDate = new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace("T", " ");
+
+            // Gọi API tạo đơn hàng
+            $.ajax({
+                url: "http://localhost:81/WebPHP_DoAn_EC/api/orders",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    user_id: user_id,
+                    total_cents: total,
+                    delivery_address: deliveryAddress,
+                    order_date: orderDate,
+                    delivery_state_id: 1,
+                    estimate_received_date: estimateReceivedDate,
+                    received_date: receivedDate,
+                    payment_method: paymentMethod
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        const order_id = response.data.id;
+                        // Lưu order_id vào sessionStorage để sử dụng sau này
+                        sessionStorage.setItem("order_id", order_id);
+
+                        const selected_products = JSON.parse(sessionStorage.getItem("selected_products"));
+                        selected_products.forEach(product => {
+                            $.ajax({
+                                url: `${BASE_API_URL}/api/carts?user_id=${user_id}&product_variation_id=${product.product_variation_id}`,
+                                type: "DELETE",
+                                success: function(response) {
+                                    if (response.success) {
+                                        console.log("Xóa sản phẩm khỏi giỏ hàng thành công!");
+                                    } else {
+                                        alert("Có lỗi xảy ra khi xóa sản phẩm khỏi giỏ hàng.");
+                                    }
+                                }
+                            });
+                            // gọi api get /products/instances?product_variation_id=455&quantity=2 để lấy mảng sku cho variation
+                            $.ajax({
+                                url: `http://localhost:81/WebPHP_DoAn_EC/api/products/instances?product_variation_id=${product.product_variation_id}&quantity=${product.quantity}`,
+                                type: "GET",
+                                success: function (response) {
+                                    if (response.success) {
+                                        response.data.forEach(instance => {
+                                            const sku = instance.sku;
+                                            $.ajax({
+                                                url: "http://localhost:81/WebPHP_DoAn_EC/api/orders/items",
+                                                type: "POST",
+                                                contentType: "application/json",
+                                                data: JSON.stringify({
+                                                    order_id: order_id,
+                                                    product_instance_sku: sku,
+                                                    price_cents: product.price * 1000
+                                                }),
+                                                success: function (response) {
+                                                    if (response.success) {
+                                                        console.log("Đặt hàng sku thành công!");
+                                                    } else {
+                                                        alert("Có lỗi xảy ra khi đặt hàng.");
+                                                    }
+                                                },
+                                                error: function () {
+                                                    alert("Không thể kết nối đến server.");
+                                                }
+                                            });
+                                        });
+                                    } else {
+                                        alert("Có lỗi xảy ra khi lấy SKU.");
+                                    }
+                                },
+                                error: function () {
+                                    alert("Không thể kết nối đến server.");
+                                }
+                            });
+                            
+                        });
+                    } else {
+                        alert("Có lỗi xảy ra khi đặt hàng.");
+                    }
+                    sessionStorage.removeItem("selected_products");
+                    sessionStorage.removeItem("order_id");
+                    alert("Đặt hàng thành công!");
+                    window.location.href = "http://localhost:81/WebPHP_DoAn_EC/client/index.php?content=pages/shopping-cart.php"; // Chuyển hướng về trang giỏ hàng
+                },
+                error: function () {
+                    alert("Không thể kết nối đến server.");
+                }
+            });
+        } else {
+            alert("Vui lòng đăng nhập để đặt hàng.");
+        }
     });
 </script>

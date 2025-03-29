@@ -49,9 +49,9 @@ if (!$product_id) {
                                             </button>
                                         </div>
                                         <span id="stock-quantity">... products available</span>
-                                        <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail addcart">
+                                        <span class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail addcart">
                                             Add to cart
-                                        </button>
+                                        </span>
                                         <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 buynow" type="submit">
                                             Buy now
                                         </button>

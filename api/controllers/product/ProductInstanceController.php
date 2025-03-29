@@ -65,13 +65,29 @@ class ProductInstanceController extends ErrorHandler {
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
     switch($method) {
       case "GET":
-        $data = $this->gateway->getAll($limit, $offset);
-
-        echo json_encode([
-          "success" => true,
-          "length" => count($data),
-          "data" => $data
-        ]);
+        // getByProductVariationIdAndQuantity
+        if(!empty($_GET["product_variation_id"]) && !empty($_GET["quantity"])) {
+          $this->auths->verifyAction("READ_PRODUCT_INSTANCE");
+          $data = $this->gateway->getByProductVariationIdAndQuantity($_GET["product_variation_id"], $_GET["quantity"]);
+          if ($data) {
+            echo json_encode([
+              "success" => true,
+              "length" => count($data),
+              "data" => $data
+            ]);
+          } else {
+            $this->sendErrorResponse(404, "Product instance not found");
+          }
+        }
+        // get all product instances
+        else {
+          $this->auths->verifyAction("READ_PRODUCT_INSTANCE");
+          $res = $this->gateway->getAll($limit, $offset);
+          echo json_encode([
+            "success" => true,
+            "data" => $res
+          ]);
+        }
         break;
 
       case "POST":

@@ -82,6 +82,18 @@ class ProductInstanceGateway {
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  // getByProductVariationId
+  public function getByProductVariationIdAndQuantity($variationId, $quantity): array | false {
+    $sql = "SELECT * FROM product_instances WHERE product_variation_id = :product_variation_id AND is_sold = false LIMIT :quantity";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":product_variation_id", $variationId, PDO::PARAM_INT);
+    $stmt->bindValue(":quantity", $quantity, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function update(array $current, array $new): array | false {
     $sql = "UPDATE product_instances SET
       goods_receipt_note_id = :goods_receipt_note_id,

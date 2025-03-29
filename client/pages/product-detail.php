@@ -333,6 +333,7 @@ if (!$product_id) {
     $(".buynow").click(function (e) {
         e.preventDefault(); // Ngăn form submit ngay lập tức
         let selectedProducts = [];
+        let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46;
         let image = document.getElementById("product-image").src;
         let name = document.getElementById("product-name").innerText;
         let variant = document.getElementById("watch-color").innerText + " - " + document.getElementById("watch-size").innerText + "mm";
@@ -341,6 +342,7 @@ if (!$product_id) {
         let total = price * quantity;
 
         selectedProducts.push({
+            product_variation_id: productVariationId,
             image: image,
             name: name,
             variant: variant,

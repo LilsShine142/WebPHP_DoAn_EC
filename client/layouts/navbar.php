@@ -91,7 +91,7 @@
 			const user_id = userObject.id; // Lấy id
 			// call ajax http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=1 to take the response.length
 			$.ajax({
-				url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+				url: `${BASE_API_URL}/api/carts?user_id=${user_id}`,
 				type: "GET",
 				success: function(response) {
 					if (response.length > 0) {

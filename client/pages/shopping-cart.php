@@ -53,6 +53,7 @@
         /* test color */
         color: #057262;
     }
+
     .purchase-bar {
         width: 100%;
         background: #0be7c7;
@@ -60,6 +61,7 @@
         text-align: center;
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     }
+
     .purchase-container {
         display: flex;
         justify-content: space-between;
@@ -67,11 +69,13 @@
         max-width: 1200px;
         margin: auto;
     }
+
     .purchase-column {
         display: flex;
         align-items: center;
         gap: 10px;
     }
+
     .purchase-button {
         background: #057262;
         color: white;
@@ -81,13 +85,14 @@
         cursor: pointer;
         border-radius: 5px;
     }
+
     .purchase-button:hover {
         background: rgb(8, 182, 156);
     }
 </style>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         const userData = localStorage.getItem("user");
 
         if (userData) {
@@ -96,9 +101,9 @@
 
             // Gọi API để lấy danh sách sản phẩm trong giỏ hàng
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+                url: `${BASE_API_URL}/api/carts?user_id=${user_id}`,
                 type: "GET",
-                success: function (cartResponse) {
+                success: function(cartResponse) {
                     if (cartResponse.success && cartResponse.length > 0) {
                         // $(".table-shopping-cart").find(".table_row").remove(); // Xóa dữ liệu cũ
                         let totalAmount = 0; // Tổng tiền
@@ -106,9 +111,9 @@
                         cartResponse.data.forEach((cartItem) => {
                             // Gọi API để lấy chi tiết sản phẩm
                             $.ajax({
-                                url: `http://localhost:81/WebPHP_DoAn_EC/api/products/variations/${cartItem.product_variation_id}`,
+                                url: `${BASE_API_URL}/api/products/variations/${cartItem.product_variation_id}`,
                                 type: "GET",
-                                success: function (productResponse) {
+                                success: function(productResponse) {
                                     if (productResponse.success) {
                                         const product = productResponse.data;
                                         const productTotal = cartItem.quantity * product.price_cents;
@@ -152,14 +157,14 @@
                                         $(".total-amount").text(formatCurrency(0));
                                     }
                                 },
-                                error: function () {
+                                error: function() {
                                     console.log("Lỗi khi lấy thông tin sản phẩm.");
                                 }
                             });
                         });
                     }
                 },
-                error: function () {
+                error: function() {
                     console.log("Lỗi khi lấy giỏ hàng.");
                 }
             });
@@ -167,7 +172,7 @@
             console.log("Không tìm thấy dữ liệu user trong localStorage.");
         }
         // Khi nhấn vào checkbox "Select All"
-        $(".select-all").on("change", function () {
+        $(".select-all").on("change", function() {
             $(".select-all").prop("checked", this.checked);
             $(".item-checkbox").prop("checked", this.checked);
             updateTotalAmount();
@@ -175,13 +180,13 @@
         });
 
         // Khi nhấn vào nhãn "Select All"
-        $(".select-all-label").on("click", function () {
+        $(".select-all-label").on("click", function() {
             const selectAllCheckbox = $(".select-all");
             selectAllCheckbox.prop("checked", !selectAllCheckbox.prop("checked")).trigger("change");
         });
 
         // Khi chọn/bỏ chọn từng sản phẩm
-        $(document).on("change", ".item-checkbox", function () {
+        $(document).on("change", ".item-checkbox", function() {
             const allChecked = $(".item-checkbox").length === $(".item-checkbox:checked").length;
             $(".select-all").prop("checked", allChecked);
             updateTotalAmount();
@@ -231,20 +236,20 @@
     // func getNameOfVariation
     function getNameOfVariation(product_id, element) {
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/products/${product_id}`,
+            url: `${BASE_API_URL}/api/products/${product_id}`,
             type: "GET",
-            success: function (response) {
+            success: function(response) {
                 if (response.success && response.data) {
                     $(element).text(response.data.name); // Cập nhật trực tiếp vào ô cột column-2
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Error loading product details.");
             }
         });
     }
 
-    $(document).on("click", ".delete-item", function (event) {
+    $(document).on("click", ".delete-item", function(event) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -259,17 +264,17 @@
         if (!confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?")) return;
 
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+            url: `${BASE_API_URL}/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
             type: "DELETE",
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $(`.delete-item[data-id='${productVariationId}']`).closest("tr").remove();
-                        updateCartCount();
+                    updateCartCount();
                 }
             }
         });
     });
-    
+
     function updateCartCount() {
         const userData = localStorage.getItem("user");
 
@@ -278,7 +283,7 @@
             const user_id = userObject.id;
 
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${user_id}`,
+                url: `${BASE_API_URL}/api/carts?user_id=${user_id}`,
                 type: "GET",
                 success: function(response) {
                     const cartCount = response.length > 0 ? response.length : 0;
@@ -291,7 +296,7 @@
         }
     }
 
-    $(document).on("input", ".num-product", function () {
+    $(document).on("input", ".num-product", function() {
         const $input = $(this);
         const newQuantity = parseInt($input.val());
         const productVariationId = $input.closest("tr").find(".delete-item").data("id");
@@ -304,7 +309,7 @@
         // nếu newQuantity > max thì newQuantity = max
         const maxValue = parseInt($input.attr("max")) || Infinity;
         if (newQuantity > maxValue) {
-            $input.val(maxValue);        
+            $input.val(maxValue);
             updateCartItem(productVariationId, maxValue, $input);
             return;
         }
@@ -321,18 +326,20 @@
         const userId = userObject.id;
 
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
+            url: `${BASE_API_URL}/api/carts?user_id=${userId}&product_variation_id=${productVariationId}`,
             type: "PUT",
             contentType: "application/json",
-            data: JSON.stringify({ quantity: quantity }),
-            success: function (response) {
+            data: JSON.stringify({
+                quantity: quantity
+            }),
+            success: function(response) {
                 if (response.success) {
                     updateCartUI($input, quantity);
                 } else {
                     console.error("Cập nhật giỏ hàng thất bại.");
                 }
             },
-            error: function () {
+            error: function() {
                 console.error("Lỗi khi gửi yêu cầu cập nhật giỏ hàng.");
             }
         });
@@ -341,7 +348,7 @@
     // Hàm cập nhật giao diện giỏ hàng
     function updateCartUI($input, quantity) {
         const $row = $input.closest("tr");
-        const pricePerItem = 1000*parseFloat($row.find(".column-4").text().replace(/[^\d.]/g, ""));
+        const pricePerItem = 1000 * parseFloat($row.find(".column-4").text().replace(/[^\d.]/g, ""));
         const totalPrice = quantity * pricePerItem;
 
         $row.find(".column-6").text(formatCurrency(totalPrice));
@@ -354,9 +361,9 @@
         let totalAmount = 0;
         let totalProducts = 0;
 
-        $(".table-shopping-cart .table_row").each(function () {
+        $(".table-shopping-cart .table_row").each(function() {
             const $checkbox = $(this).find(".item-checkbox");
-            
+
             if ($checkbox.prop("checked")) { // Kiểm tra checkbox có được tick không
                 const itemTotal = parseFloat($(this).find(".column-6").text().replace(/[^\d.]/g, ""));
                 totalAmount += itemTotal;
@@ -364,7 +371,7 @@
             }
         });
 
-        $(".total-amount").text(formatCurrency(totalAmount*1000));
+        $(".total-amount").text(formatCurrency(totalAmount * 1000));
         $(".purchase-container .mtext-106").first().text(`Total (${totalProducts} product):`);
     }
 
@@ -375,10 +382,13 @@
 
     // Hàm định dạng tiền VND
     function formatCurrency(amount) {
-        return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND"
+        }).format(amount);
     }
 
-    $(document).on("click", ".btn-num-product-up", function () {
+    $(document).on("click", ".btn-num-product-up", function() {
         const $input = $(this).closest(".wrap-num-product").find(".num-product");
         let currentValue = parseInt($input.val());
         const maxValue = parseInt($input.attr("max")) || Infinity; // Giới hạn tối đa
@@ -395,7 +405,7 @@
         }
     });
 
-    $(document).on("click", ".btn-num-product-down", function () {
+    $(document).on("click", ".btn-num-product-down", function() {
         const $input = $(this).closest(".wrap-num-product").find(".num-product");
         let currentValue = parseInt($input.val());
 

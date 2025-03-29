@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    // GẮN THÊM BASE_API_URL VÀO ĐÂY VÌ Ở INDEX KHÔNG TRUYỀN ĐƯỢC VÀO FILE JS NÀY
+    const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
     // Chuyển đổi giữa form đăng nhập và đăng ký
     $("#show-register").click(function (e) {
         e.preventDefault();
@@ -13,20 +15,20 @@ $(document).ready(function () {
         $("#login-form").fadeIn();
         document.title = "Login"; // Đổi tiêu đề thành "Login"
     });
-
+    
     // Xử lý đăng ký bằng AJAX
     $("#register-form").submit(function (e) {
         e.preventDefault();
-        
+        console.log("register-form");
         let email = $("input[name='newEmail']").val().trim();
         let password = $("input[name='newPassword']").val().trim();
         if (!email || !password) {
             alert("Email and password are required.");
             return;
         }
-    
+        
         $.ajax({
-            url: "http://localhost:81/WebPHP_DoAn_EC/api/users",
+            url: `${BASE_API_URL}/api/users`,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({ email: email, password: password }),
@@ -51,21 +53,24 @@ $(document).ready(function () {
 
     // Xử lý đăng nhập bằng AJAX
     $("#login-form").submit(function (e) {
+        console.log("login-form");
         e.preventDefault();
         let email = $("input[name='email']").val().trim();
         let password = $("input[name='pass']").val().trim();
-    
+        console.log(email);
+        console.log(password);
         // Kiểm tra nếu email hoặc password bị trống
         if (!email || !password) {
             alert("Vui lòng nhập đầy đủ email và mật khẩu.");
             return; // Không gửi request
         }
-    
+        
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+            url: `${BASE_API_URL}/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
             method: "GET",
             dataType: "json",
             success: function (response) {
+                console.log(response);
                 alert(response.message); // Hiển thị thông báo đăng nhập thành công
                 // Lưu thông tin user vào localStorage
                 localStorage.setItem("user", JSON.stringify(response.data));

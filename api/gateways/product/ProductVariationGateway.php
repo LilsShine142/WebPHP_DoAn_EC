@@ -1,13 +1,17 @@
 <?php
 
-class ProductVariationGateway {
+class ProductVariationGateway
+{
   private PDO $conn;
 
-  public function __construct(Database $db) {
+  public function __construct(Database $db)
+  {
     $this->conn = $db->getConnection();
   }
 
-  public function create(array $data): array | false { //TODO auto gen product_instances
+  public function create(array $data): array | false
+  { //TODO auto gen product_instances
+    
     $sql = "INSERT INTO product_variations (
       product_id,
       watch_size_mm,
@@ -93,26 +97,28 @@ class ProductVariationGateway {
     return $this->get($this->conn->lastInsertId());
   }
 
-  public function getAll(?int $limit, ?int $offset): array | false {
-    if($limit && $offset) {
+  public function getAll(?int $limit, ?int $offset): array | false
+  {
+    if ($limit && $offset) {
       $sql = "SELECT * FROM product_variations LIMIT :limit OFFSET :offset";
-    } elseif($limit) {
+    } elseif ($limit) {
       $sql = "SELECT * FROM product_variations LIMIT :limit";
-    } elseif($offset) {
+    } elseif ($offset) {
       $sql = "SELECT * FROM product_variations LIMIT 18446744073709551615 OFFSET :offset";
     } else {
       $sql = "SELECT * FROM product_variations";
     }
 
     $stmt = $this->conn->prepare($sql);
-    if($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
-    if($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    if ($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    if ($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function get(int $id): array | false {
+  public function get(int $id): array | false
+  {
     $sql = "SELECT * FROM product_variations WHERE id = :id";
 
     $stmt = $this->conn->prepare($sql);
@@ -122,25 +128,41 @@ class ProductVariationGateway {
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function getByProductId(int $productId, ?int $limit, ?int $offset): array | false {
+  public function getByProductId(int $productId, ?int $limit, ?int $offset): array | false
+  {
     $sql = "SELECT * FROM product_variations WHERE product_id = :product_id";
     if ($limit && $offset) {
       $sql .= " LIMIT :limit OFFSET :offset";
     } elseif ($limit) {
-        $sql .= " LIMIT :limit";
+      $sql .= " LIMIT :limit";
     } elseif ($offset) {
-        $sql .= " LIMIT 18446744073709551615 OFFSET :offset";
+      $sql .= " LIMIT 18446744073709551615 OFFSET :offset";
     }
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(":product_id", $productId, PDO::PARAM_INT);
     if ($limit) $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
     if ($offset) $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
-    
+
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function update(array $current, array $new): array | false {
+  public function update(array $current, array $new): array | false
+  {
+    // Kiểm tra nếu có ảnh mới (dưới dạng Base64)
+    if (isset($new["image_base64"])) {
+      // Giải mã Base64 và lưu ảnh
+      $imageName = $this->saveBase64Image($new["image_base64"]);
+
+      // Nếu lưu ảnh thất bại, trả về false
+      if ($imageName === false) {
+        return false;
+      }
+    } else {
+      // Nếu không có ảnh mới, giữ ảnh cũ
+      $imageName = $current["image_name"];
+    }
+
     $sql = "UPDATE product_variations SET
       product_id = :product_id,
       watch_size_mm = :watch_size_mm,
@@ -176,7 +198,7 @@ class ProductVariationGateway {
     $stmt->bindValue(":watch_color", $new["watch_color"] ?? $current["watch_color"], PDO::PARAM_STR);
     $stmt->bindValue(":price_cents", $new["price_cents"] ?? $current["price_cents"], PDO::PARAM_INT);
     $stmt->bindValue(":base_price_cents", $new["base_price_cents"] ?? $current["base_price_cents"], PDO::PARAM_INT);
-    $stmt->bindValue(":image_name", $new["image_name"] ?? $current["image_name"], PDO::PARAM_STR);
+    $stmt->bindValue(":image_name", $imageName, PDO::PARAM_STR);
     $stmt->bindValue(":display_size_mm", $new["display_size_mm"] ?? $current["display_size_mm"], PDO::PARAM_INT);
     $stmt->bindValue(":display_type", $new["display_type"] ?? $current["display_type"], PDO::PARAM_STR);
     $stmt->bindValue(":resolution_h_px", $new["resolution_h_px"] ?? $current["resolution_h_px"], PDO::PARAM_INT);
@@ -202,7 +224,8 @@ class ProductVariationGateway {
     return $this->get($current["id"]);
   }
 
-  public function delete(int $id): bool {
+  public function delete(int $id): bool
+  {
     $sql = $this->hasConstrain($id)
       ? "UPDATE product_variations SET stop_selling = true WHERE id = :id"
       : "DELETE FROM product_variations WHERE id = :id";
@@ -212,7 +235,8 @@ class ProductVariationGateway {
     return $stmt->execute();
   }
 
-  private function hasConstrain(int $id): bool {
+  private function hasConstrain(int $id): bool
+  {
     $sql = "SELECT EXISTS (
       SELECT 1 FROM carts WHERE product_variation_id = :product_variation_id
       UNION
@@ -226,4 +250,24 @@ class ProductVariationGateway {
     return (bool) $stmt->fetchColumn();
   }
 
+  private function saveBase64Image(string $base64Image): string | false
+  {
+    $uploadDir = __DIR__ . "/../../../backend/uploads/products/";
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0777, true); // Tạo thư mục nếu chưa tồn tại
+    }
+
+    // Tạo tên file duy nhất
+    $imageName = uniqid() . ".png"; // Mặc định lưu dưới dạng PNG
+    $targetFile = $uploadDir . $imageName;
+
+    // Giải mã Base64 và lưu file
+    $imageData = base64_decode($base64Image);
+    if (file_put_contents($targetFile, $imageData)) {
+      return $imageName;
+    } else {
+      error_log("Lỗi khi lưu ảnh từ Base64.");
+      return false;
+    }
+  }
 }

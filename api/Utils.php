@@ -27,6 +27,10 @@ class Utils {
     // $pattern = '/^[a-z]+-[a-z]+-[a-z0-9]+-[0-9]+-[a-z]+-[a-z]+-[0-9]+$/'; // Improved regex
 
     // return preg_match($pattern, $sku);
+    //TẠM THỜI SO SÁNH SKU VỚI INSTANCES
+    if ($sku === "instances") {
+      return false;
+    }
     return true;
   }
 

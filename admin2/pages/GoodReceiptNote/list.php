@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery -->
@@ -46,25 +45,24 @@
                     <tr>
                         <th>#</th>
                         <th>ID</th>
-                        <th>Image</th>
-                        <th>Product name</th>
-                        <th>Brand</th>
-                        <th>Category</th>
-                        <th>Stock quantity</th>
-                        <th>Stop selling</th>
-                        <th>View product variations</th>
+                        <th>Name</th>
+                        <th>Provider</th>
+                        <th>Staff</th>
+                        <th>Total Price</th>
+                        <th>Quantity</th>
+                        <th>Created At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="product-table">
-
+                <tbody id="good_receipt_note-table">
+                    <!-- VIẾT MÃ JS CALL API VÀ RENDER DỮ LIỆU TẠI ĐÂY -->
                 </tbody>
             </table>
         </div>
     </div>
 
     <!-- ModalView -->
-    <div class="modal fade" id="modalView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalViewLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="modalView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalViewLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -105,10 +103,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal Update -->
-    <div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalUpdateLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalUpdateLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -173,12 +171,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
-    <script src="assets/js/Product/Validation.js"></script>
-    <script src="assets/js/Product/ProductAction.js"></script>
+    <script src="assets/js/GoodReceiptNote/validationGoodReceiptNote.js"></script>
+    <script src="assets/js/GoodReceiptNote/goodReceiptNoteActions.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </body>

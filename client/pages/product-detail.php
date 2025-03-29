@@ -10,83 +10,85 @@ if (!$product_id) {
 <link rel="stylesheet" href="../css/product-detail.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<div class="js-modal1 p-t-60 p-b-20 show-modal1">
-    <div class="overlay-modal1 js-hide-modal1"></div>
-    <div class="container">
-        <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
-            <div class="row d-flex">
-                <div class="col-md-7 d-flex">
-                    <div class="col-md-2"></div>
-                    <div id="thumbnail-list" class="product-thumbnails"></div>
-                    <div class="col-md-10 p-b-30">
-                        <div class="wrap-pic-w pos-relative">
-                            <img id="product-image" src="" alt="IMG-PRODUCT">
-                            <a id="product-image-link" class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04">
-                                <i class="fa fa-expand"></i>
-                            </a>
+<form action="?content=pages/cart-checkout.php" method="POST">
+    <div class="js-modal1 p-t-60 p-b-20 show-modal1">
+        <div class="overlay-modal1 js-hide-modal1"></div>
+        <div class="container">
+            <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+                <div class="row d-flex">
+                    <div class="col-md-7 d-flex">
+                        <div class="col-md-2"></div>
+                        <div id="thumbnail-list" class="product-thumbnails"></div>
+                        <div class="col-md-10 p-b-30">
+                            <div class="wrap-pic-w pos-relative">
+                                <img id="product-image" src="" alt="IMG-PRODUCT">
+                                <a id="product-image-link" class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04">
+                                    <i class="fa fa-expand"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-5 product-infor">
-                    <div class="p-r-50 p-t-5 p-lr-0-lg">
-                        <h4 id="product-name" class="mtext-105 cl2 js-name-detail p-b-14">Loading...</h4>
-                        <span id="product-price" class="mtext-106 cl2">...</span>
-                        <p id="product-description" class="stext-102 cl3 p-t-23">Loading...</p>
+                    <div class="col-md-5 product-infor">
+                        <div class="p-r-50 p-t-5 p-lr-0-lg">
+                            <h4 id="product-name" class="mtext-105 cl2 js-name-detail p-b-14">Loading...</h4>
+                            <span id="product-price" class="mtext-106 cl2">...</span>
+                            <p id="product-description" class="stext-102 cl3 p-t-23">Loading...</p>
 
-                        <div class="p-t-33">
-                            <div class="flex-w flex-r-m p-b-10">
-                                <div class="size-204 flex-w flex-m respon6-next" style="width: 100%;">
-                                    <span>Quantity</span>
-                                    <div class="wrap-num-product">
-                                        <button class="btn-num-product-down">
-                                            <i class="fa fa-minus"></i>
+                            <div class="p-t-33">
+                                <div class="flex-w flex-r-m p-b-10">
+                                    <div class="size-204 flex-w flex-m respon6-next" style="width: 100%;">
+                                        <span>Quantity</span>
+                                        <div class="wrap-num-product">
+                                            <button class="btn-num-product-down">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <input class="num-product" type="number" name="num-product" value="1" min="1">
+                                            <button class="btn-num-product-up">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <span id="stock-quantity">... products available</span>
+                                        <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail addcart">
+                                            Add to cart
                                         </button>
-                                        <input class="num-product" type="number" name="num-product" value="1" min="1">
-                                        <button class="btn-num-product-up">
-                                            <i class="fa fa-plus"></i>
+                                        <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 buynow" type="submit">
+                                            Buy now
                                         </button>
                                     </div>
-                                    <span id="stock-quantity">... products available</span>
-                                    <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail addcart">
-                                        Add to cart
-                                    </button>
-                                    <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail buynow">
-                                        Buy now
-                                    </button>
-                                </div>
-                            </div>  
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Specifications -->
+                <div class="variation-details bg-light p-3 rounded w-100 mt-4" style="padding-left: 8rem !important;">
+                    <h5 class="mb-3">Technical Specifications</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Size:</strong> <span id="watch-size"></span> mm</p>
+                            <p><strong>Color:</strong> <span id="watch-color"></span></p>
+                            <p><strong>Display:</strong> <span id="display-type"></span> (<span id="display-size"></span> inch)</p>
+                            <p><strong>Resolution:</strong> <span id="resolution"></span> px</p>
+                            <p><strong>RAM/ROM:</strong> <span id="ram-rom"></span></p>
+                            <p><strong>Operating System:</strong> <span id="os-name"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Connectivity:</strong> <span id="connectivity"></span></p>
+                            <p><strong>Battery:</strong> <span id="battery-life"></span> mAh</p>
+                            <p><strong>Water Resistance:</strong> <span id="water-resistance"></span></p>
+                            <p><strong>Sensors:</strong> <span id="sensor"></span></p>
+                            <p><strong>Case Material:</strong> <span id="case-material"></span></p>
+                            <p><strong>Band:</strong> <span id="band-material"></span> (<span id="band-size"></span> mm, <span id="band-color"></span>)</p>
+                            <p><strong>Weight:</strong> <span id="weight"></span> g</p>
+                            <p><strong>Release Date:</strong> <span id="release-date"></span></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Product Specifications -->
-            <div class="variation-details bg-light p-3 rounded w-100 mt-4" style="padding-left: 8rem !important;">
-                <h5 class="mb-3">Technical Specifications</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Size:</strong> <span id="watch-size"></span> mm</p>
-                        <p><strong>Color:</strong> <span id="watch-color"></span></p>
-                        <p><strong>Display:</strong> <span id="display-type"></span> (<span id="display-size"></span> inch)</p>
-                        <p><strong>Resolution:</strong> <span id="resolution"></span> px</p>
-                        <p><strong>RAM/ROM:</strong> <span id="ram-rom"></span></p>
-                        <p><strong>Operating System:</strong> <span id="os-name"></span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Connectivity:</strong> <span id="connectivity"></span></p>
-                        <p><strong>Battery:</strong> <span id="battery-life"></span> mAh</p>
-                        <p><strong>Water Resistance:</strong> <span id="water-resistance"></span></p>
-                        <p><strong>Sensors:</strong> <span id="sensor"></span></p>
-                        <p><strong>Case Material:</strong> <span id="case-material"></span></p>
-                        <p><strong>Band:</strong> <span id="band-material"></span> (<span id="band-size"></span> mm, <span id="band-color"></span>)</p>
-                        <p><strong>Weight:</strong> <span id="weight"></span> g</p>
-                        <p><strong>Release Date:</strong> <span id="release-date"></span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> 
-</div>
+        </div> 
+    </div>
+</form>
 
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -321,4 +323,31 @@ if (!$product_id) {
             $(this).val(Math.max(1, Math.min(value, maxStock)));
         });
     }
+
+    function unformatCurrency(currency) {
+        return parseFloat(currency.replace(/[^\d.]/g, ""));
+    }
+
+    $(".buynow").click(function (e) {
+        e.preventDefault(); // Ngăn form submit ngay lập tức
+        let selectedProducts = [];
+        let image = document.getElementById("product-image").src;
+        let name = document.getElementById("product-name").innerText;
+        let variant = document.getElementById("watch-color").innerText + " - " + document.getElementById("watch-size").innerText + "mm";
+        let price = unformatCurrency(document.getElementById("product-price").innerText);
+        let quantity = parseInt($(".num-product").val()) || 1;
+        let total = price * quantity;
+
+        selectedProducts.push({
+            image: image,
+            name: name,
+            variant: variant,
+            price: price,
+            quantity: quantity,
+            total: total
+        });
+        $("#selected_products").val(JSON.stringify(selectedProducts));
+        $(this).closest("form").submit();
+        sessionStorage.setItem('selected_products', JSON.stringify(selectedProducts));
+    });
 </script>

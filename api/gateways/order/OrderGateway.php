@@ -40,7 +40,11 @@ class OrderGateway {
 
   public function create(array $data): array | false {
     $order_date = $data["order_date"] ?? null;
+    $id_clause = isset($data["id"]) ? "id, " : "";  // Nếu có id, thêm cột id vào câu lệnh
+    $id_value_clause = isset($data["id"]) ? ":id, " : "";  // Nếu có id, thêm giá trị bind
+
     $sql = "INSERT INTO orders (
+              $id_clause
               user_id,
               total_cents,
               delivery_address,
@@ -50,6 +54,7 @@ class OrderGateway {
               received_date,
               payment_method
             ) VALUES (
+              $id_value_clause
               :user_id,
               :total_cents,
               :delivery_address,
@@ -61,6 +66,10 @@ class OrderGateway {
             )";
 
     $stmt = $this->conn->prepare($sql);
+
+    if (isset($data["id"])) {
+        $stmt->bindValue(":id", $data["id"], PDO::PARAM_INT);
+    }
     $stmt->bindValue(":user_id", $data["user_id"], PDO::PARAM_INT);
     $stmt->bindValue(":total_cents", $data["total_cents"], PDO::PARAM_INT);
     $stmt->bindValue(":delivery_address", $data["delivery_address"], PDO::PARAM_STR);

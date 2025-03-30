@@ -1,4 +1,4 @@
-<!-- notice when cart is empty -->
+<!-- notice when cart is empty | Not done -->
 <div class="alert alert-warning" role="alert" style="display: none;">
     <strong>Your cart is empty!</strong> Please add product into your cart.
     <!-- btn chuyển hướng qua trang chủ -->

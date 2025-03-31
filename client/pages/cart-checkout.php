@@ -711,6 +711,11 @@
             formData.append("order_date", orderDate);
             formData.append("estimate_received_date", estimateReceivedDate);
             formData.append("received_date", receivedDate);
+            const selected_products = JSON.parse(sessionStorage.getItem("selected_products"));
+            selected_products.forEach(product => {
+                formData.append("product_variation_id[]", product.product_variation_id);
+                formData.append("quantity[]", product.quantity);
+            });
 
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php", true);

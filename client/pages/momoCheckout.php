@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $receivedDate = $_POST["received_date"] ?? null;
     $productVariationIds = $_POST["product_variation_id"] ?? [];
     $quantities = $_POST["quantity"] ?? [];
+    $priceCents = $_POST["price"] ?? [];
 
     if ($orderId !== null && $amount !== null && $paymentMethod !== null) {
         // Lưu thông tin vào session
@@ -29,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["receivedDate"] = $receivedDate;
         $_SESSION["productVariationIds"] = $productVariationIds;
         $_SESSION["quantities"] = $quantities;
+        $_SESSION["price"] = $priceCents;
 
         echo json_encode([
             "status" => "success",
@@ -48,14 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $orderId = $_SESSION["orderId"] ?? null;
 $amount = $_SESSION["amount"] ?? null;
 $paymentMethod = $_SESSION["paymentMethod"] ?? null;
-$userId = $_SESSION["userId"] ?? null;
-$totalCents = $_SESSION["totalCents"] ?? null;
-$deliveryAddress = $_SESSION["deliveryAddress"] ?? null;
-$orderDate = $_SESSION["orderDate"] ?? null;
-$estimateReceivedDate = $_SESSION["estimateReceivedDate"] ?? null;
-$receivedDate = $_SESSION["receivedDate"] ?? null;
-$productVariationIds = $_SESSION["productVariationIds"] ?? [];
-$quantities = $_SESSION["quantities"] ?? [];
 
 function apiRequest($url, $method, $data = []) {
     $ch = curl_init($url);
@@ -84,8 +78,8 @@ if ($paymentMethod === 'Momo') {
     
     $requestId = time() . "";
     $orderInfo = "Thanh toán đơn hàng #" . $orderId;
-    $redirectUrl = "http://localhost:81/WebPHP_DoAn_EC/client";
-    $ipnUrl = "http://localhost:81/WebPHP_DoAn_EC/client";
+    $redirectUrl = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momo_ipn.php"; // Chuyển sang file xử lý riêng
+    $ipnUrl = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momo_ipn.php"; // Xử lý phản hồi MoMo
     $extraData = "";
     $requestType = "payWithATM";
     // Dữ liệu yêu cầu thanh toán
@@ -124,50 +118,7 @@ if ($paymentMethod === 'Momo') {
     curl_close($ch);
 
     if (isset($result["payUrl"])) {
-        // Tạo đơn hàng
-        $orderData = [
-            "id" => $orderId,
-            "user_id" => $userId,
-            "total_cents" => $totalCents,
-            "delivery_address" => $deliveryAddress,
-            "order_date" => $orderDate,
-            "delivery_state_id" => 1,
-            "estimate_received_date" => $estimateReceivedDate,
-            "received_date" => $receivedDate,
-            "payment_method" => $paymentMethod
-        ];
-        $orderResponse = apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/orders", "POST", $orderData);
-
-        if ($orderResponse && $orderResponse["success"]) {
-            
-            foreach ($productVariationIds as $index => $productVariationId) {
-                // Xóa sản phẩm khỏi giỏ hàng
-                apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=$userId&product_variation_id=$productVariationId", "DELETE");
-                
-                // Lấy danh sách SKU cho từng sản phẩm
-                $skuResponse = apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/products/instances?product_variation_id=$productVariationId&quantity={$quantities[$index]}", "GET");
-                
-                if ($skuResponse && $skuResponse["success"]) {
-                    foreach ($skuResponse["data"] as $instance) {
-                        $sku = $instance["sku"];
-                        $orderItemData = [
-                            "order_id" => $orderId,
-                            "product_instance_sku" => $sku,
-                            "price_cents" => $totalCents
-                        ];
-                        apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/orders/items", "POST", $orderItemData);
-                    }
-                }
-            }
-            
-            // Xóa session
-            unset($_SESSION["productVariationIds"], $_SESSION["quantities"], $_SESSION["orderId"]);
-            
-            echo "<script>alert('Đặt hàng thành công!'); window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client/index.php?content=pages/shopping-cart.php';</script>";
-        } else {
-            echo "<script>alert('Có lỗi xảy ra khi đặt hàng.');</script>";
-        }
-
+        // Chuyển hướng đến trang thanh toán của MoMo
         header("Location: " . $result["payUrl"]);
         exit();
     } else {

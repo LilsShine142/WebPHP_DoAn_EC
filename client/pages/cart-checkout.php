@@ -715,6 +715,7 @@
             selected_products.forEach(product => {
                 formData.append("product_variation_id[]", product.product_variation_id);
                 formData.append("quantity[]", product.quantity);
+                formData.append("price[]", product.price * 1000);
             });
 
             let xhr = new XMLHttpRequest();

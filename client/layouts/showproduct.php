@@ -294,7 +294,7 @@
 							<div class="block2">
 								<div class="block2-pic hov-img0">
 									<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="js-show-modal1">
-										<img src="../backend/uploads/products/${imageName}" alt="${product.name}" onerror="this.onerror=null; this.src='../backend/uploads/products/applewatch_black.webp';">
+										<img src="../backend/uploads/products/${imageName}" alt="${product.name}" onerror="this.onerror=null; this.src='../backend/uploads/products/default_image.webp';">
 									</a>
 								</div>
 								<div class="block2-txt flex-w flex-t p-t-14">

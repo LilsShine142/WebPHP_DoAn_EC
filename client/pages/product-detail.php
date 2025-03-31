@@ -132,7 +132,7 @@ if (!$product_id) {
                         let activeClass = index === 0 ? "active" : "";
                         let thumbPath = `../backend/uploads/products/${variation.image_name}`;
 
-                        thumbnailsHtml += `<img onerror="this.onerror=null; this.src='../backend/uploads/products/applewatch_black.webp';" src="${thumbPath}" class="thumbnail-img ${activeClass}" 
+                        thumbnailsHtml += `<img onerror="this.onerror=null; this.src='../backend/uploads/products/default_image.webp';" src="${thumbPath}" class="thumbnail-img ${activeClass}" 
                         data-variation-id="${variation.id}"
                         onclick='changeMainImage(${JSON.stringify(variation)}, this)'>`;
                     });

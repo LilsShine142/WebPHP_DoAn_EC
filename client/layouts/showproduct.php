@@ -16,19 +16,19 @@
 					All Products
 				</button>
 
-				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".smartwatch">
+				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="smartwatch">
 					Smartwatch
 				</button>
 
-				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".cable">
+				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="cable">
 					Cable
 				</button>
 
-				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".charger">
+				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="charger">
 					Charger
 				</button>
 
-				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".band">
+				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="band">
 					Band
 				</button>
 
@@ -204,6 +204,11 @@
 		<div id="pagination"></div>
 	</div>
 </section>
+<style>
+	#product-list {
+		height: 100% !important;
+	}
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
@@ -289,7 +294,7 @@
 							<div class="block2">
 								<div class="block2-pic hov-img0">
 									<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="js-show-modal1">
-										<img src="../backend/uploads/products/${imageName}" alt="${product.name}">
+										<img src="../backend/uploads/products/${imageName}" alt="${product.name}" onerror="this.onerror=null; this.src='../backend/uploads/products/applewatch_black.webp';">
 									</a>
 								</div>
 								<div class="block2-txt flex-w flex-t p-t-14">

@@ -8,9 +8,6 @@ session_start();
 // Nhận dữ liệu từ MoMo (nếu gửi dưới dạng query string)
 $data = $_REQUEST; // Hoặc $_GET, $_POST tùy vào phương thức gửi của MoMo
 
-// Ghi log để debug
-file_put_contents("momo_log.txt", json_encode($data, JSON_PRETTY_PRINT), FILE_APPEND);
-
 // Kiểm tra nếu không có dữ liệu
 if (!$data) {
     echo json_encode(["status" => "error", "message" => "Dữ liệu không hợp lệ"]);

@@ -75,7 +75,7 @@ if ($resultCode == 0) {
         // xóa session storage
         echo "<script>sessionStorage.removeItem('selected_products');</script>";
         echo "<script>alert('Đặt hàng thành công!'); </script>";
-        echo "<script>window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client';</script>";
+        echo "<script>window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client/index.php?content=pages/user-order.php';</script>";
     } else {
         echo "<script>alert('Có lỗi xảy ra khi đặt hàng.');</script>";
     }

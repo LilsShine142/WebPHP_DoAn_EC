@@ -1,0 +1,33 @@
+{
+    "partnerCode": "MOMOBKUN20180529",
+    "orderId": "527933",
+    "requestId": "1743522480",
+    "amount": "88350",
+    "orderInfo": "Thanh to\u00e1n \u0111\u01a1n h\u00e0ng #527933",
+    "orderType": "momo_wallet",
+    "transId": "4384955441",
+    "resultCode": "0",
+    "message": "Successful.",
+    "payType": "napas",
+    "responseTime": "1743522536365",
+    "extraData": "",
+    "signature": "e779585facc41027642092ec0d2ce997c2619543191461c6c44119d8469257f3"
+}{
+    "content": "pages\/user-order.php"
+}{
+    "content": "pages\/user-order.php"
+}{
+    "partnerCode": "MOMOBKUN20180529",
+    "orderId": "523810",
+    "requestId": "1743522682",
+    "amount": "91350",
+    "orderInfo": "Thanh to\u00e1n \u0111\u01a1n h\u00e0ng #523810",
+    "orderType": "momo_wallet",
+    "transId": "4384998391",
+    "resultCode": "0",
+    "message": "Successful.",
+    "payType": "napas",
+    "responseTime": "1743522710855",
+    "extraData": "",
+    "signature": "bdf6615a56ea703733b7802ea204b12af6372fed4926fd315a2058bc864e655e"
+}

@@ -19,7 +19,7 @@
 					<div class="dropdown-account">
 						<a href="./pages/login.php">Login</a>
 						<a href="./pages/profile.php">Profile</a>
-						<a href="./pages/orders.php">Order</a>
+						<a href="?content=pages/user-order.php">Order</a>
 						<a id="logout-btn" href="#">Logout</a>
 					</div>
 				</div>

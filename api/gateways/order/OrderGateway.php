@@ -28,15 +28,55 @@ class OrderGateway {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function get(int $id): array | false {
-    $sql = "SELECT * FROM orders WHERE id = :id";
+  public function get(int $order_id): array | false {
+    $sql = "SELECT 
+    pi.product_variation_id, 
+    pv.product_id, 
+    pv.watch_size_mm, 
+    pv.watch_color, 
+    pv.image_name, 
+    pr.name,
+    COUNT(*) AS quantity,
+    oi.price_cents
+    FROM 
+        orders o
+    JOIN 
+        order_items oi ON o.id = oi.order_id
+    JOIN 
+        product_instances pi ON oi.product_instance_sku = pi.sku
+    JOIN 
+        product_variations pv ON pi.product_variation_id = pv.id
+    JOIN 
+        products pr ON pv.product_id = pr.id
+    WHERE 
+        o.id = :order_id
+    GROUP BY 
+        pi.product_variation_id, 
+        pv.product_id, 
+        pv.watch_size_mm, 
+        pv.watch_color, 
+        pv.image_name, 
+        pr.name;";
 
     $stmt = $this->conn->prepare($sql);
-    $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+    $stmt->bindParam(':order_id', $order_id, PDO::PARAM_INT);
     $stmt->execute();
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $result ?: false;
   }
+
+  public function getByUserId(int $user_id): array | false {
+    $sql = "SELECT * FROM orders WHERE user_id = :user_id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
 
   public function create(array $data): array | false {
     $order_date = $data["order_date"] ?? null;

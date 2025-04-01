@@ -61,11 +61,17 @@ class OrderController extends ErrorHandler {
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
     switch ($method) {
       case "GET":
-        $orders = $this->gateway->getAll($limit, $offset);
+        if (isset($_GET["user_id"]) && is_numeric($_GET["user_id"])) {
+          $this->auths->verifyAction("GET_USER_ORDER");
+          $data = $this->gateway->getByUserId($_GET["user_id"]);
+        } else {
+          $this->auths->verifyAction("GET_ALL_ORDER");
+          $data = $this->gateway->getAll($limit, $offset);
+        }
         echo json_encode([
           "success" => true,
-          "length" => count($orders),
-          "data" => $orders
+          "length" => count($data),
+          "data" => $data
         ]);
         break;
 

@@ -137,6 +137,9 @@ if (!$product_id) {
                         thumbnailsHtml += `<img onerror="this.onerror=null; this.src='../backend/uploads/products/default_image.webp';" src="${thumbPath}" class="thumbnail-img ${activeClass}" 
                         data-variation-id="${variation.id}"
                         onclick='changeMainImage(${JSON.stringify(variation)}, this)'>`;
+                        if (variation.stop_selling == 1) {
+                            $(".buynow").prop("disabled", true).css("background-color", "#ccc").css("cursor", "not-allowed");
+                        }
                     });
 
                     $("#thumbnail-list").html(thumbnailsHtml);
@@ -166,8 +169,7 @@ if (!$product_id) {
                 });
                 return;
             }
-            e.preventDefault(); // Ngăn chặn hành động mặc định của nút
-            swal("Product", "is added to cart !", "success");
+            // Nếu userData tồn tại, tiếp tục xử lý
             let userObject = JSON.parse(userData);
             let userId = userObject?.id; // Dùng optional chaining để tránh lỗi nếu userObject null
             let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46;
@@ -286,6 +288,12 @@ if (!$product_id) {
     }
 
     function changeMainImage(variation, element) {
+        // update disabled buynow btn if stop_selling = 0
+        if (variation.stop_selling == 1) {
+            $(".buynow").prop("disabled", true).css("background-color", "#ccc").css("cursor", "not-allowed");
+        } else {
+            $(".buynow").prop("disabled", false).css("background-color", "#ff3d00").css("cursor", "pointer");
+        }
         $("#product-image").attr("src", `../backend/uploads/products/${variation.image_name}`);
         $("#product-image-link").attr("href", `../backend/uploads/products/${variation.image_name}`);
         $("#product-price").text(new Intl.NumberFormat("vi-VN").format(variation.price_cents) + " VND");

@@ -177,6 +177,11 @@
 
                                         // Cập nhật tổng tiền
                                         $(".total-amount").text(formatCurrency(0));
+                                        if (product.stop_selling ==1) {
+                                            // unable tr table_row. user cannot choose product
+                                            $(`.table-shopping-cart [data-product-id='${product.product_id}']`).closest("tr").find(".item-checkbox").prop("disabled", true);
+                                            $(`.table-shopping-cart [data-product-id='${product.product_id}']`).closest("tr").find(".num-product").prop("disabled", true);
+                                        }
                                     }
                                 },
                                 error: function() {
@@ -196,7 +201,8 @@
         // Khi nhấn vào checkbox "Select All"
         $(".select-all").on("change", function() {
             $(".select-all").prop("checked", this.checked);
-            $(".item-checkbox").prop("checked", this.checked);
+            // trừ những nút disable = true
+            $(".item-checkbox").not(":disabled").prop("checked", this.checked);
             updateTotalAmount();
             updatePurchaseButton();
         });
@@ -204,7 +210,10 @@
         // Khi nhấn vào nhãn "Select All"
         $(".select-all-label").on("click", function() {
             const selectAllCheckbox = $(".select-all");
-            selectAllCheckbox.prop("checked", !selectAllCheckbox.prop("checked")).trigger("change");
+            selectAllCheckbox.prop("checked", !selectAllCheckbox.prop("checked"));
+            $(".item-checkbox").not(":disabled").prop("checked", selectAllCheckbox.prop("checked"));
+            updateTotalAmount();
+            updatePurchaseButton();
         });
 
         // Khi chọn/bỏ chọn từng sản phẩm

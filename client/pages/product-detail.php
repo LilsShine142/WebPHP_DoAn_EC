@@ -49,7 +49,7 @@ if (!$product_id) {
                                             </button>
                                         </div>
                                         <span id="stock-quantity">... products available</span>
-                                        <span class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail addcart">
+                                        <span class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 addcart">
                                             Add to cart
                                         </span>
                                         <button class="cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 buynow" type="submit">
@@ -92,6 +92,8 @@ if (!$product_id) {
 
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function() {
         let productId = <?php echo json_encode($product_id); ?>;
@@ -148,7 +150,24 @@ if (!$product_id) {
 
         $(".addcart").on("click", async function() {
             let userData = localStorage.getItem("user");
-
+            // Kiểm tra xem userData có tồn tại không
+            if (!userData) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "You are not logged in!",
+                    text: "Please log in to add products to your cart.",
+                    showConfirmButton: true,
+                    confirmButtonText: "Log in now",
+                    confirmButtonColor: "#3085d6"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "../client/pages/login.php";
+                    }
+                });
+                return;
+            }
+            e.preventDefault(); // Ngăn chặn hành động mặc định của nút
+            swal("Product", "is added to cart !", "success");
             let userObject = JSON.parse(userData);
             let userId = userObject?.id; // Dùng optional chaining để tránh lỗi nếu userObject null
             let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46;
@@ -157,9 +176,23 @@ if (!$product_id) {
             let maxQuantity = parseInt($(".num-product").attr("max"));
             if ((existingQuantity + newQuantity) > maxQuantity) {
                 updateItemToCart(userId, productVariationId, maxQuantity);
+                Swal.fire({
+                    icon: "info",
+                    title: "Quantity Limit Reached!",
+                    text: `You can only add up to ${maxQuantity} items.`,
+                    confirmButtonColor: "#3085d6"
+                });
                 return;
             }
             addNewItemToCart(userId, productVariationId, newQuantity);
+            // Hiển thị thông báo sản phẩm đã được thêm thành công
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Product has been added to your cart.",
+                showConfirmButton: false,
+                timer: 1500
+            });
         });
     });
 
@@ -331,6 +364,21 @@ if (!$product_id) {
     }
 
     $(".buynow").click(function (e) {
+        let userData = localStorage.getItem("user");
+        if (!userData) {
+            Swal.fire({
+                icon: "warning",
+                title: "You are not logged in!",
+                text: "Please log in to buy products.",
+                showConfirmButton: true,
+                confirmButtonText: "Log in now",
+                confirmButtonColor: "#3085d6"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../client/pages/login.php";
+                }
+            });
+        }
         e.preventDefault(); // Ngăn form submit ngay lập tức
         let selectedProducts = [];
         let productVariationId = $(".product-thumbnails img.active").data("variation-id") || 46;

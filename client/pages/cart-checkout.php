@@ -312,6 +312,7 @@
         font-weight: bold;
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script>
@@ -684,8 +685,18 @@
     $(".checkout-button").click(function() {
         const userData = localStorage.getItem("user");
         if (!userData) {
-            alert("Vui lòng đăng nhập để đặt hàng.");
-            return;
+            Swal.fire({
+                icon: "warning",
+                title: "You are not logged in!",
+                text: "Please log in to buy products.",
+                showConfirmButton: true,
+                confirmButtonText: "Log in now",
+                confirmButtonColor: "#3085d6"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../client/pages/login.php";
+                }
+            });
         }
         const userObject = JSON.parse(userData);
         const user_id = userObject.id;

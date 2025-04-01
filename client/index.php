@@ -23,9 +23,6 @@
     <?php include("layouts/navbar.php") ?>
 
 
-    <!-- Cart -->
-    <?php include("layouts/viewcart.php") ?>
-
     <!-- Product -->
     <main>
         <?php

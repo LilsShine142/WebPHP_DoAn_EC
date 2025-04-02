@@ -35,9 +35,9 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 alert("Registration successful! You can now log in.");
-                $("#register-form").hide();
-                $("#login-form").fadeIn();
-                document.title = "Login";
+                // Chuyển về trang đăng nhập href="./pages/login.php"
+                window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client/pages/login.php';
+
             },
             error: function (xhr) {
                 try {

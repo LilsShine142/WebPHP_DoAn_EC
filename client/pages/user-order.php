@@ -74,30 +74,33 @@
                     $("#ordersList").empty();
                     
                     response.data.forEach(order => {
+                        const orderElement = $(`
+                            <div class="order bg-white p-4 rounded-lg shadow-md" data-status="${order.delivery_state_id}">
+                                <h2 class="font-bold text-lg">Order ID: #${order.id}</h2>
+                                <p class="text-sm text-gray-600">Status: ${order.delivery_state_id == 1 ? "Pending" : order.delivery_state_id == 2 ? "Approved" : "Canceled"}</p>
+                                <div class="grid grid-cols-1 gap-3 mt-3" id="orderItems">
+                                    
+                                </div>
+                                <div class="mt-3 text-right font-bold text-lg">Total: ${formatCurrency(order.total_cents)}</div>
+                            </div>
+                        `);
+                        $("#ordersList").append(orderElement);
                         $.ajax({
                             url: `${BASE_API_URL}/api/orders/${order.id}`,
                             type: "GET",
                             success: function(response) {
                                 response.data.forEach(variant => {
-                                    const orderElement = $(`
-                                        <div class="order bg-white p-4 rounded-lg shadow-md" data-status="${order.delivery_state_id}">
-                                            <h2 class="font-bold text-lg">Order ID: #${order.id}</h2>
-                                            <p class="text-sm text-gray-600">Status: ${order.delivery_state_id == 1 ? "Pending" : order.delivery_state_id == 2 ? "Approved" : "Canceled"}</p>
-                                            <div class="grid grid-cols-1 gap-3 mt-3">
-                                                <div class="flex items-center p-3 border rounded-lg">
-                                                    <img src="../backend/uploads/products/${variant.image_name}" alt="Sản phẩm" class="w-16 h-16 object-cover rounded-md">
-                                                    <div class="ml-3">
-                                                        <p class="font-semibold">${variant.name}</p>
-                                                        <p class="text-sm text-gray-600">Viriation: ${variant.watch_color} - ${variant.watch_size_mm} mm</p>
-                                                        <p class="text-sm">Quantity: ${variant.quantity}</p>
-                                                        <p class="text-sm font-bold">Price: ${formatCurrency(variant.price_cents)}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-3 text-right font-bold text-lg">Total: ${formatCurrency(variant.quantity*variant.price_cents)}</div>
+                                    const orderItems = $(`
+                                    <div class="flex items-center p-3 border rounded-lg">
+                                        <img src="../backend/uploads/products/${variant.image_name}" alt="Sản phẩm" class="w-16 h-16 object-cover rounded-md">
+                                        <div class="ml-3">
+                                            <p class="font-semibold">${variant.name}</p>
+                                            <p class="text-sm text-gray-600">Viriation: ${variant.watch_color} - ${variant.watch_size_mm} mm</p>
+                                            <p class="text-sm">Quantity: ${variant.quantity}</p>
+                                            <p class="text-sm font-bold">Price: ${formatCurrency(variant.price_cents)}</p>
                                         </div>
-                                    `);
-                                    $("#ordersList").append(orderElement);
+                                    </div>`);
+                                    orderElement.find("#orderItems").append(orderItems);
                                 });
                             },
                             error: function() {

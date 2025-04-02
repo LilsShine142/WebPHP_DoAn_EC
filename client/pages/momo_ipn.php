@@ -35,7 +35,7 @@ if ($resultCode == 0) {
     $orderData = [
         "id" => $orderId,
         "user_id" => $userId,
-        "total_cents" => $totalCents,
+        "total_cents" => $totalCents/100,
         "delivery_address" => $deliveryAddress,
         "order_date" => $orderDate,
         "delivery_state_id" => 1,

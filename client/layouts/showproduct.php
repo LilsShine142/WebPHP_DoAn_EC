@@ -303,7 +303,7 @@
 											${product.name}
 										</a>
 										<span class="stext-105 cl3">
-											${price} VND
+											${formatDollarCurrency(price)}
 										</span>
 									</div>
 								</div>
@@ -315,6 +315,15 @@
 				renderPagination(totalPages, page);
 			});
 		}
+
+		/** 📌 Định dạng giá tiền đô*/
+		function formatDollarCurrency(cents) {
+			return (cents / 1).toLocaleString("en-US", {
+				style: "currency",
+				currency: "USD"
+			});
+		}
+
 
 		/** 📌 Hiển thị phân trang */
 		function renderPagination(totalPages, currentPage) {

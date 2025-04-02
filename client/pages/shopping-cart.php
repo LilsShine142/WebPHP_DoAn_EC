@@ -426,22 +426,21 @@
             }
         });
 
-        $(".total-amount").text(formatCurrency(totalAmount * 1000));
+        $(".total-amount").text(formatCurrency(totalAmount));
         $(".purchase-container .mtext-106").first().text(`Total (${totalProducts} product):`);
     }
 
-    // unformatCurrency
-    function unformatCurrency(currency) {
-        return parseFloat(currency.replace(/[^\d.]/g, ""));
-    }
-
-    // Hàm định dạng tiền VND
     function formatCurrency(amount) {
-        return new Intl.NumberFormat("vi-VN", {
+        return new Intl.NumberFormat("en-US", {
             style: "currency",
-            currency: "VND"
+            currency: "USD"
         }).format(amount);
     }
+
+    function unformatCurrency(amount) {
+        return parseFloat(amount.replace(/[^0-9.-]+/g, ""));
+    }
+    
 
     $(document).on("click", ".btn-num-product-up", function() {
         const $input = $(this).closest(".wrap-num-product").find(".num-product");

@@ -666,20 +666,31 @@
                         </td>
                         <td class="column-2">${product.name}</td>
                         <td class="column-3">${product.variant}</td>
-                        <td class="column-4">${formatCurrency(1000 * product.price)}</td>
+                        <td class="column-4">${formatCurrency(product.price)}</td>
                         <td class="column-5">${product.quantity}</td>
-                        <td class="column-6">${formatCurrency(1000 * productTotal)}</td>
+                        <td class="column-6">${formatCurrency(productTotal)}</td>
                     </tr>
                 `;
             });
 
             $(".table-shopping-cart").append(productHTML);
-            $(".total").text(formatCurrency(1000 * total));
+            $(".total").text(formatCurrency(total));
         }
     });
-    
+
     function formatCurrency(amount) {
-        return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
+    }
+
+    function unformatCurrency(amount) {
+        return parseFloat(amount.replace(/[^0-9.-]+/g, ""));
+    }
+
+    async function getExchangeRate() {
+        const response = await fetch('https://open.er-api.com/v6/latest/USD');
+        const data = await response.json();
+        const rate = data.rates.VND;
+        return rate;
     }
 
     $(".checkout-button").click(function() {
@@ -713,49 +724,57 @@
 
             let formData = new FormData();
             formData.append("orderId", randomOrderId);
-            formData.append("amount", amount);
-            formData.append("paymentMethod", "Momo");
+            getExchangeRate().then(rate => {
+                if (rate !== null) {
+                    amount = parseInt((parseFloat(amount) * rate / 100)/1000)*1000;
+                    formData.append("amount", amount);
+                    formData.append("paymentMethod", "Momo");
 
-            formData.append("userId", user_id);
-            formData.append("total_cents", total);
-            formData.append("delivery_address", deliveryAddress);
-            formData.append("order_date", orderDate);
-            formData.append("estimate_received_date", estimateReceivedDate);
-            formData.append("received_date", receivedDate);
-            const selected_products = JSON.parse(sessionStorage.getItem("selected_products"));
-            selected_products.forEach(product => {
-                formData.append("product_variation_id[]", product.product_variation_id);
-                formData.append("quantity[]", product.quantity);
-                formData.append("price[]", product.price * 1000);
-            });
+                    formData.append("userId", user_id);
+                    formData.append("total_cents", total);
+                    formData.append("delivery_address", deliveryAddress);
+                    formData.append("order_date", orderDate);
+                    formData.append("estimate_received_date", estimateReceivedDate);
+                    formData.append("received_date", receivedDate);
+                    const selected_products = JSON.parse(sessionStorage.getItem("selected_products"));
+                    selected_products.forEach(product => {
+                        formData.append("product_variation_id[]", product.product_variation_id);
+                        formData.append("quantity[]", product.quantity);
+                        formData.append("price[]", product.price);
+                    });
 
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php", true);
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php", true);
 
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    try {
-                        let response = JSON.parse(xhr.responseText);
-                        if (response.status === "success") {
-                            window.location.href = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php";
-                            
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            try {
+                                let response = JSON.parse(xhr.responseText);
+                                if (response.status === "success") {
+                                    window.location.href = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php";
+                                    
+                                } else {
+                                    alert("Lỗi: " + response.message);
+                                }
+                            } catch (error) {
+                                console.error("Lỗi phân tích JSON:", error);
+                                alert("Lỗi hệ thống, vui lòng thử lại!");
+                            }
                         } else {
-                            alert("Lỗi: " + response.message);
+                            console.error("Lỗi khi gửi đơn hàng.");
                         }
-                    } catch (error) {
-                        console.error("Lỗi phân tích JSON:", error);
-                        alert("Lỗi hệ thống, vui lòng thử lại!");
-                    }
+                    };
+
+                    xhr.onerror = function () {
+                        console.error("Không thể kết nối đến server.");
+                    };
+
+                    xhr.send(formData);
                 } else {
-                    console.error("Lỗi khi gửi đơn hàng.");
+                    console.log('Không thể lấy tỷ giá.');
                 }
-            };
-
-            xhr.onerror = function () {
-                console.error("Không thể kết nối đến server.");
-            };
-
-            xhr.send(formData);
+            });
+            
 
         }
         else if (paymentMethod === "COD") {

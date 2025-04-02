@@ -287,6 +287,14 @@ if (!$product_id) {
         }
     }
 
+    /** 📌 Định dạng giá tiền đô*/
+    function formatDollarCurrency(cents) {
+        return (cents / 1).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+        });
+    }
+
     function changeMainImage(variation, element) {
         // update disabled buynow btn if stop_selling = 0
         if (variation.stop_selling == 1) {
@@ -296,7 +304,7 @@ if (!$product_id) {
         }
         $("#product-image").attr("src", `../backend/uploads/products/${variation.image_name}`);
         $("#product-image-link").attr("href", `../backend/uploads/products/${variation.image_name}`);
-        $("#product-price").text(new Intl.NumberFormat("vi-VN").format(variation.price_cents) + " VND");
+        $("#product-price").text(formatDollarCurrency(variation.price_cents));
         $("#stock-quantity").text(`${variation.stock_quantity} products available`);
 
         maxStock = variation.stock_quantity;

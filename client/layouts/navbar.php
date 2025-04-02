@@ -37,7 +37,8 @@
 				<!-- Menu desktop -->
 				<div class="menu-desktop">
 					<ul class="main-menu">
-						<li class="active-menu">
+						<!-- class="active-menu" -->
+						<li>
 							<a href="index.php">Home</a>
 						</li>
 
@@ -46,19 +47,19 @@
 						</li>
 
 						<li class="label1" data-label1="hot">
-							<a href="?content=pages/shopping-cart.php">Smartwatch</a>
+							<a href="?content=pages/smartwatch.php">Smartwatch</a>
 						</li>
 
 						<li>
-							<a href="?content=pages/blog.php">Cables</a>
+							<a href="?content=pages/cables.php">Cables</a>
 						</li>
 
 						<li>
-							<a href="?content=pages/about.php">Chargers</a>
+							<a href="?content=pages/chargers.php">Chargers</a>
 						</li>
 
 						<li>
-							<a href="?content=pages/contact.php">Bands</a>
+							<a href="?content=pages/bands.php">Bands</a>
 						</li>
 					</ul>
 				</div>

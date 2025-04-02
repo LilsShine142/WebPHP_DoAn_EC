@@ -30,6 +30,7 @@ class OrderGateway {
 
   public function get(int $order_id): array | false {
     $sql = "SELECT 
+    o.*,
     pi.product_variation_id, 
     pv.product_id, 
     pv.watch_size_mm, 

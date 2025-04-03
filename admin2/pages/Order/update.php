@@ -54,7 +54,7 @@ $orderId = $_GET['id'];
             $("#orderIdText").text("#" + orderId);
 
             const formatCurrency = (amount) => 
-                new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+                new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
             try {
                 // Lấy thông tin đơn hàng & trạng thái giao hàng song song
@@ -72,7 +72,7 @@ $orderId = $_GET['id'];
                     });
                 }
 
-                const order = orderRes.data;
+                const order = orderRes.data[0];
                 const deliveryState = deliveryStateMap[order.delivery_state_id] || "Unknown";
 
                 // Hiển thị nút Approve & Cancel nếu trạng thái là Pending
@@ -185,22 +185,23 @@ $orderId = $_GET['id'];
 
         async function updateOrderStatus(orderId, newStateId) {
             try {
-                const response = await fetch(`http://localhost:81/WebPHP_DoAn_EC/api/orders/${orderId}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ delivery_state_id: newStateId })
+                const response = await $.ajax({
+                    url: `${BASE_API_URL}/api/orders/${orderId}`,
+                    type: 'PUT', // Cập nhật đơn hàng
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        delivery_state_id: newStateId, // Cập nhật trạng thái giao hàng mới
+                    }),
                 });
 
-                const result = await response.json();
-                if (result.success) {
-                    alert("Order status updated successfully!");
-                    location.reload(); // Reload trang để cập nhật giao diện
+                if (response.success) {
+                    alert(`Order has been ${newStateId === 2 ? 'approved' : 'canceled'} successfully.`);
+                    window.location.href = `index.php?page=pages/Order/details.php&id=${orderId}`;
                 } else {
-                    alert("Failed to update order status.");
+                    alert(`Failed to update order: ${response.message || 'Unknown error'}`);
                 }
             } catch (error) {
-                console.error("Error:", error);
-                alert("An error occurred while updating the status.");
+                alert(`Error updating order: ${error.message}`);
             }
         }
     </script>

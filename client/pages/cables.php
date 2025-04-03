@@ -180,12 +180,17 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
+		function formatDollarCurrency(cents) {
+			return (cents / 1).toLocaleString("en-US", {
+				style: "currency",
+				currency: "USD"
+			});
+		}
 		let currentPage = 1;
 		let productsPerPage = 16;
 		let totalProducts = 0;
 		let allProducts = []; // Lưu trữ toàn bộ sản phẩm
 		let categoriesMap = {}; // Lưu trữ danh mục sản phẩm
-		let activeCategory = "*"; // Lưu danh mục đang được chọn
 
 		/** 📌 Gọi API lấy danh mục sản phẩm */
 		function fetchCategories() {
@@ -209,32 +214,18 @@
 				type: "GET"
 			}).then(response => {
 				if (response.success) {
-					allProducts = response.data;
+					allProducts = response.data.filter(product => categoriesMap[product.category_id] === "cable");
 					totalProducts = allProducts.length;
 				}
 			});
 		}
 
 		/** 📌 Hiển thị danh sách sản phẩm theo phân trang */
-		function loadProducts(page, categoryFilter = "*", searchKeyword = "") {
-			let filteredProducts = allProducts;
-
-			// 🔹 Lọc theo danh mục nếu không phải "All Products"
-			if (categoryFilter !== "*") {
-				filteredProducts = filteredProducts.filter(product => categoriesMap[product.category_id] === categoryFilter);
-			}
-
-			// 🔹 Lọc theo từ khóa tìm kiếm
-			if (searchKeyword) {
-				filteredProducts = filteredProducts.filter(product =>
-					product.name.toLowerCase().includes(searchKeyword)
-				);
-			}
-
+		function loadProducts(page) {
 			let start = (page - 1) * productsPerPage;
 			let end = start + productsPerPage;
-			let productsToShow = filteredProducts.slice(start, end);
-			let totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+			let productsToShow = allProducts.slice(start, end);
+			let totalPages = Math.ceil(allProducts.length / productsPerPage);
 			let productHtml = "";
 
 			let variationPromises = productsToShow.map(product => {
@@ -248,18 +239,13 @@
 			});
 
 			Promise.all(variationPromises).then(results => {
-				results.forEach(({
-					product,
-					variations
-				}) => {
+				results.forEach(({ product, variations }) => {
 					let firstVariation = variations.length > 0 ? variations[0] : null;
 					let imageName = firstVariation ? firstVariation.image_name : "default.webp";
 					let price = firstVariation ? firstVariation.price_cents : "N/A";
-                    // chỉ hiện những sản phẩm có categories = smartwatch
-                    let categoryName = categoriesMap[product.category_id] || "other";
-                    if (categoryName !== "cable") return; 
+
 					productHtml += `
-						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${categoryName}">
+						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item cable">
 							<div class="block2">
 								<div class="block2-pic hov-img0">
 									<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="js-show-modal1">
@@ -272,7 +258,7 @@
 											${product.name}
 										</a>
 										<span class="stext-105 cl3">
-											${price} VND
+											${formatDollarCurrency(price)}
 										</span>
 									</div>
 								</div>
@@ -297,32 +283,62 @@
 		/** 📌 Xử lý sự kiện phân trang */
 		$(document).on("click", ".pagination-btn", function() {
 			currentPage = $(this).data("page");
-			let searchKeyword = $("input[name='search-product']").val().toLowerCase();
-			loadProducts(currentPage, activeCategory, searchKeyword);
-		});
-
-		/** 📌 Xử lý sự kiện lọc theo danh mục */
-		$(".filter-tope-group button").on("click", function() {
-			$(".filter-tope-group button").removeClass("how-active1");
-			$(this).addClass("how-active1");
-
-			activeCategory = $(this).data("filter").replace(".", ""); // Loại bỏ dấu `.`
-			currentPage = 1;
-			let searchKeyword = $("input[name='search-product']").val().toLowerCase();
-			loadProducts(currentPage, activeCategory, searchKeyword);
-		});
-
-		/** 📌 Xử lý sự kiện tìm kiếm */
-		$("input[name='search-product']").on("input", function() {
-			let searchKeyword = $(this).val().toLowerCase();
-			currentPage = 1;
-			loadProducts(currentPage, activeCategory, searchKeyword);
+			loadProducts(currentPage);
 		});
 
 		/** 📌 Gọi API danh mục trước, sau đó tải sản phẩm */
 		fetchCategories().then(() => {
 			fetchAllProducts().then(() => {
 				loadProducts(currentPage);
+			});
+		});
+		
+		$("input[name='search-product']").on("input", function() {
+			let searchQuery = $(this).val().toLowerCase(); // Lấy giá trị nhập vào và chuyển thành chữ thường
+			let filteredProducts = allProducts.filter(product => product.name.toLowerCase().includes(searchQuery)); // Lọc sản phẩm theo tên
+			let totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+			let productHtml = "";
+
+			let variationPromises = filteredProducts.slice(0, productsPerPage).map(product => {
+				return $.ajax({
+					url: `${BASE_API_URL}/api/products/variations?product_id=${product.id}`,
+					type: "GET"
+				}).then(variationResponse => ({
+					product: product,
+					variations: variationResponse.success ? variationResponse.data : []
+				}));
+			});
+
+			Promise.all(variationPromises).then(results => {
+				results.forEach(({ product, variations }) => {
+					let firstVariation = variations.length > 0 ? variations[0] : null;
+					let imageName = firstVariation ? firstVariation.image_name : "default.webp";
+					let price = firstVariation ? firstVariation.price_cents : "N/A";
+
+					productHtml += `
+						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item smartwatch">
+							<div class="block2">
+								<div class="block2-pic hov-img0">
+									<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="js-show-modal1">
+										<img src="../backend/uploads/products/${imageName}" alt="${product.name}" onerror="this.onerror=null; this.src='../backend/uploads/products/default_image.webp';">
+									</a>
+								</div>
+								<div class="block2-txt flex-w flex-t p-t-14">
+									<div class="block2-txt-child1 flex-col-l">
+										<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+											${product.name}
+										</a>
+										<span class="stext-105 cl3">
+											${formatDollarCurrency(price)}
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>`;
+				});
+
+				$("#product-list").html(productHtml);
+				renderPagination(totalPages, 1); // Cập nhật lại phân trang
 			});
 		});
 	});

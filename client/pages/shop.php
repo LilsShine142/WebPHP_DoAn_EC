@@ -201,6 +201,12 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+	function formatDollarCurrency(cents) {
+		return (cents / 1).toLocaleString("en-US", {
+			style: "currency",
+			currency: "USD"
+		});
+	}
 	$(document).ready(function() {
 		let currentPage = 1;
 		let productsPerPage = 16;
@@ -293,7 +299,7 @@
 											${product.name}
 										</a>
 										<span class="stext-105 cl3">
-											${price} VND
+											${formatDollarCurrency(price)}
 										</span>
 									</div>
 								</div>

@@ -124,6 +124,16 @@ class OrderGateway {
     return $this->get($this->conn->lastInsertId());
   }
 
+  public function getForUpdate(int $id): array | false {
+    $sql = "SELECT * FROM orders WHERE id = :id";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
   public function update(array $current, array $new): array | false {
     $sql = "UPDATE orders SET
       user_id = :user_id,
@@ -148,7 +158,7 @@ class OrderGateway {
     $stmt->bindValue(":id", $current["id"], PDO::PARAM_INT);
     $stmt->execute();
 
-    return $this->get($current["id"]);
+    return $this->getForUpdate($current["id"]);
   }
 
   public function delete(int $id): bool {

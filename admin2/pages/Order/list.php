@@ -127,9 +127,9 @@
                 let html = "";
                 data.forEach(order => {
                     var stateName = deliveryStateMap[order.delivery_state_id] || "Unknown";
-                    let formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', {
+                    let formatCurrency = (amount) => new Intl.NumberFormat('en-US', {
                         style: 'currency',
-                        currency: 'VND'
+                        currency: 'USD'
                     }).format(amount);
                     html += `<tr>
                         <td>${order.id}</td>

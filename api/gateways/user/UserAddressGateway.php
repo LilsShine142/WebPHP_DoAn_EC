@@ -122,34 +122,19 @@ class UserAddressGateway
   }
 
   //Update address theo user id
-  public function updateAddressByUserId(array $current, array $new): array | false
+  public function updateAddressByUserId(int $user_id, array $data): array | false
   {
     $sql = "UPDATE user_addresses SET
-        street = :street,
-        apartment_number = :apartment_number,
-        ward = :ward,
-        district = :district,
-        city_province = :city_province,
-        phone_number = :phone_number,
-        is_default = :is_default,
-        name = :name
-        WHERE user_id = :user_id
+      is_default = :is_default
+      WHERE user_id = :user_id
     ";
 
     $stmt = $this->conn->prepare($sql);
-    $stmt->bindValue(":street", $new["street"] ?? $current["street"], PDO::PARAM_STR);
-    $stmt->bindValue(":apartment_number", $new["apartment_number"] ?? $current["apartment_number"], PDO::PARAM_STR);
-    $stmt->bindValue(":ward", $new["ward"] ?? $current["ward"], PDO::PARAM_STR);
-    $stmt->bindValue(":district", $new["district"] ?? $current["district"], PDO::PARAM_STR);
-    $stmt->bindValue(":city_province", $new["city_province"] ?? $current["city_province"], PDO::PARAM_STR);
-    $stmt->bindValue(":phone_number", $new["phone_number"] ?? $current["phone_number"], PDO::PARAM_STR);
-    $stmt->bindValue(":is_default", $new["is_default"] ?? $current["is_default"], PDO::PARAM_BOOL);
-    $stmt->bindValue(":name", $new["name"] ?? $current["name"], PDO::PARAM_STR);
-    $stmt->bindValue(":user_id", $current["user_id"], PDO::PARAM_INT);
-
+    $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(":is_default", $data["is_default"], PDO::PARAM_BOOL);
     $stmt->execute();
 
-    return $this->getAddressByUserId($current["user_id"]);
+    return $this->getAddressByUserId($user_id);
   }
 
 

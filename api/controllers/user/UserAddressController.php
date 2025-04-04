@@ -128,45 +128,22 @@ class UserAddressController extends ErrorHandler
         break;
 
       case "PUT":
-        $this->auths->verifyAction("UPDATE_USER_ADDRESS");
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        if (!is_array($data) || empty($data)) {
-          $this->sendErrorResponse(400, "Invalid or missing user_id");
-          return;
-        }
-
-        // Kiểm tra xem user_id có tồn tại không
-        if ($user_id) {
-
-          // Kiểm tra xem user_id có địa chỉ hợp lệ không
-          $existingAddress = $this->gateway->getAddressByUserId($user_id);
-          if (!$existingAddress) {
-            $this->sendErrorResponse(404, "No address found for user_id $user_id");
-            return;
-          }
-
-          // Kiểm tra lỗi dữ liệu đầu vào
+        if($user_id) {
+          $data = (array) json_decode(file_get_contents("php://input"));
           $errors = $this->getValidationErrors($data, false);
           if (!empty($errors)) {
             $this->sendErrorResponse(422, $errors);
-            return;
+            break;
           }
+          $data = $this->gateway->updateAddressByUserId($user_id, $data);
 
-          // Cập nhật theo user_id
-          $updatedData = $this->gateway->updateAddressByUserId($existingAddress, $data);
           echo json_encode([
             "success" => true,
-            "message" => "Address for user_id $user_id updated",
-            "data" => $updatedData
+            "message" => "Address of user_id $user_id updated",
+            "data" => $data
           ]);
         } else {
-          // Nếu không có user_id, cập nhật theo id
-          $errors = $this->getValidationErrors($data, false);
-          if (!empty($errors)) {
-            $this->sendErrorResponse(422, $errors);
-            return;
-          }
+          $this->sendErrorResponse(400, "user_id is required to update address");
         }
         break;
 

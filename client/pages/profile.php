@@ -159,16 +159,16 @@
     <!-- Modal Update Address -->
     <div id="updateAddressModal" class="modal">
         <div class="modal-content update-address-modal-content">
-            <h2 class="m-b-20">Update Address</h2>
+            <h2 class="modal-title" class="m-b-20">Update Address</h2>
             <div id="addressUpdate">
                 <div class="input-row">
                     <div class="input-group">
                         <label for="fullName">Name</label>
-                        <input type="text" id="fullName" value="Đào Thanh Tú">
+                        <input type="text" class="fullName" value="">
                     </div>
                     <div class="input-group">
                         <label for="phoneNumber">Phone Number</label>
-                        <input type="text" id="phoneNumber" value="(+84) 886 766 143">
+                        <input type="text" class="phoneNumber" value="">
                     </div>
                 </div>
                 
@@ -190,12 +190,7 @@
                 </div>
                 <div class="input-group">
                     <label for="specificAddress">Specific Address</label>
-                    <input type="text" id="specificAddress" value="Tạp Quá Cô Huế">
-                </div>
-                <div class="address-type">
-                    <!-- checkbox Set as default address -->
-                    <input type="checkbox" id="defaultAddress" name="defaultAddress">
-                    <label style="margin-bottom: 0;" for="defaultAddress">Set as default address</label>
+                    <input type="text" class="specificAddress" value="">
                 </div>
             </div>
             <div class="buttons">
@@ -393,9 +388,9 @@
         $(".li-addresses").removeClass("active");
     });
 
-    let selectedProvince = "";
-    let selectedDistrict = "";
-    let selectedWard = "";
+    selectedProvince = "";
+    selectedDistrict = "";
+    selectedWard = "";
     let selectedProvinceCode = null;
     let selectedDistrictCode = null;
 
@@ -625,32 +620,27 @@
                             // hiển thị modal update
                             $("#updateAddressModal").show();
                             // hiển thị dữ liệu của address cần update
-                            $("#fullName").val(selectedAddress.name);
-                            $("#phoneNumber").val(selectedAddress.phone_number);
+                            $(".fullName").val(selectedAddress.name);
+                            $(".phoneNumber").val(selectedAddress.phone_number);
                             // pdw-address
                             $("#pdw-address").val(`${selectedAddress.city_province}, ${selectedAddress.district}, ${selectedAddress.ward}`);
                             // specificAddress
-                            $("#specificAddress").val(`${selectedAddress.apartment_number} ${selectedAddress.street}`);
-                            // defaultAddress
-                            if (parseInt(selectedAddress.is_default) === 1) {
-                                $("#defaultAddress").prop("checked", true);
-                            } else {
-                                $("#defaultAddress").prop("checked", false);
-                            }
+                            $(".specificAddress").val(`${selectedAddress.apartment_number} ${selectedAddress.street}`);
+                            
 
                             // Xử lý khi nhấn nút Confirm Change Address trong updateAddressModal
                             $("#confirmChangeAddress").on("click", function () {
                                 
                                 // Tạo body dữ liệu từ các input trong modal
                                 const updatedAddressData = {
-                                    name: $("#fullName").val(),
-                                    street: $("#specificAddress").val().split(" ")[1], // Lấy tên đường
-                                    apartment_number: $("#specificAddress").val().split(" ")[0], // Lấy số nhà
+                                    name: $(".fullName").val(),
+                                    street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                    apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
                                     ward: selectedWard,
                                     district: selectedDistrict,
                                     city_province: selectedProvince,
-                                    phone_number: $("#phoneNumber").val(),
-                                    is_default: $("#defaultAddress").is(":checked") ? true : false
+                                    phone_number: $(".phoneNumber").val(),
+                                    is_default: false
                                 };
 
                                 // Gọi API cập nhật địa chỉ
@@ -676,6 +666,55 @@
                                 });
                             });
 
+                        });
+
+                        // Xử lý sự kiện nhấn nút Add New Address
+                        $("#add-new-address").on("click", function () {
+                            // reset dữ liệu trong modal
+                            $(".modal-title").text("Add New Address");
+                            $(".fullName").val("");
+                            $(".phoneNumber").val("");
+                            $("#pdw-address").val("");
+                            $(".specificAddress").val("");
+                            // hiển thị modal update
+                            $("#updateAddressModal").show();
+                            // gọi api thêm address khi nhấn nút comfirm
+                            $("#confirmChangeAddress").on("click", function () {
+                                // Tạo body dữ liệu từ các input trong modal
+                                const newAddressData = {
+                                    user_id: user_id,
+                                    name: $(".fullName").val(),
+                                    street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                    apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
+                                    ward: selectedWard,
+                                    district: selectedDistrict,
+                                    city_province: selectedProvince,
+                                    phone_number: $(".phoneNumber").val(),
+                                    is_default: false
+                                };
+
+                                // Gọi API thêm địa chỉ mới
+                                $.ajax({
+                                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
+                                    type: "POST",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(newAddressData),
+                                    success: function (response) {
+                                        if (response.success) {
+                                            alert("Thêm địa chỉ thành công!");
+                                            $("#updateAddressModal").hide();
+                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                        } else {
+                                            alert("Có lỗi xảy ra khi thêm địa chỉ.");
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log("Dữ liệu gửi lên:", newAddressData);
+
+                                        alert("Không thể kết nối đến server.");
+                                    }
+                                });
+                            });
                         });
 
                         // Xử lý sự kiện nhấn nút Delete

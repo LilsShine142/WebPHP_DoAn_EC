@@ -152,7 +152,7 @@
                                                         </div> 
                                                     </a>
                                                 </td><td class="column-2" data-product-id="${product.product_id}">Loading...</td>
-                                                <td class="column-3">${product.watch_color} - ${product.watch_size_mm}mm</td>
+                                                <td class="column-3">${product.watch_color}  ${product.watch_size_mm}mm</td>
                                                 <td class="column-4">${formatCurrency(product.price_cents)}</td>
                                                 <td class="column-5">
                                                     <div class="wrap-num-product wrap-num-product-grey flex-w m-l-auto m-r-0">

@@ -154,6 +154,32 @@
                     </div>
                 </div>
             </div>
+
+            
+            <div class="change-password" style="display: none;">
+                <h2>Change Password</h2>
+                <div class="input-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" placeholder="Enter your current password">
+                    <!-- hiện thông báo -->
+                    <div class="message" id="current-password-message" style="color: red; display: none;">Current password is incorrect</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" placeholder="Enter your new password">
+                    <div class="message" id="new-password-message" style="color: red; display: none;">New password must be at least 8 characters long and contain at least one number and one letter</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your new password">
+                    <div class="message" id="confirm-password-message" style="color: red; display: none;">Passwords do not match</div>
+                </div>
+
+                <button class="button" id="change-password" style="background-color: #007bff;">Change Password</button>
+                <div class="message" id="message"></div>
+            </div>
         </main>
     </div>
     <!-- Modal Update Address -->
@@ -383,6 +409,8 @@
     $(".li-changePass").click(function() {
         $(".user-infor").hide();
         $(".addresses").hide();
+        $(".change-password").show();
+        $(".li-changePass").addClass("active");
         $(this).addClass("active");
         $(".li-profile").removeClass("active");
         $(".li-addresses").removeClass("active");
@@ -800,6 +828,68 @@
                 error: function (xhr, status, error) {
                     console.error("Error fetching addresses:", error);
                 }
+            });
+
+            // sự kiện change-password
+            $("#change-password").on("click", function (event) {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
+                let email = userObject.email;
+                const currentPassword = $("#current-password").val();
+                const newPassword = $("#new-password").val();
+                const confirmPassword = $("#confirm-password").val();
+                $.ajax({
+                    url: `${BASE_API_URL}/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(currentPassword)}`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            // Nếu mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
+                            $("#current-password-message").hide();
+                        } else {
+                            alert("Mật khẩu hiện tại không đúng!");
+                        }
+                    },
+                    error: function (xhr) {
+                        //show div message 
+                        $("#current-password-message").show();
+                        console.error("Error fetching user data:", xhr.responseText);
+                    }
+                });
+
+                if (newPassword !== confirmPassword) {
+                    $("#confirm-password-message").show();
+                    $("#new-password-message").hide();
+                    return;
+                } else if (!newPassword || !currentPassword || !confirmPassword) {
+                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    return;
+                } else if (newPassword.length < 8 || !/\d/.test(newPassword) || !/[a-zA-Z]/.test(newPassword)) {
+                    $("#new-password-message").show();
+                    $("#confirm-password-message").hide();
+                    return;
+                } 
+                else {
+                    $("#new-password-message").hide();
+                    $("#confirm-password-message").hide();
+                    $.ajax({
+                        url: `${BASE_API_URL}/api/users/${user_id}`,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({ password: newPassword }),
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Đổi mật khẩu thành công!");
+                                location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                            } else {
+                                alert("Có lỗi xảy ra khi đổi mật khẩu.");
+                            }
+                        },
+                        error: function () {
+                            alert("Không thể kết nối đến server.");
+                        }
+                    });
+                 }
+
             });
         } else {
             console.error("User data not found in localStorage.");

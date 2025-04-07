@@ -26,13 +26,44 @@
             </form>
         </div>
 
+        <div class="form-box forgot-password" style="display: none;">
+            <div class="change-password">
+                <h1 style="padding-bottom: 40px;">Change Password</h1>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" placeholder="Enter your email">
+                    <!-- hiện thông báo -->
+                    <div class="message" id="email" style="color: red; display: none;">Email is incorrect</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" placeholder="Enter your current password">
+                    <!-- hiện thông báo -->
+                    <div class="message" id="current-password-message" style="color: red; display: none;">Current password is incorrect</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" placeholder="Enter your new password">
+                    <div class="message" id="new-password-message" style="color: red; display: none;">New password must be at least 8 characters long and contain at least one number and one letter</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your new password">
+                    <div class="message" id="confirm-password-message" style="color: red; display: none;">Passwords do not match</div>
+                </div>
+
+                <button class="button" id="change-password" style="background-color: #007bff;">Change Password</button>
+                <div class="message" id="message"></div>
+            </div>
+        </div>
+
         <div class="form-box register">
             <form id="register-form" action="register?form=" method="POST" class="validate-form">
                 <h1>Registration</h1>
-                <!-- <div class="input-box">
-                    <input type="text" placeholder="Username" required>
-                    <i class='bx bxs-user'></i>
-                </div> -->
                 <div class="input-box validate-input" data-validate="Valid email is required: ex@abc.xyz">
                     <input type="text" name="newEmail" placeholder="Email" required>
                     <i class='bx bxs-envelope' ></i>
@@ -321,7 +352,51 @@
         .toggle-panel h1{font-size: 30px; }
     }
 
+    .input-group {
+        flex: 1; /* Chia đều không gian */
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .input-group input{
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .input-group select {
+        width: 100%;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 10px;
+        border: none;
+        background: #ff5a5f;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #e04e50;
+    }
+    
+    button {
+        margin-top: 0;
+        padding: 2px 6px;
+    }
+
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     const container = document.querySelector('.container');
@@ -334,5 +409,80 @@
 
     loginBtn.addEventListener('click', () => {
         container.classList.remove('active');
-    })
+    });
+
+    $('.forgot-link a').click(function(e) {
+        e.preventDefault();
+        $('.form-box.login').hide();
+        $('.form-box.forgot-password').show();
+    });
+
+    $('#show-login').click(function(e) {
+        e.preventDefault();
+        $('.form-box.forgot-password').hide();
+        $('.form-box.login').show();
+    });
+
+    $("#change-password").on("click", function (event) {
+        event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
+        let email = $("#email").val();
+        const currentPassword = $("#current-password").val();
+        const newPassword = $("#new-password").val();
+        const confirmPassword = $("#confirm-password").val();
+
+        // Kiểm tra thông tin đầu vào
+        if (!email || !currentPassword || !newPassword || !confirmPassword) {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            $("#confirm-password-message").show();
+            $("#new-password-message").hide();
+            return;
+        } else if (newPassword.length < 8 || !/\d/.test(newPassword) || !/[a-zA-Z]/.test(newPassword)) {
+            $("#new-password-message").show();
+            $("#confirm-password-message").hide();
+            return;
+        } else {
+            $("#new-password-message").hide();
+            $("#confirm-password-message").hide();
+        }
+
+        // Kiểm tra mật khẩu hiện tại
+        $.ajax({
+            url: `http://localhost:81/WebPHP_DoAn_EC/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(currentPassword)}`,
+            method: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    // Nếu mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
+                    $.ajax({
+                        url: `http://localhost:81/WebPHP_DoAn_EC/api/users/${response.data.id}`, // Sử dụng id từ phản hồi
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({ password: newPassword }),
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Đổi mật khẩu thành công!");
+                                location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                            } else {
+                                alert("Có lỗi xảy ra khi đổi mật khẩu.");
+                            }
+                        },
+                        error: function () {
+                            alert("Không thể kết nối đến server.");
+                        }
+                    });
+                } else {
+                    alert("Mật khẩu hiện tại không đúng!");
+                }
+            },
+            error: function (xhr) {
+                console.error("Error fetching user data:", xhr.responseText);
+                // alert("Không thể kết nối đến server.");
+                $("#current-password-message").show();
+            }
+        });
+    });
 </script>

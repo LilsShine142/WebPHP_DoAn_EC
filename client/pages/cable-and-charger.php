@@ -208,17 +208,21 @@
 		}
 
 		/** 📌 Gọi API lấy toàn bộ sản phẩm */
-		function fetchAllProducts() {
-			return $.ajax({
-				url: `${BASE_API_URL}/api/products`,
-				type: "GET"
-			}).then(response => {
-				if (response.success) {
-					allProducts = response.data.filter(product => categoriesMap[product.category_id] === "band");
-					totalProducts = allProducts.length;
-				}
-			});
-		}
+        function fetchAllProducts() {
+            return $.ajax({
+                url: `${BASE_API_URL}/api/products`,
+                type: "GET"
+            }).then(response => {
+                if (response.success) {
+                    allProducts = response.data.filter(product => {
+                        let category = categoriesMap[product.category_id];
+                        return category === "cable" || category === "charger";
+                    });
+                    totalProducts = allProducts.length;
+                }
+            });
+        }
+
 
 		/** 📌 Hiển thị danh sách sản phẩm theo phân trang */
 		function loadProducts(page) {
@@ -245,7 +249,7 @@
 					let price = firstVariation ? firstVariation.price_cents : "N/A";
 
 					productHtml += `
-						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item band">
+						<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item smartwatch">
 							<div class="block2">
 								<div class="block2-pic hov-img0">
 									<a href="index.php?content=pages/product-detail.php&id=${product.id}" class="js-show-modal1">

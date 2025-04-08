@@ -18,7 +18,7 @@
 					</a>
 					<div class="dropdown-account">
 						<a href="./pages/login.php">Login</a>
-						<a href="./pages/profile.php">Profile</a>
+						<a href="?content=pages/profile.php">Profile</a>
 						<a href="?content=pages/user-order.php">Order</a>
 						<a id="logout-btn" href="#">Logout</a>
 					</div>
@@ -66,9 +66,12 @@
 
 				<!-- Icon header -->
 				<div class="wrap-icon-header flex-w flex-r-m">
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-						<i class="zmdi zmdi-search"></i>
-					</div>
+					<!-- <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 nav-search-container">
+						<div class="nav-search-input">
+							<input class="nav-search-input-input" type="text" name="search" placeholder="Search...">
+						</div>
+						<i class="zmdi zmdi-search search-icon"></i>
+					</div> -->
 
 					<a href="?content=pages/shopping-cart.php">
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="0">
@@ -80,8 +83,44 @@
 		</div>
 	</div>
 </header>
+<style>
+	.nav-search-container{
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+	.nav-search-input-input{
+		border-radius: 20px;
+		border: 1px solid #ccc;
+		/* chỉnh cỡ chữ placeholder */
+		font-size: 14px;
+		padding: 10px 20px;
+		display: none;
+	}
+	.search-icon{
+		position: absolute;
+		right: 20px;
+		cursor: pointer;
+	}
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+	// $(".search-icon").click(function() {
+	// 	$(".nav-search-input-input").toggle(); 
+	// 	$(".nav-search-input-input").focus(); 
+	// });
+
+	// // sự kiện nhập từ khóa và nhấn enter
+	// $(".nav-search-input-input").on("keypress", function(event) {
+	// 	if (event.which === 13) { // Kiểm tra nếu phím Enter được nhấn
+	// 		event.preventDefault(); // Ngăn chặn hành động mặc định của phím Enter
+	// 		const keyword = $(this).val(); // Lấy giá trị từ ô tìm kiếm
+	// 		if (keyword) {
+				
+	// 		}
+	// 	}
+	// });
+
 	$(document).ready(function() {
 		// Lấy dữ liệu từ localStorage
 		const userData = localStorage.getItem("user");

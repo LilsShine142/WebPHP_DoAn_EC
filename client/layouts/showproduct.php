@@ -69,13 +69,13 @@
 
 						<ul>
 							<li class="p-b-6">
-								<a href="#" class="filter-link stext-106 trans-04">
+								<a class="filter-link stext-106 trans-04">
 									Price: Low to High
 								</a>
 							</li>
 
 							<li class="p-b-6">
-								<a href="#" class="filter-link stext-106 trans-04">
+								<a class="filter-link stext-106 trans-04">
 									Price: High to Low
 								</a>
 							</li>
@@ -96,31 +96,25 @@
 
 							<li class="p-b-6">
 								<a href="#" class="filter-link stext-106 trans-04">
-									$0.00 - $50.00
+									$0.00 - $200.00
 								</a>
 							</li>
 
 							<li class="p-b-6">
 								<a href="#" class="filter-link stext-106 trans-04">
-									$50.00 - $100.00
+									$200.00 - $500.00
 								</a>
 							</li>
 
 							<li class="p-b-6">
 								<a href="#" class="filter-link stext-106 trans-04">
-									$100.00 - $150.00
+									$500.00 - $800.00
 								</a>
 							</li>
 
 							<li class="p-b-6">
 								<a href="#" class="filter-link stext-106 trans-04">
-									$150.00 - $200.00
-								</a>
-							</li>
-
-							<li class="p-b-6">
-								<a href="#" class="filter-link stext-106 trans-04">
-									$200.00+
+									$800.00+
 								</a>
 							</li>
 						</ul>
@@ -147,7 +141,7 @@
 									<i class="zmdi zmdi-circle"></i>
 								</span>
 
-								<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
+								<a href="#" class="filter-link stext-106 trans-04">
 									Blue
 								</a>
 							</li>
@@ -158,7 +152,7 @@
 								</span>
 
 								<a href="#" class="filter-link stext-106 trans-04">
-									Grey
+									Gray
 								</a>
 							</li>
 
@@ -188,7 +182,7 @@
 								</span>
 
 								<a href="#" class="filter-link stext-106 trans-04">
-									White
+									Silver
 								</a>
 							</li>
 						</ul>
@@ -247,8 +241,88 @@
 			});
 		}
 
+		$(document).on("click", ".filter-link", function(e) {
+			e.preventDefault();
+			
+			if ($(this).text().trim() === "Price: Low to High") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "low-to-high");
+				// remove class filter-link-active chỉ nằm trong filter-col1
+				$(".filter-col1 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "Price: High to Low") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "high-to-low");
+				// add class filter-link-active
+				$(".filter-col1 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			// lọc theo khoảng giá
+			else if ($(this).text().trim() === "$0.00 - $200.00") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "$0.00 - $200.00");
+				// add class filter-link-active
+				$(".filter-col2 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "$200.00 - $500.00") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "$200.00 - $500.00");
+				// add class filter-link-active
+				$(".filter-col2 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "$500.00 - $800.00") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "$500.00 - $800.00");
+				// add class filter-link-active
+				$(".filter-col2 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "$800.00+") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "$800.00+");
+				// add class filter-link-active
+				$(".filter-col2 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			// lọc theo màu
+			else if ($(this).text().trim() === "Black") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "black");
+				// add class filter-link-active
+				$(".filter-col3 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "Blue") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "blue");
+				// add class filter-link-active
+				$(".filter-col3 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "Gray") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "gray");
+				// add class filter-link-active
+				$(".filter-col3 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "Green") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "green");
+				// add class filter-link-active
+				$(".filter-col3 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "Red") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "red");
+				// add class filter-link-active
+				$(".filter-col3 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+			else if ($(this).text().trim() === "Silver") {
+				loadProducts(currentPage, activeCategory, $("input[name='search-product']").val().toLowerCase(), "silver");
+				// add class filter-link-active
+				$(".filter-col3 .filter-link").removeClass("filter-link-active");
+				$(this).addClass("filter-link-active");
+			}
+		});
+
+
 		/** 📌 Hiển thị danh sách sản phẩm theo phân trang */
-		function loadProducts(page, categoryFilter = "*", searchKeyword = "") {
+		function loadProducts(page, categoryFilter = "*", searchKeyword = "", sortBy = "") {
 			let filteredProducts = allProducts;
 
 			// 🔹 Lọc theo danh mục nếu không phải "All Products"
@@ -263,13 +337,7 @@
 				);
 			}
 
-			let start = (page - 1) * productsPerPage;
-			let end = start + productsPerPage;
-			let productsToShow = filteredProducts.slice(start, end);
-			let totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-			let productHtml = "";
-
-			let variationPromises = productsToShow.map(product => {
+			let variationPromises = filteredProducts.map(product => {
 				return $.ajax({
 					url: `${BASE_API_URL}/api/products/variations?product_id=${product.id}`,
 					type: "GET"
@@ -280,13 +348,62 @@
 			});
 
 			Promise.all(variationPromises).then(results => {
-				results.forEach(({
-					product,
-					variations
-				}) => {
+				// 🔹 Gán giá đầu tiên của từng sản phẩm để sắp xếp
+				results.forEach(item => {
+					let firstVariation = item.variations.length > 0 ? item.variations[0] : null;
+					item.price = firstVariation ? firstVariation.price_cents : Number.MAX_SAFE_INTEGER;
+				});
+
+				// 🔹 Sắp xếp theo giá nếu chọn "Low to High"
+				if (sortBy === "low-to-high") {
+					results.sort((a, b) => a.price - b.price);
+				}
+				// 🔹 Sắp xếp theo giá nếu chọn "High to Low"
+				else if (sortBy === "high-to-low") {
+					results.sort((a, b) => b.price - a.price);
+				}
+				// lọc theo khoảng giá
+				else if (sortBy === "$0.00 - $200.00") {
+					results = results.filter(item => item.price >= 0 && item.price <= 200);
+				}
+				else if (sortBy === "$200.00 - $500.00") {
+					results = results.filter(item => item.price > 200 && item.price <= 500);
+				}
+				else if (sortBy === "$500.00 - $800.00") {
+					results = results.filter(item => item.price > 500 && item.price <= 800);
+				}
+				else if (sortBy === "$800.00+") {
+					results = results.filter(item => item.price > 800);
+				}
+				// lọc theo màu
+				else if (sortBy === "black") {
+					results = results.filter(item => item.variations.some(variation => variation.watch_color === "black"));
+				}
+				else if (sortBy === "blue") {
+					results = results.filter(item => item.variations.some(variation => variation.watch_color === "blue"));
+				}
+				else if (sortBy === "gray") {
+					results = results.filter(item => item.variations.some(variation => variation.watch_color === "gray"));
+				}
+				else if (sortBy === "green") {
+					results = results.filter(item => item.variations.some(variation => variation.watch_color === "green"));
+				}
+				else if (sortBy === "red") {
+					results = results.filter(item => item.variations.some(variation => variation.watch_color === "red"));
+				}
+				else if (sortBy === "silver") {
+					results = results.filter(item => item.variations.some(variation => variation.watch_color === "silver"));
+				}
+
+				let start = (page - 1) * productsPerPage;
+				let end = start + productsPerPage;
+				let productsToShow = results.slice(start, end);
+				let totalPages = Math.ceil(results.length / productsPerPage);
+				let productHtml = "";
+
+				productsToShow.forEach(({ product, variations, price }) => {
 					let firstVariation = variations.length > 0 ? variations[0] : null;
 					let imageName = firstVariation ? firstVariation.image_name : "default.webp";
-					let price = firstVariation ? firstVariation.price_cents : "N/A";
 					let categoryName = categoriesMap[product.category_id] || "uncategorized";
 
 					productHtml += `
@@ -303,7 +420,7 @@
 											${product.name}
 										</a>
 										<span class="stext-105 cl3">
-											${price} VND
+											${formatDollarCurrency(price)}
 										</span>
 									</div>
 								</div>
@@ -315,6 +432,15 @@
 				renderPagination(totalPages, page);
 			});
 		}
+
+		/** 📌 Định dạng giá tiền đô*/
+		function formatDollarCurrency(cents) {
+			return (cents / 1).toLocaleString("en-US", {
+				style: "currency",
+				currency: "USD"
+			});
+		}
+
 
 		/** 📌 Hiển thị phân trang */
 		function renderPagination(totalPages, currentPage) {

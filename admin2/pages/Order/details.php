@@ -51,7 +51,7 @@ $orderId = $_GET['id'];
             $("#orderIdText").text("#" + orderId);
 
             const formatCurrency = (amount) => 
-                new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+                new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
             try {
                 // Gọi tất cả API bằng Promise.all để tăng tốc độ tải
@@ -70,7 +70,7 @@ $orderId = $_GET['id'];
                     });
                 }
 
-                const order = orderRes.data;
+                const order = orderRes.data[0];
                 const deliveryState = deliveryStateMap[order.delivery_state_id] || "Unknown";
 
                 // Lấy thông tin người dùng

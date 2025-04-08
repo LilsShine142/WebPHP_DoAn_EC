@@ -66,7 +66,7 @@ if (!$product_id) {
                     <h5 class="mb-3">Technical Specifications</h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Size:</strong> <span id="watch-size"></span> mm</p>
+                            <p><strong>Size:</strong> <span id="watch-size"></span></p>
                             <p><strong>Color:</strong> <span id="watch-color"></span></p>
                             <p><strong>Display:</strong> <span id="display-type"></span> (<span id="display-size"></span> inch)</p>
                             <p><strong>Resolution:</strong> <span id="resolution"></span> px</p>
@@ -98,6 +98,7 @@ if (!$product_id) {
     $(document).ready(function() {
         let productId = <?php echo json_encode($product_id); ?>;
         let maxStock = 1;
+        let categoryId = 0;
 
         // Fetch product details
         $.ajax({
@@ -108,6 +109,7 @@ if (!$product_id) {
                     let product = response.data;
                     $("#product-name").text(product.name);
                     $("#product-description").text(product.description);
+                    categoryId = product.category_id;
                 }
             },
             error: function() {
@@ -126,7 +128,7 @@ if (!$product_id) {
                     maxStock = firstVariation.stock_quantity;
 
                     // Update product details with first variation
-                    changeMainImage(firstVariation, null);
+                    changeMainImage(firstVariation, categoryId, null);
 
                     // Generate thumbnails
                     let thumbnailsHtml = "";
@@ -136,7 +138,7 @@ if (!$product_id) {
 
                         thumbnailsHtml += `<img onerror="this.onerror=null; this.src='../backend/uploads/products/default_image.webp';" src="${thumbPath}" class="thumbnail-img ${activeClass}" 
                         data-variation-id="${variation.id}"
-                        onclick='changeMainImage(${JSON.stringify(variation)}, this)'>`;
+                        onclick='changeMainImage(${JSON.stringify(variation)}, ${categoryId}, this)'>`;
                         if (variation.stop_selling == 1) {
                             $(".buynow").prop("disabled", true).css("background-color", "#ccc").css("cursor", "not-allowed");
                         }
@@ -287,7 +289,15 @@ if (!$product_id) {
         }
     }
 
-    function changeMainImage(variation, element) {
+    /** 📌 Định dạng giá tiền đô*/
+    function formatDollarCurrency(cents) {
+        return (cents / 1).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+        });
+    }
+
+    function changeMainImage(variation, category_id, element) {
         // update disabled buynow btn if stop_selling = 0
         if (variation.stop_selling == 1) {
             $(".buynow").prop("disabled", true).css("background-color", "#ccc").css("cursor", "not-allowed");
@@ -296,33 +306,91 @@ if (!$product_id) {
         }
         $("#product-image").attr("src", `../backend/uploads/products/${variation.image_name}`);
         $("#product-image-link").attr("href", `../backend/uploads/products/${variation.image_name}`);
-        $("#product-price").text(new Intl.NumberFormat("vi-VN").format(variation.price_cents) + " VND");
+        $("#product-price").text(formatDollarCurrency(variation.price_cents));
         $("#stock-quantity").text(`${variation.stock_quantity} products available`);
 
         maxStock = variation.stock_quantity;
         $(".num-product").val(1).attr("max", maxStock);
 
-        // Update specifications
-        $("#watch-size").text(variation.watch_size_mm);
-        $("#watch-color").text(variation.watch_color);
-        $("#display-type").text(variation.display_type);
-        $("#display-size").text(variation.display_size_mm);
-        $("#resolution").text(`${variation.resolution_w_px} x ${variation.resolution_h_px}`);
-        $("#ram-rom").text(`${variation.ram_bytes / 1024} GB / ${variation.rom_bytes / 1024} GB`);
-        $("#connectivity").text(variation.connectivity);
-        $("#battery-life").text(variation.battery_life_mah);
-        $("#water-resistance").text(`${variation.water_resistance_value} ${variation.water_resistance_unit}`);
-        $("#sensor").text(variation.sensor);
-        $("#case-material").text(variation.case_material);
-        $("#band-material").text(variation.band_material);
-        $("#band-size").text(variation.band_size_mm);
-        $("#band-color").text(variation.band_color);
-        $("#weight").text(variation.weight_milligrams / 1000);
-        $("#release-date").text(new Date(variation.release_date).toLocaleDateString());
-
-        fetchOSName(variation.os_id, function(osName) {
-            $("#os-name").text(osName);
-        });
+        if (category_id == 2) { //cable
+            $("#watch-size").text(parseFloat(variation.watch_size_mm/100) + " m (length)");
+            $("#watch-color").parent().hide();
+            $("#display-type").parent().hide();
+            $("#display-size").parent().hide();
+            $("#resolution").parent().hide();
+            $("#ram-rom").parent().hide();
+            $("#connectivity").parent().hide();
+            $("#battery-life").parent().hide();
+            $("#water-resistance").parent().hide();
+            $("#sensor").parent().hide();
+            $("#case-material").parent().hide();
+            $("#band-material").parent().hide();
+            $("#band-size").parent().hide();
+            $("#band-color").parent().hide();
+            $("#weight").parent().hide();
+            $("#release-date").parent().hide();
+            $("#os-name").parent().hide();
+        }
+        else if (category_id == 3) { //charger
+            $("#watch-size").parent().hide();
+            $("#watch-color").parent().hide();
+            $("#display-type").parent().hide();
+            $("#display-size").parent().hide();
+            $("#resolution").parent().hide();
+            $("#ram-rom").parent().hide();
+            $("#connectivity").parent().hide();
+            $("#battery-life").parent().hide();
+            $("#water-resistance").parent().hide();
+            $("#sensor").parent().hide();
+            $("#case-material").parent().hide();
+            $("#band-material").parent().hide();
+            $("#band-size").parent().hide();
+            $("#band-color").parent().hide();
+            $("#weight").parent().hide();
+            $("#release-date").parent().hide();
+            $("#os-name").parent().hide();
+        }
+        else if (category_id == 4) { //band
+            $("#watch-size").parent().hide();
+            $("#watch-color").parent().hide();
+            $("#display-type").parent().hide();
+            $("#display-size").parent().hide();
+            $("#resolution").parent().hide();
+            $("#ram-rom").parent().hide();
+            $("#connectivity").parent().hide();
+            $("#battery-life").parent().hide();
+            $("#water-resistance").parent().hide();
+            $("#sensor").parent().hide();
+            $("#case-material").text(variation.case_material);
+            $("#band-material").text(variation.band_material);
+            $("#band-size").text(variation.band_size_mm);
+            $("#band-color").text(variation.band_color);
+            $("#weight").parent().hide();
+            $("#release-date").parent().hide();
+            $("#os-name").parent().hide();
+        }
+        else {
+            // Update specifications
+            $("#watch-size").text(variation.watch_size_mm);
+            $("#watch-color").text(variation.watch_color);
+            $("#display-type").text(variation.display_type);
+            $("#display-size").text(variation.display_size_mm);
+            $("#resolution").text(`${variation.resolution_w_px} x ${variation.resolution_h_px}`);
+            $("#ram-rom").text(`${variation.ram_bytes / 1024} GB / ${variation.rom_bytes / 1024} GB`);
+            $("#connectivity").text(variation.connectivity);
+            $("#battery-life").text(variation.battery_life_mah);
+            $("#water-resistance").text(`${variation.water_resistance_value} ${variation.water_resistance_unit}`);
+            $("#sensor").text(variation.sensor);
+            $("#case-material").text(variation.case_material);
+            $("#band-material").text(variation.band_material);
+            $("#band-size").text(variation.band_size_mm);
+            $("#band-color").text(variation.band_color);
+            $("#weight").text(variation.weight_milligrams / 1000);
+            $("#release-date").text(new Date(variation.release_date).toLocaleDateString());
+            fetchOSName(variation.os_id, function(osName) {
+                $("#os-name").text(osName);
+            });
+        }
 
         if (element) {
             $(".product-thumbnails img").removeClass("active");

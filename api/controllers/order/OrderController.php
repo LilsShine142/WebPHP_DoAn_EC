@@ -28,6 +28,7 @@ class OrderController extends ErrorHandler {
         break;
 
       case "PUT":
+        $order = $this->gateway->getForUpdate($id);
         $this->auths->verifyAction("UPDATE_ORDER");
         $data = (array) json_decode(file_get_contents("php://input"));
         $errors = $this->getValidationErrors($data, false);

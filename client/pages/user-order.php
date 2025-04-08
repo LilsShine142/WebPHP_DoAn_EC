@@ -58,7 +58,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function formatCurrency(amount) {
-        return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
     }
 
     $(document).ready(function() {

@@ -37,7 +37,22 @@ switch (true) {
   case $uri === SOURCE_URI . "/products/variations":
     $gateway = new ProductVariationGateway($db);
     $controller = new ProductVariationController($gateway, $auths);
-    $controller->processRequest($method, $id, $limit, $offset);
+    $controller->processRequest($method, null, $id, $limit, $offset);
+    break;
+  // Xử lý route /products/variations/latest
+  case $uri === SOURCE_URI . "/products/variations/latest":
+    $gateway = new ProductVariationGateway($db);
+    $controller = new ProductVariationController($gateway, $auths);
+    // Phân tích URL chính xác
+    $parsedUrl = parse_url(url: $uri);
+    $path = $parsedUrl['path'] ?? '';
+    $pathParts = explode('/', trim($path, '/'));
+
+    $action = $pathParts[4] ?? null;
+    // Xử lý route /products/variations/latest
+    if (isset($action) && $action === 'latest') {
+      $controller->processRequest($method, $action, $id, $limit, $offset);
+    }
     break;
 
   default:

@@ -235,6 +235,17 @@ class ProductVariationGateway
     return $stmt->execute();
   }
 
+  // API lấy product_variation có id lớn nhất để tự động tạo id cho product_instance
+  public function getLatestId(): int | false
+  {
+    $sql = "SELECT MAX(id) FROM product_variations";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+
+    return $stmt->fetchColumn();
+  }
+
   private function hasConstrain(int $id): bool
   {
     $sql = "SELECT EXISTS (

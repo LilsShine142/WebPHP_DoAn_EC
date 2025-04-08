@@ -34,7 +34,7 @@
             <div class="search" style="width: 80%; margin-right: 30px;">
                 <input type="text" class="form-control" placeholder="Search...">
             </div>
-            <a href="index.php?page=pages/Product/create.php" class="btn btn-primary">
+            <a href="index.php?page=pages/GoodReceiptNote/create.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Add new product
             </a>
         </div>

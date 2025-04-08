@@ -1,29 +1,60 @@
 <?php
 
-class ProductVariationController extends ErrorHandler {
+class ProductVariationController extends ErrorHandler
+{
   private Utils $utils;
 
-  public function __construct(private ProductVariationGateway $gateway, private Auths $auths) {
+  public function __construct(private ProductVariationGateway $gateway, private Auths $auths)
+  {
     $this->utils = new Utils;
   }
 
-  public function processRequest(string $method, ?int $id, ?int $limit, ?int $offset): void {
-    if($id) {
+  public function processRequest(string $method, ?string $action = null, ?int $id, ?int $limit, ?int $offset): void
+  {
+
+    if ($action === 'latest') {
+      $this->processLatestRequest($method);
+      return;
+    }
+
+    if ($id) {
       $this->processResourceRequest($method, $id);
       return;
     }
 
     $this->processCollectionRequest($method, $limit, $offset);
   }
+  // Lấy id lớn nhất (id sau cùng) trong bảng product_variation
+  private function processLatestRequest(string $method): void
+  {
+    if ($method !== "GET") {
+      $this->sendErrorResponse(405, "Only GET method is allowed");
+      header("Allow: GET");
+      return;
+    }
 
-  private function processResourceRequest(string $method, int $id): void {
+    $latestVariation = $this->gateway->getLatestId();
+
+    if (!$latestVariation) {
+      $this->sendErrorResponse(404, "No product variations found");
+      return;
+    }
+
+    echo json_encode([
+      "success" => true,
+      "data" => $latestVariation
+    ]);
+  }
+
+  private function processResourceRequest(string $method, int $id): void
+  {
     $product = $this->gateway->get($id);
-    if(!$product) {
+    if (!$product) {
       $this->sendErrorResponse(404, "Product variation with an id $id not found");
       return;
     }
 
-    switch($method) {
+    switch ($method) {
       case "GET":
         echo json_encode([
           "success" => true,
@@ -35,7 +66,7 @@ class ProductVariationController extends ErrorHandler {
         $this->auths->verifyAction("UPDATE_PRODUCT_VARIATION");
         $data = (array) json_decode(file_get_contents("php://input"));
         $errors = $this->getValidationErrors($data, false);
-        if(!empty($errors)) {
+        if (!empty($errors)) {
           $this->sendErrorResponse(422, $errors);
           break;
         }
@@ -64,8 +95,9 @@ class ProductVariationController extends ErrorHandler {
     }
   }
 
-  private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
-    switch($method) {
+  private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void
+  {
+    switch ($method) {
       case "GET":
         if (isset($_GET["product_id"]) && is_numeric($_GET["product_id"])) {
           $product_id = (int) $_GET["product_id"];
@@ -84,7 +116,7 @@ class ProductVariationController extends ErrorHandler {
         $this->auths->verifyAction("CREATE_PRODUCT_VARIATION");
         $data = (array) json_decode(file_get_contents("php://input"));
         $errors = $this->getValidationErrors($data);
-        if(!empty($errors)) {
+        if (!empty($errors)) {
           $this->sendErrorResponse(422, $errors);
           break;
         }

@@ -398,6 +398,7 @@
         $(this).addClass("active");
         $(".li-addresses").removeClass("active");
         $(".li-changePass").removeClass("active");
+        $(".change-password").hide();
     });
     $(".li-addresses").click(function() {
         $(".user-infor").hide();
@@ -405,6 +406,7 @@
         $(this).addClass("active");
         $(".li-profile").removeClass("active");
         $(".li-changePass").removeClass("active");
+        $(".change-password").hide();
     });
     $(".li-changePass").click(function() {
         $(".user-infor").hide();

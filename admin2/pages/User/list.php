@@ -111,29 +111,29 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
         </div>
         <!-- JS ẩn hiện bộ lọc khi bấm nút lọc -->
         <script>
-            document.getElementById("toggleFilter").addEventListener("click", function() {
-                toggleFilter();
-            });
+            // document.getElementById("toggleFilter").addEventListener("click", function() {
+            //     toggleFilter();
+            // });
 
-            document.getElementById("closeIcon").addEventListener("click", function() {
-                toggleFilter();
-            });
+            // document.getElementById("closeIcon").addEventListener("click", function() {
+            //     toggleFilter();
+            // });
 
-            function toggleFilter() {
-                let filterContainer = document.getElementById("filterContainer");
-                let filterIcon = document.getElementById("filterIcon");
-                let closeIcon = document.getElementById("closeIcon");
+            // function toggleFilter() {
+            //     let filterContainer = document.getElementById("filterContainer");
+            //     let filterIcon = document.getElementById("filterIcon");
+            //     let closeIcon = document.getElementById("closeIcon");
 
-                if (filterContainer.style.display === "none") {
-                    filterContainer.style.display = "block";
-                    filterIcon.style.display = "none";
-                    closeIcon.style.display = "inline";
-                } else {
-                    filterContainer.style.display = "none";
-                    filterIcon.style.display = "inline";
-                    closeIcon.style.display = "none";
-                }
-            }
+            //     if (filterContainer.style.display === "none") {
+            //         filterContainer.style.display = "block";
+            //         filterIcon.style.display = "none";
+            //         closeIcon.style.display = "inline";
+            //     } else {
+            //         filterContainer.style.display = "none";
+            //         filterIcon.style.display = "inline";
+            //         closeIcon.style.display = "none";
+            //     }
+            // }
         </script>
         <div class="card-body">
             <table id="customerTable" class="table table-bordered table-striped table-hover">
@@ -227,6 +227,7 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
                             </div>
 
                             <div class="col-md-6">
+                                <input type="hidden" id="addressId" name="addressId">
                                 <div class="form-group">
                                     <label for="city_province">City province:</label>
                                     <select class="form-control" id="city_province" name="city_province" required></select>
@@ -264,170 +265,170 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
     </div>
     <!-- =============================== CALL API LẤY DANH SÁCH EMPLOYEE HOẶC CUSTOMER ================================================= -->
     <script>
-        function fetchUsersByType(type) {
-            fetchUserData().then(({
-                userRoles,
-                roles,
-                addresses
-            }) => {
-                let isEmployeeList = type !== 'customer';
-                let filteredUsers = filterUsersByType(userRoles, isEmployeeList);
-                console.log("Filtered users:", filteredUsers);
-                console.log("addresses2", addresses);
-                fetchUserDetails(filteredUsers).then(userDetails => {
-                    console.log("User details:", userDetails);
-                    console.log("addresses3", addresses);
-                    let userWithDetails = mergeUserData(userDetails, roles, addresses);
-                    console.log("User with details:", userWithDetails);
-                    renderTable(userWithDetails, isEmployeeList);
-                });
-            }).catch(error => {
-                console.error("Lỗi khi lấy thông tin người dùng", error);
-            });
-        }
+        //     function fetchUsersByType(type) {
+        //         fetchUserData().then(({
+        //             userRoles,
+        //             roles,
+        //             addresses
+        //         }) => {
+        //             let isEmployeeList = type !== 'customer';
+        //             let filteredUsers = filterUsersByType(userRoles, isEmployeeList);
+        //             console.log("Filtered users:", filteredUsers);
+        //             console.log("addresses2", addresses);
+        //             fetchUserDetails(filteredUsers).then(userDetails => {
+        //                 console.log("User details:", userDetails);
+        //                 console.log("addresses3", addresses);
+        //                 let userWithDetails = mergeUserData(userDetails, roles, addresses);
+        //                 console.log("User with details:", userWithDetails);
+        //                 renderTable(userWithDetails, isEmployeeList);
+        //             });
+        //         }).catch(error => {
+        //             console.error("Lỗi khi lấy thông tin người dùng", error);
+        //         });
+        //     }
 
-        // Gọi API lấy danh sách user_roles, roles và addresses
-        function fetchUserData() {
-            return Promise.all([
-                $.ajax({
-                    url: `${BASE_API_URL}/api/users/user_roles`,
-                    type: 'GET',
-                    dataType: "json"
-                }),
-                $.ajax({
-                    url: `${BASE_API_URL}/api/users/roles`,
-                    type: 'GET',
-                    dataType: "json"
-                }),
-                $.ajax({
-                    url: `${BASE_API_URL}/api/users/addresses`,
-                    type: 'GET',
-                    dataType: "json"
-                })
-            ]).then(([userRolesRes, rolesRes, addressRes]) => {
-                if (!userRolesRes.success || !rolesRes.success || !addressRes.success) {
-                    throw new Error("Lỗi khi lấy dữ liệu user_roles, roles hoặc addresses");
-                }
-                console.log("addresses", addressRes.data);
-                return {
-                    userRoles: userRolesRes.data,
-                    roles: rolesRes.data,
-                    addresses: addressRes.data
-                };
-            });
-        }
+        //     // Gọi API lấy danh sách user_roles, roles và addresses
+        //     function fetchUserData() {
+        //         return Promise.all([
+        //             $.ajax({
+        //                 url: `${BASE_API_URL}/api/users/user_roles`,
+        //                 type: 'GET',
+        //                 dataType: "json"
+        //             }),
+        //             $.ajax({
+        //                 url: `${BASE_API_URL}/api/users/roles`,
+        //                 type: 'GET',
+        //                 dataType: "json"
+        //             }),
+        //             $.ajax({
+        //                 url: `${BASE_API_URL}/api/users/addresses`,
+        //                 type: 'GET',
+        //                 dataType: "json"
+        //             })
+        //         ]).then(([userRolesRes, rolesRes, addressRes]) => {
+        //             if (!userRolesRes.success || !rolesRes.success || !addressRes.success) {
+        //                 throw new Error("Lỗi khi lấy dữ liệu user_roles, roles hoặc addresses");
+        //             }
+        //             console.log("addresses", addressRes.data);
+        //             return {
+        //                 userRoles: userRolesRes.data,
+        //                 roles: rolesRes.data,
+        //                 addresses: addressRes.data
+        //             };
+        //         });
+        //     }
 
-        // Lọc danh sách user theo loại (nhân viên/khách hàng)
-        function filterUsersByType(userRoles, isEmployeeList) {
-            return isEmployeeList ?
-                userRoles.filter(user => user.role_id != 3) // Nhân viên
-                :
-                userRoles.filter(user => user.role_id == 3); // Khách hàng
-        }
+        //     // Lọc danh sách user theo loại (nhân viên/khách hàng)
+        //     function filterUsersByType(userRoles, isEmployeeList) {
+        //         return isEmployeeList ?
+        //             userRoles.filter(user => user.role_id != 3) // Nhân viên
+        //             :
+        //             userRoles.filter(user => user.role_id == 3); // Khách hàng
+        //     }
 
-        // Gọi API lấy chi tiết từng user
-        //Thay vì gọi API từng user, lất tất cả user từ API rồi lọc ra user cần thiết
-        function fetchUserDetails(user_roles) {
-            console.log("user_roles", user_roles);
+        //     // Gọi API lấy chi tiết từng user
+        //     //Thay vì gọi API từng user, lất tất cả user từ API rồi lọc ra user cần thiết
+        //     function fetchUserDetails(user_roles) {
+        //         console.log("user_roles", user_roles);
 
-            return $.ajax({
-                url: `${BASE_API_URL}/api/users`,
-                type: 'GET',
-                dataType: "json"
-            }).then(response => {
-                if (!response.success) return [];
+        //         return $.ajax({
+        //             url: `${BASE_API_URL}/api/users`,
+        //             type: 'GET',
+        //             dataType: "json"
+        //         }).then(response => {
+        //             if (!response.success) return [];
 
-                let allUsers = response.data; // Danh sách tất cả users từ API
+        //             let allUsers = response.data; // Danh sách tất cả users từ API
 
-                // Lọc chỉ những user có trong danh sách users truyền vào
-                return user_roles.map(user => {
-                    let userDetail = allUsers.find(u => u.id === user.user_id);
-                    return userDetail ? {
-                        ...userDetail,
-                        role_id: user.role_id
-                    } : null;
-                }).filter(user => user !== null);
-            }).catch(error => {
-                console.error("Error fetching users:", error);
-                return [];
-            });
-        }
+        //             // Lọc chỉ những user có trong danh sách users truyền vào
+        //             return user_roles.map(user => {
+        //                 let userDetail = allUsers.find(u => u.id === user.user_id);
+        //                 return userDetail ? {
+        //                     ...userDetail,
+        //                     role_id: user.role_id
+        //                 } : null;
+        //             }).filter(user => user !== null);
+        //         }).catch(error => {
+        //             console.error("Error fetching users:", error);
+        //             return [];
+        //         });
+        //     }
 
 
 
-        // Ghép role & địa chỉ vào user
-        function mergeUserData(users, roles, addresses) {
-            let roleMap = {};
-            roles.forEach(role => {
-                roleMap[role.id] = role.name;
-            });
-            console.log("rolempa", roleMap);
-            return users.map(user => {
-                console.log("user", user);
-                console.log("userAddress4", addresses);
-                let userAddress = addresses.find(addr => addr.user_id === user.id);
-                console.log("userAddress5", userAddress);
-                return {
-                    ...user,
-                    role_name: roleMap[user.role_id] || "Không xác định",
-                    street: userAddress ? userAddress.street : "Chưa có tên đường",
-                    apartment_number: userAddress ? userAddress.apartment_number : "Chưa có số nhà",
-                    ward: userAddress ? userAddress.ward : "Chưa có phường/xã",
-                    district: userAddress ? userAddress.district : "Chưa có quận/huyện",
-                    city_province: userAddress ? userAddress.city_province : "Chưa có tỉnh/thành phố"
-                };
-            });
-        }
+        //     // Ghép role & địa chỉ vào user
+        //     function mergeUserData(users, roles, addresses) {
+        //         let roleMap = {};
+        //         roles.forEach(role => {
+        //             roleMap[role.id] = role.name;
+        //         });
+        //         console.log("rolempa", roleMap);
+        //         return users.map(user => {
+        //             console.log("user", user);
+        //             console.log("userAddress4", addresses);
+        //             let userAddress = addresses.find(addr => addr.user_id === user.id);
+        //             console.log("userAddress5", userAddress);
+        //             return {
+        //                 ...user,
+        //                 role_name: roleMap[user.role_id] || "Không xác định",
+        //                 street: userAddress ? userAddress.street : "Chưa có tên đường",
+        //                 apartment_number: userAddress ? userAddress.apartment_number : "Chưa có số nhà",
+        //                 ward: userAddress ? userAddress.ward : "Chưa có phường/xã",
+        //                 district: userAddress ? userAddress.district : "Chưa có quận/huyện",
+        //                 city_province: userAddress ? userAddress.city_province : "Chưa có tỉnh/thành phố"
+        //             };
+        //         });
+        //     }
 
-        // Render bảng
-        function renderTable(users, isEmployeeList) {
-            console.log("users", users);
-            let tableBody = document.getElementById('data-table');
-            let tableHead = document.getElementById('table-head');
+        //     // Render bảng
+        //     function renderTable(users, isEmployeeList) {
+        //         console.log("users", users);
+        //         let tableBody = document.getElementById('data-table');
+        //         let tableHead = document.getElementById('table-head');
 
-            tableHead.innerHTML = `
-        <tr>
-            <th>ID</th>
-            <th>Fullname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            ${isEmployeeList ? '<th>Role</th>' : ''} 
-            <th>Status</th>
-            <th>Create At</th>
-            <th>Actions</th>
-        </tr>
-    `;
+        //         tableHead.innerHTML = `
+        //     <tr>
+        //         <th>ID</th>
+        //         <th>Fullname</th>
+        //         <th>Email</th>
+        //         <th>Phone</th>
+        //         ${isEmployeeList ? '<th>Role</th>' : ''} 
+        //         <th>Status</th>
+        //         <th>Create At</th>
+        //         <th>Actions</th>
+        //     </tr>
+        // `;
 
-            tableBody.innerHTML = users.map(user => `
-        <tr id="user-${user.id}">
-            <td>${user.id}</td>
-            <td class="user-name">${user.full_name}</td>
-            <td class="user-email">${user.email}</td>
-            <td class="user-phone">${user.phone_number}</td>
-            ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''} 
-            <td class="user-status">${user.status}</td>
-            <td>${user.created_at}</td>
-            <td>
-                <button class="btn btn-info btn-view" data-id="${user.id}">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-warning btn-update" data-id="${user.id}">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-danger btn-delete" data-id="${user.id}">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-        }
+        //         tableBody.innerHTML = users.map(user => `
+        //     <tr id="user-${user.id}">
+        //         <td>${user.id}</td>
+        //         <td class="user-name">${user.full_name}</td>
+        //         <td class="user-email">${user.email}</td>
+        //         <td class="user-phone">${user.phone_number}</td>
+        //         ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''} 
+        //         <td class="user-status">${user.status}</td>
+        //         <td>${user.created_at}</td>
+        //         <td>
+        //             <button class="btn btn-info btn-view" data-id="${user.id}">
+        //                 <i class="fas fa-eye"></i>
+        //             </button>
+        //             <button class="btn btn-warning btn-update" data-id="${user.id}">
+        //                 <i class="fas fa-edit"></i>
+        //             </button>
+        //             <button class="btn btn-danger btn-delete" data-id="${user.id}">
+        //                 <i class="fas fa-trash"></i>
+        //             </button>
+        //         </td>
+        //     </tr>
+        // `).join('');
+        //     }
 
-        // Gọi hàm fetchUsersByType khi trang load
-        $(document).ready(function() {
-            let urlParams = new URLSearchParams(window.location.search);
-            let type = urlParams.get('type');
-            fetchUsersByType(type);
-        });
+        //     // Gọi hàm fetchUsersByType khi trang load
+        //     $(document).ready(function() {
+        //         let urlParams = new URLSearchParams(window.location.search);
+        //         let type = urlParams.get('type');
+        //         fetchUsersByType(type);
+        //     });
     </script>
 
     <!-- Toast container để hiển thị thông báo thành công -->

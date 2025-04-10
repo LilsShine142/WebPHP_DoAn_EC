@@ -126,6 +126,7 @@ class Pagination {
     render(total, containerId = 'pagination-container') {
         this.totalItems = total;
         const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+        console.log("Tổng số trang:", totalPages);
         const container = document.getElementById(containerId);
 
         if (!container) {

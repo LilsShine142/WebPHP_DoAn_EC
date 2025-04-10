@@ -120,38 +120,7 @@
                 </div>
                 
                 <div class="address-list">
-                    <div class="address-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <p><strong>Đào Thanh Tú</strong> <br> <span>(+84) 886 766 143</span> <br> Tập Đoàn Cỏ Hú <br> Xã Đức Hòa Huyện Đức Hòa, Long An</p>
-                            <!-- span "Default" -->
-                            <span style="background: #5cb85c; color: white; padding: 2px 5px; border-radius: 3px; font-size: 12px;">Default</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                            <button style="background: #f0ad4e; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;">Set as default</button>
-                            <button style="background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;">Edit</button>
-                            <button style="background: #d9534f; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
-                        </div>
-                    </div>
-                    <div class="address-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <p><strong>Thanh Tú</strong> <br> <span>(+84) 886 766 143</span> <br> 657b/78, Đường Ba Đình <br> Phường 9, Quận 1, TP. Hồ Chí Minh</p>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                            <button style="background: #f0ad4e; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;">Set as default</button>
-                            <button style="background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;">Edit</button>
-                            <button style="background: #d9534f; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
-                        </div>
-                    </div>
-                    <div class="address-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <p><strong>Thanh Tú</strong> <br> <span>(+84) 345 642 396</span> <br> Cầu Tổ, Lộc 2, P. 4 <br> Huyện Tháp Mười, Long An</p>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                            <button style="background: #f0ad4e; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;">Set as default</button>
-                            <button style="background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;">Edit</button>
-                            <button style="background: #d9534f; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
-                        </div>
-                    </div>
+                    <!-- Danh sách địa chỉ sẽ được đổ vào đây -->
                 </div>
             </div>
 
@@ -698,54 +667,6 @@
 
                         });
 
-                        // Xử lý sự kiện nhấn nút Add New Address
-                        $("#add-new-address").on("click", function () {
-                            // reset dữ liệu trong modal
-                            $(".modal-title").text("Add New Address");
-                            $(".fullName").val("");
-                            $(".phoneNumber").val("");
-                            $("#pdw-address").val("");
-                            $(".specificAddress").val("");
-                            // hiển thị modal update
-                            $("#updateAddressModal").show();
-                            // gọi api thêm address khi nhấn nút comfirm
-                            $("#confirmChangeAddress").on("click", function () {
-                                // Tạo body dữ liệu từ các input trong modal
-                                const newAddressData = {
-                                    user_id: user_id,
-                                    name: $(".fullName").val(),
-                                    street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
-                                    apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
-                                    ward: selectedWard,
-                                    district: selectedDistrict,
-                                    city_province: selectedProvince,
-                                    phone_number: $(".phoneNumber").val(),
-                                    is_default: false
-                                };
-
-                                // Gọi API thêm địa chỉ mới
-                                $.ajax({
-                                    url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
-                                    type: "POST",
-                                    contentType: "application/json",
-                                    data: JSON.stringify(newAddressData),
-                                    success: function (response) {
-                                        if (response.success) {
-                                            alert("Thêm địa chỉ thành công!");
-                                            $("#updateAddressModal").hide();
-                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
-                                        } else {
-                                            alert("Có lỗi xảy ra khi thêm địa chỉ.");
-                                        }
-                                    },
-                                    error: function () {
-                                        console.log("Dữ liệu gửi lên:", newAddressData);
-
-                                        alert("Không thể kết nối đến server.");
-                                    }
-                                });
-                            });
-                        });
 
                         // Xử lý sự kiện nhấn nút Delete
                         $(document).on("click", ".delete-address", function () {
@@ -821,11 +742,56 @@
                                 }
                             });
                         });
-                        
-
-                    } else {
-                        console.error("Error fetching addresses:", response.message);
                     }
+
+                    // Xử lý sự kiện nhấn nút Add New Address
+                    $("#add-new-address").on("click", function () {
+                        // reset dữ liệu trong modal
+                        $(".modal-title").text("Add New Address");
+                        $(".fullName").val("");
+                        $(".phoneNumber").val("");
+                        $("#pdw-address").val("");
+                        $(".specificAddress").val("");
+                        // hiển thị modal update
+                        $("#updateAddressModal").show();
+                        // gọi api thêm address khi nhấn nút comfirm
+                        $("#confirmChangeAddress").on("click", function () {
+                            // Tạo body dữ liệu từ các input trong modal
+                            const newAddressData = {
+                                user_id: user_id,
+                                name: $(".fullName").val(),
+                                street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
+                                ward: selectedWard,
+                                district: selectedDistrict,
+                                city_province: selectedProvince,
+                                phone_number: $(".phoneNumber").val(),
+                                is_default: false
+                            };
+
+                            // Gọi API thêm địa chỉ mới
+                            $.ajax({
+                                url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify(newAddressData),
+                                success: function (response) {
+                                    if (response.success) {
+                                        alert("Thêm địa chỉ thành công!");
+                                        $("#updateAddressModal").hide();
+                                        location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                    } else {
+                                        alert("Có lỗi xảy ra khi thêm địa chỉ.");
+                                    }
+                                },
+                                error: function () {
+                                    console.log("Dữ liệu gửi lên:", newAddressData);
+
+                                    alert("Không thể kết nối đến server.");
+                                }
+                            });
+                        });
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error("Error fetching addresses:", error);

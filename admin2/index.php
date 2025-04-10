@@ -40,7 +40,7 @@
       if (file_exists($contentPath)) {
         include($contentPath);
       } else {
-        echo "<pre>File not found: " . htmlspecialchars($contentPath) . "</pre>";
+        // echo "<pre>File not found: " . htmlspecialchars($contentPath) . "</pre>";
         include("pages/Statistics/Statistical.php");
       }
       ?>

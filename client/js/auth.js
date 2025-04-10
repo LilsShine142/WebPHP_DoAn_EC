@@ -70,12 +70,26 @@ $(document).ready(function () {
             method: "GET",
             dataType: "json",
             success: function (response) {
-                console.log(response);
-                alert(response.message); // Hiển thị thông báo đăng nhập thành công
-                // Lưu thông tin user vào localStorage
-                localStorage.setItem("user", JSON.stringify(response.data));
-                // Chuyển hướng về trang chủ
-                window.location.href = "../index.php";
+                $.ajax({
+                    url: `${BASE_API_URL}/api/users/user_roles?user_id=${response.data.id}&role_id=1`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        if(response.success) {
+                            // Lưu thông tin người dùng vào localStorage
+                            localStorage.setItem("user", JSON.stringify(response.data));
+                            alert("Đăng nhập thành công với quyền admin!");
+                            // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
+                            window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/admin2';
+                        }
+                    },
+                    error: function (xhr) {
+                        let error = JSON.parse(xhr.responseText);
+                        localStorage.setItem("user", JSON.stringify(response.data));
+                        alert("Đăng nhập thành công với quyền user!");
+                        window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client';
+                    }
+                });
             },
             error: function (xhr) {
                 let error = JSON.parse(xhr.responseText);

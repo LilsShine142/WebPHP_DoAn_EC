@@ -17,7 +17,7 @@
 						Account
 					</a>
 					<div class="dropdown-account">
-						<a href="./pages/login.php">Login</a>
+						<a class="login-tab" href="./pages/login.php">Login</a>
 						<a href="?content=pages/profile.php">Profile</a>
 						<a href="?content=pages/user-order.php">Order</a>
 						<a id="logout-btn" href="#">Logout</a>
@@ -127,6 +127,8 @@
 
 		// Kiểm tra nếu dữ liệu tồn tại
 		if (userData) {
+			// ẩn class login-tab
+			$(".login-tab").hide();
 			const userObject = JSON.parse(userData); // Chuyển từ JSON string thành object
 			const user_id = userObject.id; // Lấy id
 			// call ajax http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=1 to take the response.length

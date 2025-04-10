@@ -77,11 +77,19 @@
                         const orderElement = $(`
                             <div class="order bg-white p-4 rounded-lg shadow-md" data-status="${order.delivery_state_id}">
                                 <h2 class="font-bold text-lg">Order ID: #${order.id}</h2>
-                                <p class="text-sm text-gray-600">Status: ${order.delivery_state_id == 1 ? "Pending" : order.delivery_state_id == 2 ? "Approved" : "Canceled"}</p>
+                                <p class="text-lg">Status: ${order.delivery_state_id == 1 ? "Pending" : order.delivery_state_id == 2 ? "Approved" : order.delivery_state_id == 3 ? "Canceled" : order.delivery_state_id == 4 ? "To Ship" : "Received"}</p>
+
                                 <div class="grid grid-cols-1 gap-3 mt-3" id="orderItems">
                                     
                                 </div>
+
                                 <div class="mt-3 text-right font-bold text-lg">Total: ${formatCurrency(order.total_cents)}</div>
+
+                                <div class="mt-3 text-right">
+                                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                                        <a href="index.php?content=pages/order-detail.php&id=${order.id}">View Details</a>
+                                    </button>
+                                </div>
                             </div>
                         `);
                         $("#ordersList").append(orderElement);

@@ -572,9 +572,9 @@
         if (userData) {
             const userObject = JSON.parse(userData);
             const user_id = userObject.id;
-            // call ajax http://localhost:81/WebPHP_DoAn_EC/api/users/${user_id} to take the response
+            // call ajax ${BASE_API_URL}/api/users/${user_id} to take the response
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/${user_id}`,
+                url: `${BASE_API_URL}/api/users/${user_id}`,
                 type: "GET",
                 success: function(response) {
                     if (response.success) {
@@ -599,7 +599,7 @@
                     phone_number: $("#phoneNumber").val()
                 };
                 $.ajax({
-                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/${user_id}`,
+                    url: `${BASE_API_URL}/api/users/${user_id}`,
                     type: "PUT",
                     contentType: "application/json",
                     data: JSON.stringify(updatedUserData),
@@ -619,7 +619,7 @@
 
             // sự kiện add-new-address
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
+                url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
                 type: "GET",
                 success: function (response) {
                     if (response.success === true) {
@@ -675,7 +675,7 @@
 
                                 // Gọi API cập nhật địa chỉ
                                 $.ajax({
-                                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses/${selectedAddressId}`,
+                                    url: `${BASE_API_URL}/api/users/addresses/${selectedAddressId}`,
                                     type: "PUT",
                                     contentType: "application/json",
                                     data: JSON.stringify(updatedAddressData),
@@ -725,7 +725,7 @@
 
                                 // Gọi API thêm địa chỉ mới
                                 $.ajax({
-                                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
+                                    url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
                                     type: "POST",
                                     contentType: "application/json",
                                     data: JSON.stringify(newAddressData),
@@ -752,7 +752,7 @@
                             const selectedAddressId = $(this).siblings("input[name='selectedAddress']").val();
                             if (confirm("Bạn có chắc chắn muốn xóa địa chỉ này không?")) {
                                 $.ajax({
-                                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses/${selectedAddressId}`,
+                                    url: `${BASE_API_URL}/api/users/addresses/${selectedAddressId}`,
                                     type: "DELETE",
                                     success: function (response) {
                                         if (response.success) {
@@ -785,7 +785,7 @@
                         $(".set-default").on("click", function () {
                             const addressId = $(this).siblings("input[name='selectedAddress']").val();
                             $.ajax({
-                                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
+                                url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
                                 type: "PUT",
                                 contentType: "application/json",
                                 data: JSON.stringify({
@@ -794,7 +794,7 @@
                                 success: function (response) {
                                     if (response.success) {
                                         $.ajax({
-                                            url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses/${addressId}`,
+                                            url: `${BASE_API_URL}/api/users/addresses/${addressId}`,
                                             type: "PUT",
                                             contentType: "application/json",
                                             data: JSON.stringify({

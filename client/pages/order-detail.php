@@ -136,7 +136,7 @@ if (!$order_id) {
 
             // Gọi API để lấy thông tin chi tiết đơn hàng
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/orders/${<?php echo $order_id; ?>}`,
+                url: `${BASE_API_URL}/api/orders/${<?php echo $order_id; ?>}`,
                 type: "GET",
                 success: function(response) {
                     $("#orderDetails").empty();

@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+include_once "../../api/config/constants.php";
 
 // Khởi động session
 session_start();
@@ -43,16 +44,16 @@ if ($resultCode == 0) {
         "received_date" => $receivedDate,
         "payment_method" => $paymentMethod
     ];
-    $orderResponse = apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/orders", "POST", $orderData);
+    $orderResponse = apiRequest(BASE_API_URL . "/api/orders", "POST", $orderData);
 
     if ($orderResponse && $orderResponse["success"]) {
         
         foreach ($productVariationIds as $index => $productVariationId) {
             // Xóa sản phẩm khỏi giỏ hàng
-            apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/carts?user_id=$userId&product_variation_id=$productVariationId", "DELETE");
+            apiRequest(BASE_API_URL . "/api/carts?user_id=$userId&product_variation_id=$productVariationId", "DELETE");
             
             // Lấy danh sách SKU cho từng sản phẩm
-            $skuResponse = apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/products/instances?product_variation_id=$productVariationId&quantity={$quantities[$index]}", "GET");
+            $skuResponse = apiRequest(BASE_API_URL . "/api/products/instances?product_variation_id=$productVariationId&quantity={$quantities[$index]}", "GET");
             
             if ($skuResponse && $skuResponse["success"]) {
                 foreach ($skuResponse["data"] as $instance) {
@@ -62,7 +63,7 @@ if ($resultCode == 0) {
                         "product_instance_sku" => $sku,
                         "price_cents" => $priceCents[$index]
                     ];
-                    apiRequest("http://localhost:81/WebPHP_DoAn_EC/api/orders/items", "POST", $orderItemData);
+                    apiRequest(BASE_API_URL . "/api/orders/items", "POST", $orderItemData);
                 }
             }
         }
@@ -72,7 +73,7 @@ if ($resultCode == 0) {
         // xóa session storage
         echo "<script>sessionStorage.removeItem('selected_products');</script>";
         echo "<script>alert('Đặt hàng thành công!'); </script>";
-        echo "<script>window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client/index.php?content=pages/user-order.php';</script>";
+        echo "<script>window.location.href = '" . BASE_API_URL . "/client/index.php?content=pages/user-order.php';</script>";
     } else {
         echo "<script>alert('Có lỗi xảy ra khi đặt hàng.');</script>";
     }

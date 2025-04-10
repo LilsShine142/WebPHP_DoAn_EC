@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // GẮN THÊM BASE_API_URL VÀO ĐÂY VÌ Ở INDEX KHÔNG TRUYỀN ĐƯỢC VÀO FILE JS NÀY
-    const BASE_API_URL = "http://localhost:3000/WebPHP_DoAn_EC";
+    const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
     // Chuyển đổi giữa form đăng nhập và đăng ký
     $("#show-register").click(function (e) {
         e.preventDefault();

@@ -485,7 +485,7 @@
             const user_id = userObject.id;
             let addressOutId = null;
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses?user_id=${user_id}`,
+                url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
                 type: "GET",
                 success: function (response) {
                     if (response.success === true) {
@@ -599,7 +599,7 @@
 
                                 // Gọi API cập nhật địa chỉ
                                 $.ajax({
-                                    url: `http://localhost:81/WebPHP_DoAn_EC/api/users/addresses/${selectedAddressId}`,
+                                    url: `${BASE_API_URL}/api/users/addresses/${selectedAddressId}`,
                                     type: "PUT",
                                     contentType: "application/json",
                                     data: JSON.stringify(updatedAddressData),
@@ -744,14 +744,14 @@
                     });
 
                     let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php", true);
+                    xhr.open("POST", `${BASE_API_URL}/client/pages/momoCheckout.php`, true);
 
                     xhr.onload = function () {
                         if (xhr.status === 200) {
                             try {
                                 let response = JSON.parse(xhr.responseText);
                                 if (response.status === "success") {
-                                    window.location.href = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momoCheckout.php";
+                                    window.location.href = `${BASE_API_URL}/client/pages/momoCheckout.php`;
                                     
                                 } else {
                                     alert("Lỗi: " + response.message);
@@ -784,7 +784,7 @@
         // Gọi API tạo đơn hàng
         function createOrder() {
             $.ajax({
-                url: "http://localhost:81/WebPHP_DoAn_EC/api/orders",
+                url: `${BASE_API_URL}/api/orders`,
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
@@ -818,14 +818,14 @@
                             });
                             // gọi api get /products/instances?product_variation_id=455&quantity=2 để lấy mảng sku cho variation
                             $.ajax({
-                                url: `http://localhost:81/WebPHP_DoAn_EC/api/products/instances?product_variation_id=${product.product_variation_id}&quantity=${product.quantity}`,
+                                url: `${BASE_API_URL}/api/products/instances?product_variation_id=${product.product_variation_id}&quantity=${product.quantity}`,
                                 type: "GET",
                                 success: function (response) {
                                     if (response.success) {
                                         response.data.forEach(instance => {
                                             const sku = instance.sku;
                                             $.ajax({
-                                                url: "http://localhost:81/WebPHP_DoAn_EC/api/orders/items",
+                                                url: `${BASE_API_URL}/api/orders/items`,
                                                 type: "POST",
                                                 contentType: "application/json",
                                                 data: JSON.stringify({
@@ -861,7 +861,7 @@
                     sessionStorage.removeItem("selected_products");
                     sessionStorage.removeItem("order_id");
                     alert("Đặt hàng thành công!");
-                    window.location.href = "http://localhost:81/WebPHP_DoAn_EC/client/index.php?content=pages/shopping-cart.php"; // Chuyển hướng về trang giỏ hàng
+                    window.location.href = `${BASE_API_URL}/client/index.php?content=pages/shopping-cart.php`; // Chuyển hướng về trang giỏ hàng
                 },
                 error: function () {
                     alert("Không thể kết nối đến server.");

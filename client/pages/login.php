@@ -451,14 +451,14 @@
 
         // Kiểm tra mật khẩu hiện tại
         $.ajax({
-            url: `http://localhost:81/WebPHP_DoAn_EC/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(currentPassword)}`,
+            url: `${BASE_API_URL}/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(currentPassword)}`,
             method: "GET",
             dataType: "json",
             success: function (response) {
                 if (response.success) {
                     // Nếu mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
                     $.ajax({
-                        url: `http://localhost:81/WebPHP_DoAn_EC/api/users/${response.data.id}`, // Sử dụng id từ phản hồi
+                        url: `${BASE_API_URL}/api/users/${response.data.id}`, // Sử dụng id từ phản hồi
                         method: "PUT",
                         contentType: "application/json",
                         data: JSON.stringify({ password: newPassword }),

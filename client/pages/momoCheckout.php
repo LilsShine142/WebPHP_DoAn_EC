@@ -1,6 +1,7 @@
 <?php
 session_start();
 header("Content-Type: application/json");
+include_once "../../api/config/constants.php";
 
 // Kiểm tra nếu có dữ liệu được gửi từ POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -78,8 +79,8 @@ if ($paymentMethod === 'Momo') {
     
     $requestId = time() . "";
     $orderInfo = "Thanh toán đơn hàng #" . $orderId;
-    $redirectUrl = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momo_ipn.php"; // Chuyển sang file xử lý riêng
-    $ipnUrl = "http://localhost:81/WebPHP_DoAn_EC/client/pages/momo_ipn.php"; // Xử lý phản hồi MoMo
+    $redirectUrl = BASE_API_URL . "/client/pages/momo_ipn.php"; // Chuyển sang file xử lý riêng
+    $ipnUrl =  BASE_API_URL . "/client/pages/momo_ipn.php"; // Xử lý phản hồi MoMo
     $extraData = "";
     $requestType = "payWithATM";
     // Dữ liệu yêu cầu thanh toán

@@ -68,7 +68,7 @@ if (!$product_id) {
                         <div class="col-md-6">
                             <p><strong>Size:</strong> <span id="watch-size"></span></p>
                             <p><strong>Color:</strong> <span id="watch-color"></span></p>
-                            <p><strong>Display:</strong> <span id="display-type"></span> (<span id="display-size"></span> inch)</p>
+                            <p><strong>Display:</strong> <span id="display-type"></span> (<span id="display-size"></span> inches)</p>
                             <p><strong>Resolution:</strong> <span id="resolution"></span> px</p>
                             <p><strong>RAM/ROM:</strong> <span id="ram-rom"></span></p>
                             <p><strong>Operating System:</strong> <span id="os-name"></span></p>
@@ -361,7 +361,7 @@ if (!$product_id) {
             $("#battery-life").parent().hide();
             $("#water-resistance").parent().hide();
             $("#sensor").parent().hide();
-            $("#case-material").text(variation.case_material);
+            $("#case-material").parent().hide();
             $("#band-material").text(variation.band_material);
             $("#band-size").text(variation.band_size_mm);
             $("#band-color").text(variation.band_color);

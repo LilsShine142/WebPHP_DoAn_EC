@@ -47,46 +47,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // LOAD DỮ LIỆU PHIÊN BẢN SẢN PHẨM LÊN FORM
     function loadProductVariationsDataToTable(productVariationData) {
-        let productVariationTable = document.getElementById("product-variations-table");
+        const productVariationTable = document.getElementById("product-variations-table");
         productVariationTable.innerHTML = "";
-        let index = 0;
+
+        // Xử lý trường hợp không có dữ liệu
         if (!productVariationData || productVariationData.length === 0) {
-            productVariationTable.innerHTML = `<tr><td colspan="11" class="text-center">No data available</td></tr>`;
+            productVariationTable.innerHTML = `
+            <tr>
+                <td colspan="11" class="text-center py-3">No data available</td>
+            </tr>`;
             return;
         }
+
+        let index = 0;
         productVariationData.forEach((variation) => {
-            console.log("index:", index);
-            console.log("watch_size_mm:", variation.watch_size_mm);
-            let imageUrl = variation.image_name ? `../backend/uploads/products/${variation.image_name}` : "default-image.jpg"; // Ảnh mặc định nếu không có ảnh
-            console.log("Image URL:", imageUrl);
-            variation.instances.forEach((instance, instance_index) => {
-                console.log("Instance:", instance);
+            const imageUrl = variation.image_name
+                ? `../backend/uploads/products/${variation.image_name}`
+                : "default-image.jpg";
+
+            variation.instances.forEach((instance) => {
+                index += 1;
                 productVariationTable.innerHTML += `
-                    <tr>
-                        <td>${index += 1}</td>
-                        <td>${variation.product_id}</td>
-                        <td>${variation.id}</td>
-                        <td><img src="${imageUrl}" width="50" onerror="this.onerror=null; this.src='default-image.jpg';"></td>
-                        <td>${variation.instances[instance_index].sku}</td>
-                        <td>${variation.watch_size_mm}</td>
-                        <td>${variation.display_size_mm}</td>
-                        <td>${variation.price_cents}</td>
-                        <td>${variation.stock_quantity}</td>
-                        <td>${variation.stop_selling}</td>
-                        <td>
-                            <button class="btn btn-info btn-view" data-id="${variation.id}">
+                <tr class="align-middle">
+                    <td class="text-center">${index}</td>
+                    <td class="text-center">${variation.product_id}</td>
+                    <td class="text-center">${variation.id}</td>
+                    <td class="text-center">
+                        <img src="${imageUrl}" 
+                             width="50" 
+                             class="img-thumbnail"
+                             onerror="this.onerror=null; this.src='default-image.jpg';"
+                             alt="Variation ${variation.id}">
+                    </td>
+                    <td class="text-center">${instance.sku}</td>
+                    <td class="text-center">${variation.watch_size_mm || '-'}</td>
+                    <td class="text-center">${variation.display_size_mm || '-'}</td>
+                    <td class="text-center">${variation.price_cents || '0'}</td>
+                    <td class="text-center">${variation.stock_quantity || '0'}</td>
+                    <td class="text-center">${variation.stop_selling ? 'Yes' : 'No'}</td>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <button class="btn btn-info btn-sm py-1 px-2 btn-view" 
+                                    data-id="${variation.id}" 
+                                    title="View">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button class="btn btn-warning btn-update" data-id="${variation.id}">
+                            <button class="btn btn-warning btn-sm py-1 px-2 btn-update" 
+                                    data-id="${variation.id}" 
+                                    title="Edit">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-danger btn-delete" data-id="${variation.id}">
+                            <button class="btn btn-danger btn-sm py-1 px-2 btn-delete" 
+                                    data-id="${variation.id}" 
+                                    title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
-                        </td>
-                    </tr> `;
+                        </div>
+                    </td>
+                </tr>`;
             });
-
         });
     }
 

@@ -81,105 +81,127 @@ class UserController extends ErrorHandler
 
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void
   {
-      switch ($method) {
-          case "GET":
-              $email = $_GET['email'] ?? null;
-              $password = $_GET['password'] ?? null;
+    switch ($method) {
+      case "GET":
+        $email = $_GET['email'] ?? null;
+        $password = $_GET['password'] ?? null;
 
-              // ✅ Kiểm tra đăng nhập
-              if ($email && $password) {
-                  $user = $this->gateway->getByEmail($email);
-                  if (!$user) {
-                      $this->sendErrorResponse(404, "User with email $email not found");
-                      return;
-                  }
+        // ✅ Kiểm tra đăng nhập
+        if ($email && $password) {
+          $user = $this->gateway->getByEmail($email);
+          if (!$user) {
+            $this->sendErrorResponse(404, "User with email $email not found");
+            return;
+          }
 
-                  // So sánh mật khẩu nhập vào với mật khẩu hash trong DB
-                  if (!password_verify($password, $user["password"])) {
-                      $this->sendErrorResponse(401, "Incorrect password");
-                      return;
-                  }
+          // So sánh mật khẩu nhập vào với mật khẩu hash trong DB
+          if (!password_verify($password, $user["password"])) {
+            $this->sendErrorResponse(401, "Incorrect password");
+            return;
+          }
 
-                  unset($user["password"]); // Xóa password trước khi trả về
-                  
-                  echo json_encode([
-                      "success" => true,
-                      "message" => "Login successful",
-                      "data" => $user
-                  ]);
-                  return;
-              }
+          unset($user["password"]); // Xóa password trước khi trả về
 
-              // ✅ Nếu không có email và password, thực hiện các thao tác lấy danh sách người dùng
-              $id = $_GET['id'] ?? null;
-              $name = trim($_GET['full_name'] ?? '') ?: null;
-              $contact = trim($_GET['contact'] ?? '') ?: null;
-              $from_date = trim($_GET['from_date'] ?? '') ?: null;
-              $to_date = trim($_GET['to_date'] ?? '') ?: null;
-              $type = $_GET['type'] ?? null;
+          echo json_encode([
+            "success" => true,
+            "message" => "Login successful",
+            "data" => $user
+          ]);
+          return;
+        }
 
-              if ($id || $type || $name || $contact || $from_date || $to_date) {
-                  $data = $this->gateway->getByFilters($id, $name, $contact, $from_date, $to_date, $type);
-              } else {
-                  $data = $this->gateway->getAll($limit, $offset);
-              }
+        $filters = [
+          'id' => isset($_GET['id']) ? (int)$_GET['id'] : null,
+          'name' => trim($_GET['full_name'] ?? '') ?: null,
+          'contact' => trim($_GET['contact'] ?? '') ?: null,
+          'from_date' => trim($_GET['from_date'] ?? '') ?: null,
+          'to_date' => trim($_GET['to_date'] ?? '') ?: null,
+          'type' => $_GET['type'] ?? null
+        ];
 
-              $dataFiltered = [];
-              foreach ($data as $user) {
-                  unset($user["password"]);
-                  $dataFiltered[] = $user;
-              }
+        $this->handleUserList($filters, $limit ?? 10, $offset ?? 0);
+        break;
 
-              echo json_encode([
-                  "success" => true,
-                  "length" => count($dataFiltered),
-                  "data" => $dataFiltered
-              ]);
-              break;
+      case "POST":
+        // Lấy dữ liệu từ JSON body thay vì $_POST
+        $data = json_decode(file_get_contents("php://input"), true);
 
-              case "POST":
-                // Lấy dữ liệu từ JSON body thay vì $_POST
-                $data = json_decode(file_get_contents("php://input"), true);
-            
-                $newEmail = $data['email'] ?? null;
-                $newPassword = $data['password'] ?? null;
-            
-                if ($newEmail && $newPassword) {
-                    $user = $this->gateway->getByEmail($newEmail);
-                    if ($user) {
-                        $this->sendErrorResponse(409, "User with email $newEmail already exists.");
-                        return;
-                    }
-            
-                    $userData = [
-                        "email" => $newEmail,
-                        "password" => $newPassword
-                    ];
-            
-                    $errors = $this->getValidationErrors($userData, true);
-                    if (!empty($errors)) {
-                        $this->sendErrorResponse(422, $errors);
-                        break;
-                    }
-            
-                    $createdUser = $this->gateway->create($userData);
-                    unset($createdUser["password"]); // Không trả về password
-            
-                    echo json_encode([
-                        "success" => true,
-                        "message" => "User created successfully",
-                        "data" => $createdUser
-                    ]);
-                    break;
-                } else {
-                    $this->sendErrorResponse(400, "Email and password are required.");
-                }
-              break;            
+        $newEmail = $data['email'] ?? null;
+        $newPassword = $data['password'] ?? null;
 
-          default:
-              $this->sendErrorResponse(405, "only allow GET, POST method");
-              header("Allow: GET, POST");
-      }
+        if ($newEmail && $newPassword) {
+          $user = $this->gateway->getByEmail($newEmail);
+          if ($user) {
+            $this->sendErrorResponse(409, "User with email $newEmail already exists.");
+            return;
+          }
+
+          $userData = [
+            "email" => $newEmail,
+            "password" => $newPassword
+          ];
+
+          $errors = $this->getValidationErrors($userData, true);
+          if (!empty($errors)) {
+            $this->sendErrorResponse(422, $errors);
+            break;
+          }
+
+          $createdUser = $this->gateway->create($userData);
+          unset($createdUser["password"]); // Không trả về password
+
+          echo json_encode([
+            "success" => true,
+            "message" => "User created successfully",
+            "data" => $createdUser
+          ]);
+          break;
+        } else {
+          $this->sendErrorResponse(400, "Email and password are required.");
+        }
+        break;
+
+      default:
+        $this->sendErrorResponse(405, "only allow GET, POST method");
+        header("Allow: GET, POST");
+    }
+  }
+
+  private function handleUserList(array $filters, int $limit, int $offset): void
+  {
+    $hasFilters = !empty(array_filter($filters));
+
+    if ($hasFilters) {
+      $result = $this->gateway->getByFiltersWithPagination(
+        $filters['id'],
+        $filters['name'],
+        $filters['contact'],
+        $filters['from_date'],
+        $filters['to_date'],
+        $filters['type'],
+        $limit,
+        $offset
+      );
+      $data = $result['data'];
+      $totalElements = $result['total'];
+    } else {
+      $totalElements = $this->gateway->countAll();
+      $data = $this->gateway->getAll($limit, $offset);
+    }
+
+    $dataFiltered = array_map(function ($user) {
+      unset($user['password']);
+      return $user;
+    }, $data);
+
+    echo json_encode([
+      "success" => true,
+      "totalElements" => $totalElements,
+      "limit" => $limit,
+      "offset" => $offset,
+      "length" => count($dataFiltered),
+      "data" => $dataFiltered
+    ]);
   }
 
   private function getValidationErrors(array $data, bool $new = true): array

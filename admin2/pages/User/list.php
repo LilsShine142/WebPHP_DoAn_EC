@@ -13,6 +13,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Import file pagination -->
+    <script src="assets/Components/Pagination.js"></script>
+
 </head>
 <?php
 $cssStack = [];
@@ -141,6 +144,10 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
                     <!-- Dữ liệu sẽ được load bằng AJAX -->
                 </tbody>
             </table>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div id="record-info" class="ms-2">Đang hiển thị 0–0 trên tổng số 0 mục</div>
+                <div id="pagination-container" class="me-2"></div>
+            </div>
         </div>
     </div>
 

@@ -197,7 +197,194 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     //================================================== LẤY THÔNG TIN NGƯỜI DÙNG ====================================
-    // Gọi API lấy danh sách user_roles, roles và addresses
+    // // Gọi API lấy danh sách user_roles, roles và addresses
+    // function fetchUserData(userId) {
+    //     return Promise.all([
+    //         $.ajax({
+    //             url: `${BASE_API_URL}/api/users/${userId}`,
+    //             type: 'GET',
+    //             dataType: "json"
+    //         }).catch(error => {
+    //             console.error("Lỗi API user:", error);
+    //             return { success: false, data: {} };
+    //         }),
+
+    //         $.ajax({
+    //             url: `${BASE_API_URL}/api/users/user_roles?user_id=${userId}`,
+    //             type: 'GET',
+    //             dataType: "json"
+    //         }).catch(error => {
+    //             console.error("Lỗi API user_roles:", error);
+    //             return { success: false, data: [] };
+    //         }),
+
+    //         $.ajax({
+    //             url: `${BASE_API_URL}/api/users/addresses?user_id=${userId}`,
+    //             type: 'GET',
+    //             dataType: "json"
+    //         }).catch(error => {
+    //             console.error("Lỗi API addresses:", error);
+    //             return { success: false, data: [] };
+    //         })
+    //     ]).then(([userInfor, userRolesRes, addressRes]) => {
+    //         console.log("API userInfor:", userInfor);
+    //         console.log("API user_roles:", userRolesRes);
+    //         console.log("API addresses:", addressRes);
+
+    //         if (!userInfor.success || !userRolesRes.success) {
+    //             throw new Error("Lỗi khi lấy dữ liệu userInfor hoặc user_roles"); //Không có address cũng không sao
+    //         }
+
+    //         let roleId = userRolesRes.data[0]?.role_id || 0;
+    //         console.log("Role ID:", roleId);
+
+    //         // Nếu roleId hợp lệ (>0) thì gọi API lấy roles, nếu không thì trả về dữ liệu ngay
+    //         if (roleId > 0) {
+    //             return $.ajax({
+    //                 url: `${BASE_API_URL}/api/users/roles/${roleId}`,
+    //                 type: 'GET',
+    //                 dataType: "json"
+    //             }).then(rolesRes => {
+    //                 console.log("API roles:", rolesRes);
+
+    //                 if (!rolesRes.success) {
+    //                     throw new Error("Lỗi khi lấy dữ liệu roles");
+    //                 }
+
+    //                 return {
+    //                     userInfor: userInfor.data,
+    //                     userRoles: userRolesRes.data,
+    //                     roles: rolesRes.data,
+    //                     addresses: addressRes.data
+    //                 };
+    //             });
+    //         }
+    //         // Nếu không có address
+    //         else if (!addressRes.success) {
+    //             return {
+    //                 userInfor: userInfor.data,
+    //                 userRoles: userRolesRes.data,
+    //                 roles: rolesRes.data,
+    //                 addresses: []
+    //             };
+    //         } else {
+    //             // Nếu không có roleId, trả về dữ liệu ngay
+    //             return {
+    //                 userInfor: userInfor.data,
+    //                 userRoles: userRolesRes.data,
+    //                 roles: [],
+    //                 addresses: addressRes.data
+    //             };
+    //         }
+    //     }).catch(error => {
+    //         console.error("Lỗi trong fetchUserData:", error);
+    //         return { userInfor: {}, userRoles: [], roles: [], addresses: [] };
+    //     });
+    // }
+
+    // // Ghép userInfor, usetRoles, roles, addresses vào 1 object userDataUpdate
+    // function mergeUserData(userInfor, roles, addresses) {
+
+    //     return {
+    //         id: userInfor.id || null,
+    //         full_name: userInfor.full_name || "N/A",
+    //         email: userInfor.email || "N/A",
+    //         phone_number: userInfor.phone_number || "N/A",
+    //         role_id: roles.id || null,
+    //         role_name: roles.name || "N/A",
+    //         city_province: addresses ? addresses.city_province : "N/A",
+    //         district: addresses ? addresses.district : "N/A",
+    //         ward: addresses ? addresses.ward : "N/A",
+    //         street: addresses ? addresses.street : "N/A",
+    //         apartment_number: addresses ? addresses.apartment_number : "N/A"
+    //     };
+    // }
+
+    // // Gọi API để lấy thông tin người dùng
+    // function getUserDataInfor(userId) {
+    //     return fetchUserData(userId).then(userData => {
+    //         if (!userData) return null;
+    //         console.log("userData:", userData);
+
+    //         let userWithDetails = mergeUserData(userData.userInfor, userData.roles, userData.addresses);
+    //         console.log("User with details:", userWithDetails);
+
+    //         return userWithDetails;
+    //     }).catch(error => {
+    //         console.error("Lỗi khi lấy thông tin người dùng", error);
+    //         return null;
+    //     });
+    // }
+
+
+
+
+    // function filterData(keyValue = "", extraParams = "") {
+    //     let apiUrl = `${BASE_API_URL}/api/users?full_name=${encodeURIComponent(keyValue)}`;
+    //     console.log("API URL:", apiUrl);
+    //     if (extraParams) {
+    //         apiUrl += `&${extraParams}`;
+    //     }
+    //     console.log("API URL with extra params:", apiUrl);
+
+    //     $.ajax({
+    //         url: apiUrl,
+    //         type: "GET",
+    //         success: function (response) {
+    //             console.log("Filtered Data:", response);
+    //             renderUserList(response.data); // Hiển thị lại bảng với dữ liệu mới
+    //         },
+    //         error: function (err) {
+    //             console.error("Error fetching data:", err);
+    //         },
+    //     });
+    // }
+
+    // // Hàm cập nhật danh sách người dùng
+    // function renderUserList(users) {
+    //     let tableBody = document.getElementById('data-table');
+    //     console.log("Danh sách người dùng:", users);
+    //     console.log("table", tableBody);
+    //     // Xóa nội dung cũ
+    //     tableBody.innerHTML = "";
+    //     let urlParams = new URLSearchParams(window.location.search);
+    //     let type = urlParams.get('type');
+    //     let isEmployeeList = type === 'employee';
+    //     console.log("isEmployeeList:", isEmployeeList);
+    //     if (users.length === 0) {
+    //         tableBody.innerHTML = `<tr><td colspan='8' class='text-center'>No data available</td></tr>`;
+    //     } else {
+    //         tableBody.innerHTML = users.map(user => `
+    //     <tr id="user-${user.id}">
+    //         <td>${user.id}</td>
+    //         <td class="user-name">${user.full_name}</td>
+    //         <td class="user-email">${user.email}</td>
+    //         <td class="user-phone">${user.phone_number}</td>
+    //         ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''}
+    //         <td class="user-status">${user.status}</td>
+    //         <td>${user.created_at}</td>
+    //         <td>
+    //             <button class="btn btn-info btn-view" data-id="${user.id}">
+    //                 <i class="fas fa-eye"></i>
+    //             </button>
+    //             <button class="btn btn-warning btn-update" data-id="${user.id}">
+    //                 <i class="fas fa-edit"></i>
+    //             </button>
+    //             <button class="btn btn-danger btn-delete" data-id="${user.id}">
+    //                 <i class="fas fa-trash"></i>
+    //             </button>
+    //         </td>
+    //     </tr>
+    // `).join('');
+    //     }
+    // }
+
+
+// ====================================== RENDER RA BẢNG DỮ LIỆU =========================================
+    
+
+
+// Gọi API lấy danh sách user_roles, roles và addresses
     function fetchUserData(userId) {
         return Promise.all([
             $.ajax({
@@ -315,6 +502,167 @@ document.addEventListener("DOMContentLoaded", function () {
             return null;
         });
     }
+
+
+
+
+
+
+    // Cấu hình
+    const USER_CONFIG = {
+        DEFAULT_ITEMS_PER_PAGE: 10,
+        DEFAULT_EXTRA_PARAMS: "" // Sẽ được thêm type từ URL
+    };
+
+
+
+
+    // Khởi tạo pagination với số item mỗi trang
+    const userPagination = new Pagination(USER_CONFIG.DEFAULT_ITEMS_PER_PAGE);
+
+    // Hàm xây dựng URL với phân trang và filter
+    function buildUserApiUrl(searchValue, page, limit) {
+        const type = getUserTypeFromURL();
+        let url = `${BASE_API_URL}/api/users?limit=${limit}&offset=${(page - 1) * limit}&type=${type}`;
+
+        if (searchValue) {
+            url += `&full_name=${encodeURIComponent(searchValue)}`;
+        }
+
+        return url;
+    }
+
+    // Hàm filterData với phân trang
+    function filterData(searchValue = "", extraParams = "", page = 1, limit = USER_CONFIG.DEFAULT_ITEMS_PER_PAGE) {
+        let apiUrl = buildUserApiUrl(searchValue, page, limit);
+
+        if (extraParams) {
+            apiUrl += `&${extraParams}`;
+        }
+
+        console.log("API URL:", apiUrl);
+
+        $.ajax({
+            url: apiUrl,
+            type: "GET",
+            success: function (response) {
+                console.log("Filtered Data:", response);
+                if (response.success) {
+                    handleUserResponse(response, page, limit);
+                } else {
+                    showError(response.message || "Failed to load users");
+                    renderUserList([]);
+                }
+            },
+            error: function (xhr) {
+                console.error("Error fetching data:", xhr);
+                const errorMsg = xhr.responseJSON?.message || "Không thể tải dữ liệu";
+                showError(errorMsg);
+                renderUserList([]);
+            }
+        });
+    }
+
+    // Hàm xử lý response từ server
+    function handleUserResponse(response, page, limit) {
+        const users = response.data || [];
+        const totalUsers = response.totalElements || 0;
+
+        // Cập nhật pagination
+        userPagination.currentPage = page;
+        userPagination.totalItems = totalUsers;
+
+        renderUserList(users);
+        updatePaginationDisplay(totalUsers, page, limit);
+    }
+
+    // Hàm cập nhật hiển thị phân trang
+    function updatePaginationDisplay(totalItems, page, limit) {
+        const start = (page - 1) * limit + 1;
+        const end = Math.min(page * limit, totalItems);
+
+        // Cập nhật thông tin bản ghi
+        userPagination.updateRecordInfo(start, end, totalItems);
+
+        // Render phân trang
+        userPagination.render(totalItems);
+    }
+
+    // Hàm cập nhật danh sách người dùng
+    function renderUserList(users) {
+        const tableBody = $('#data-table');
+        if (!tableBody.length) return;
+
+        if (!users || users.length === 0) {
+            tableBody.html('<tr><td colspan="8" class="text-center">Không có dữ liệu</td></tr>');
+            return;
+        }
+
+        const isEmployeeView = getUserTypeFromURL() === 'employee';
+
+        const rows = users.map((user, index) => `
+        <tr id="user-${user.id}">
+            <td>${(userPagination.currentPage - 1) * userPagination.itemsPerPage + index + 1}</td>
+            <td>${user.full_name || 'N/A'}</td>
+            <td>${user.email || 'N/A'}</td>
+            <td>${user.phone_number || 'N/A'}</td>
+            ${isEmployeeView ? `<td>${user.role_name || 'N/A'}</td>` : ''}
+            <td>${user.status || 'N/A'}</td>
+            <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('vi-VN') : 'N/A'}</td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-info btn-sm btn-view" data-id="${user.id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-warning btn-sm btn-edit" data-id="${user.id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="${user.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+        tableBody.html(rows);
+        attachUserEvents();
+    }
+
+    // Hàm xử lý tìm kiếm
+    function handleUserSearch() {
+        const searchValue = $('#user-search-input').val().trim();
+        userPagination.setSearchValue(searchValue);
+        userPagination.currentPage = 1; // Reset về trang đầu
+        loadUsers();
+    }
+
+    // Khởi tạo
+    $(document).ready(function () {
+        // Khởi tạo pagination với callback là filterData
+        userPagination.init(filterData);
+
+        // Gắn sự kiện tìm kiếm với debounce 300ms
+        $('#user-search-input').on('input', debounce(handleUserSearch, 300));
+
+        // Load dữ liệu ban đầu
+        loadUsers();
+    });
+
+    // Hàm debounce
+    function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
+
+
+
+
+    
+
 
     //====================================== Hiện modal và data khi bấm update khách hàng hoặc nhân viên ====================================
     // Lấy danh sách tất cả các nút có class "btn-update"
@@ -589,65 +937,7 @@ document.addEventListener("DOMContentLoaded", function () {
         filterData(keyValue); // Gọi hàm lọc dữ liệu
     });
 
-    function filterData(keyValue = "", extraParams = "") {
-        let apiUrl = `${BASE_API_URL}/api/users?full_name=${encodeURIComponent(keyValue)}`;
-        console.log("API URL:", apiUrl);
-        if (extraParams) {
-            apiUrl += `&${extraParams}`;
-        }
-        console.log("API URL with extra params:", apiUrl);
-
-        $.ajax({
-            url: apiUrl,
-            type: "GET",
-            success: function (response) {
-                console.log("Filtered Data:", response);
-                renderUserList(response.data); // Hiển thị lại bảng với dữ liệu mới
-            },
-            error: function (err) {
-                console.error("Error fetching data:", err);
-            },
-        });
-    }
-
-    // Hàm cập nhật danh sách người dùng
-    function renderUserList(users) {
-        let tableBody = document.getElementById('data-table');
-        console.log("Danh sách người dùng:", users);
-        console.log("table", tableBody);
-        // Xóa nội dung cũ
-        tableBody.innerHTML = "";
-        let urlParams = new URLSearchParams(window.location.search);
-        let type = urlParams.get('type');
-        let isEmployeeList = type === 'employee';
-        console.log("isEmployeeList:", isEmployeeList);
-        if (users.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan='8' class='text-center'>No data available</td></tr>`;
-        } else {
-            tableBody.innerHTML = users.map(user => `
-        <tr id="user-${user.id}">
-            <td>${user.id}</td>
-            <td class="user-name">${user.full_name}</td>
-            <td class="user-email">${user.email}</td>
-            <td class="user-phone">${user.phone_number}</td>
-            ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''}  
-            <td class="user-status">${user.status}</td>
-            <td>${user.created_at}</td>
-            <td>
-                <button class="btn btn-info btn-view" data-id="${user.id}">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-warning btn-update" data-id="${user.id}">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-danger btn-delete" data-id="${user.id}">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-        }
-    }
+    
 });
 
 

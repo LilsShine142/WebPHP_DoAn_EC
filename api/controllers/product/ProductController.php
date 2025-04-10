@@ -64,11 +64,15 @@ class ProductController extends ErrorHandler {
   private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
     switch($method) {
       case "GET":
-        $data = $this->gateway->getAll($limit, $offset);
+        $total = $this->gateway->countAll(); // Đếm tổng số sản phẩm (chưa lọc)
+        $data = $this->gateway->getAll($limit, $offset); // Lấy danh sách phân trang
 
         echo json_encode([
           "success" => true,
-          "length" => count($data),
+          "totalElements" => $total, // Tổng số bản ghi
+          "limit" => $limit,
+          "offset" => $offset,
+          "length" => count($data), // Số lượng phần tử thực tế trong trang hiện tại
           "data" => $data
         ]);
         break;

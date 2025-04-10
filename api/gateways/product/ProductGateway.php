@@ -162,4 +162,12 @@ class ProductGateway
 
     return (bool) $stmt->fetchColumn();
   }
+
+  // Hàm đếm tổng sản phẩm
+  public function countAll(): int
+  {
+    $sql = "SELECT COUNT(*) FROM products";
+    $stmt = $this->conn->query($sql);
+    return (int) $stmt->fetchColumn();
+  }
 }

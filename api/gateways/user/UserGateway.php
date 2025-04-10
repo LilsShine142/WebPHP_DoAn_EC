@@ -11,14 +11,15 @@ class UserGateway
     $this->userRole = new UserRoleGateway($db);
   }
 
-  public function getByEmail(string $email): ?array{
-      $sql = "SELECT * FROM users WHERE email = :email";
-      $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(":email", $email);
-      $stmt->execute();
+  public function getByEmail(string $email): ?array
+  {
+    $sql = "SELECT * FROM users WHERE email = :email";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(":email", $email);
+    $stmt->execute();
 
-      $user = $stmt->fetch(PDO::FETCH_ASSOC);
-      return $user ?: null;
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $user ?: null;
   }
 
   public function getAll(?int $limit, ?int $offset): array | false
@@ -174,5 +175,142 @@ class UserGateway
     $stmt->execute();
 
     return (bool) $stmt->fetchColumn();
+  }
+
+  /**
+   * Đếm tổng số employee (không phải customer)
+   */
+  public function countEmployees(): int
+  {
+    $sql = "SELECT COUNT(DISTINCT u.id) 
+                FROM users u
+                JOIN user_roles ur ON u.id = ur.user_id
+                WHERE ur.role_id NOT IN (3)"; // Loại bỏ role customer (3)
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return (int) $stmt->fetchColumn();
+  }
+
+  /**
+   * Đếm tổng số customer
+   */
+  public function countCustomers(): int
+  {
+    $sql = "SELECT COUNT(DISTINCT u.id) 
+                FROM users u
+                JOIN user_roles ur ON u.id = ur.user_id
+                WHERE ur.role_id = 3"; // Chỉ lấy role customer (3)
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return (int) $stmt->fetchColumn();
+  }
+
+  public function getByFiltersWithPagination(
+    ?int $id,
+    ?string $name,
+    ?string $contact,
+    ?string $from_date,
+    ?string $to_date,
+    ?string $type,
+    ?int $limit,
+    ?int $offset
+  ): array {
+    // Xây dựng query cơ bản
+    $query = "SELECT SQL_CALC_FOUND_ROWS u.*, r.name as role_name 
+              FROM users u
+              LEFT JOIN user_roles ur ON u.id = ur.user_id
+              LEFT JOIN roles r ON ur.role_id = r.id";
+
+    $conditions = [];
+    $params = [];
+    $paramTypes = [];
+
+    // Thêm điều kiện lọc
+    if (!empty($id)) {
+      $conditions[] = "u.id = ?";
+      $params[] = $id;
+      $paramTypes[] = PDO::PARAM_INT;
+    }
+
+    if (!empty($name)) {
+      $conditions[] = "u.full_name LIKE ?";
+      $params[] = "%$name%";
+      $paramTypes[] = PDO::PARAM_STR;
+    }
+
+    if (!empty($contact)) {
+      $conditions[] = "(u.email LIKE ? OR u.phone_number LIKE ?)";
+      $params[] = "%$contact%";
+      $paramTypes[] = PDO::PARAM_STR;
+      $params[] = "%$contact%";
+      $paramTypes[] = PDO::PARAM_STR;
+    }
+
+    if (!empty($from_date)) {
+      $conditions[] = "u.created_at >= ?";
+      $params[] = $from_date;
+      $paramTypes[] = PDO::PARAM_STR;
+    }
+
+    if (!empty($to_date)) {
+      $conditions[] = "u.created_at <= ?";
+      $params[] = $to_date;
+      $paramTypes[] = PDO::PARAM_STR;
+    }
+
+    if (!empty($type)) {
+      if ($type === "employee") {
+        $conditions[] = "ur.role_id NOT IN (3)";
+      } elseif ($type === "customer") {
+        $conditions[] = "ur.role_id = 3";
+      }
+    }
+
+    // Kết hợp điều kiện WHERE nếu có
+    if (!empty($conditions)) {
+      $query .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    // Thêm phân trang
+    if ($limit !== null) {
+      $query .= " LIMIT ?";
+      $params[] = $limit;
+      $paramTypes[] = PDO::PARAM_INT;
+    }
+
+    if ($offset !== null && $limit !== null) { // Chỉ thêm OFFSET nếu có LIMIT
+      $query .= " OFFSET ?";
+      $params[] = $offset;
+      $paramTypes[] = PDO::PARAM_INT;
+    }
+
+    $stmt = $this->conn->prepare($query);
+
+    // Bind các tham số với kiểu dữ liệu tương ứng
+    foreach ($params as $i => $param) {
+      $stmt->bindValue($i + 1, $param, $paramTypes[$i] ?? PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Lấy tổng số bản ghi (không phân trang)
+    $stmt = $this->conn->prepare("SELECT FOUND_ROWS()");
+    $stmt->execute();
+    $total = (int) $stmt->fetchColumn();
+
+    return [
+      'data' => $data,
+      'total' => $total
+    ];
+  }
+  public function countAll(): int
+  {
+    $sql = "SELECT COUNT(*) FROM users";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return (int) $stmt->fetchColumn();
   }
 }

@@ -469,7 +469,7 @@ if (!$product_id) {
                 response.data.forEach(feedback => {
                     // Create a promise to fetch user details
                     let userPromise = $.ajax({
-                        url: `http://localhost:81/WebPHP_DoAn_EC/api/users/${feedback.user_id}`,
+                        url: `${BASE_API_URL}/api/users/${feedback.user_id}`,
                         type: "GET"
                     }).then(userResponse => {
                         // If user fetch is successful, return user's full name
@@ -507,7 +507,7 @@ if (!$product_id) {
 
                             // Fetch admin responses for this feedback
                             $.ajax({
-                                url: `http://localhost:81/WebPHP_DoAn_EC/api/feedbacks/responses?feedback_id=${feedback.id}`,
+                                url: `${BASE_API_URL}/api/feedbacks/responses?feedback_id=${feedback.id}`,
                                 type: "GET"
                             }).then(response => {
                                 if (response.success && response.data.length > 0) {

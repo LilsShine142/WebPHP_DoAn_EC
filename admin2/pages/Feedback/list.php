@@ -22,13 +22,13 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User ID</th>
-                        <th>Product Variation ID</th>
-                        <th>Product Image</th>
+                        <th style="width: 10%;">User ID</th>
+                        <th style="width: 10%;">Product Variation ID</th>
+                        <th style="width: 10%;">Product Image</th>
                         <th>Content</th>
-                        <th>Rating</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
+                        <th style="width: 6%;">Rating</th>
+                        <th style="width: 10%;">Created At</th>
+                        <th style="width: 10%;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="feedback-data-table">

@@ -24,6 +24,9 @@ define("GOODS_CONTROLLER_PATH", CONTROLLERS_PATH . "/goods");
 define("STATISTICS_GATEWAY_PATH", GATEWAYS_PATH . "/statistics");
 define("STATISTICS_CONTROLLER_PATH", CONTROLLERS_PATH . "/statistics");
 
+define("FEEDBACK_GATEWAY_PATH", GATEWAYS_PATH . "/feedback");
+define("FEEDBACK_CONTROLLER_PATH", CONTROLLERS_PATH . "/feedback");
+
 return [
   "Database" => __DIR__ . "/config/Database.php",
 
@@ -51,6 +54,7 @@ return [
   "GoodsReceiptNoteGateway" => GOODS_GATEWAY_PATH . "/GoodsReceiptNoteGateway.php",
 
   "FinancialGateway" => STATISTICS_GATEWAY_PATH . "/FinancialGateway.php",
+  "FeedbackGateway" => FEEDBACK_GATEWAY_PATH . "/FeedbackGateway.php",
   //controllers
   "ProductController" => PRODUCT_CONTROLLER_PATH . "/ProductController.php",
   "ProductVariationController" => PRODUCT_CONTROLLER_PATH . "/ProductVariationController.php",
@@ -75,6 +79,7 @@ return [
   "GoodsReceiptNoteController" => GOODS_CONTROLLER_PATH . "/GoodsReceiptNoteController.php",
 
   "FinancialController" => STATISTICS_CONTROLLER_PATH . "/FinancialController.php",
+  "FeedbackController" => FEEDBACK_CONTROLLER_PATH . "/FeedbackController.php",
 
   //orders
   "ErrorHandler" => __DIR__ . "/ErrorHandler.php",

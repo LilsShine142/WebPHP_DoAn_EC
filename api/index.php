@@ -66,6 +66,10 @@ switch (true) {
     include_once "./routes/statistics.php";
     break;
 
+  case str_contains($uri, SOURCE_URI . "/feedbacks"):
+    include_once "./routes/feedback.php";
+    break;
+
   default:
     $errorHandler = new ErrorHandler();
     $errorHandler->sendErrorResponse(404, "Request not found!");

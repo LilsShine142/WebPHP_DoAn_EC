@@ -69,7 +69,7 @@
     <script>
         function fetchFeedback() {
             $.ajax({
-                url: 'http://localhost:81/WebPHP_DoAn_EC/api/feedbacks',
+                url: `${BASE_API_URL}/api/feedbacks`,
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -80,7 +80,7 @@
                         // Create an array to hold promises for fetching product images
                         let imageFetchPromises = response.data.map(feedback => {
                             return $.ajax({
-                                url: `http://localhost:81/WebPHP_DoAn_EC/api/products/variations/${feedback.product_variation_id}`,
+                                url: `${BASE_API_URL}/api/products/variations/${feedback.product_variation_id}`,
                                 type: 'GET',
                                 dataType: 'json'
                             }).then(imageResponse => {
@@ -143,7 +143,7 @@
 
         function displayExistingResponses(feedbackId) {
             $.ajax({
-                url: `http://localhost:81/WebPHP_DoAn_EC/api/feedbacks/responses?feedback_id=${feedbackId}`,
+                url: `${BASE_API_URL}/api/feedbacks/responses?feedback_id=${feedbackId}`,
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -173,7 +173,7 @@
             const responseContent = document.getElementById('response_content').value;
 
             $.ajax({
-                url: 'http://localhost:81/WebPHP_DoAn_EC/api/feedbacks/responses',
+                url: `${BASE_API_URL}/api/feedbacks/responses`,
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({

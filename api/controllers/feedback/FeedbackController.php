@@ -86,10 +86,26 @@ class FeedbackController extends ErrorHandler {
                     "data" => $res
                 ]);
                 break;
+            
+            case "PATCH":
+                $this->auths->verifyAction("UPDATE_FEEDBACK");
+                $data = (array) json_decode(file_get_contents("php://input"));
+                $errors = $this->getValidationErrors($data, false);
+                if (!empty($errors)) {
+                    $this->sendErrorResponse(422, $errors);
+                    break;
+                }
+                $res = $this->gateway->update($data["id"], $data);
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Feedback updated",
+                    "data" => $res
+                ]);
+                break;
 
             default:
-                $this->sendErrorResponse(405, "Only GET and POST methods are allowed");
-                header("Allow: GET, POST");
+                $this->sendErrorResponse(405, "Only GET, PATCH and POST methods are allowed");
+                header("Allow: GET, POST, PATCH");
         }
     }
 

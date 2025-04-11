@@ -8,6 +8,12 @@ switch (true) {
     $controller->processRequest($method, $id, $limit, $offset);
     break;
 
+  case $uri === SOURCE_URI . "/feedbacks/responses":
+    $gateway = new FeedbackResponseGateway($db);
+    $controller = new FeedbackResponseController($gateway, $auths);
+    $controller->processRequest($method, $id, $limit, $offset);
+    break;
+
   default:
     $errorHandler = new ErrorHandler();
     $errorHandler->sendErrorResponse(404, "Request not found!");

@@ -55,6 +55,7 @@ return [
 
   "FinancialGateway" => STATISTICS_GATEWAY_PATH . "/FinancialGateway.php",
   "FeedbackGateway" => FEEDBACK_GATEWAY_PATH . "/FeedbackGateway.php",
+  "FeedbackResponseGateway" => FEEDBACK_GATEWAY_PATH . "/FeedbackResponseGateway.php",
   //controllers
   "ProductController" => PRODUCT_CONTROLLER_PATH . "/ProductController.php",
   "ProductVariationController" => PRODUCT_CONTROLLER_PATH . "/ProductVariationController.php",
@@ -80,7 +81,7 @@ return [
 
   "FinancialController" => STATISTICS_CONTROLLER_PATH . "/FinancialController.php",
   "FeedbackController" => FEEDBACK_CONTROLLER_PATH . "/FeedbackController.php",
-
+  "FeedbackResponseController" => FEEDBACK_CONTROLLER_PATH . "/FeedbackResponseController.php",
   //orders
   "ErrorHandler" => __DIR__ . "/ErrorHandler.php",
   "Auths" => __DIR__ . "/Auths.php",

@@ -80,33 +80,54 @@ $orderId = $_GET['id'];
                     if(order.payment_method.toLowerCase() === "momo"){
                         $("#orderActions").html(`
                         <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                        <button class="btn btn-primary" id="shipOrder"><i class="fas fa-truck"></i>To Ship</button>
+                        <button class="btn btn-warning" id="receivedOrder"><i class="fas fa-check"></i> Received</button>
                         `);
 
                         $("#approveOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
+                        $("#shipOrder").click(() => confirmUpdate(orderId, 4)); // ID 4 cho "To Ship"
+                        $("#receivedOrder").click(() => confirmUpdate(orderId, 5)); // ID 5 cho "Received"
                     }
                     else {
                         $("#orderActions").html(`
                         <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                        <button class="btn btn-primary" id="shipOrder"><i class="fas fa-truck"></i>To Ship</button>
+                        <button class="btn btn-warning" id="receivedOrder"><i class="fas fa-check"></i> Received</button>
                         <button class="btn btn-danger" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
                         `);
 
                         $("#approveOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
                         $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
+                        $("#shipOrder").click(() => confirmUpdate(orderId, 4)); // ID 4 cho "To Ship"
+                        $("#receivedOrder").click(() => confirmUpdate(orderId, 5)); // ID 5 cho "Received"
                     }
                 }  
-                if (deliveryState.toLowerCase() === "approved" && order.payment_method.toLowerCase() === "cod") {
-                    $("#orderActions").html(`
-                        <button class="btn btn-warning" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
-                    `);
+                else if (deliveryState.toLowerCase() === "approved") {
+                    if(order.payment_method.toLowerCase() === "momo") {
+                        $("#orderActions").html(`
+                        <button class="btn btn-primary" id="shipOrder"><i class="fas fa-truck"></i>To Ship</button>
+                        <button class="btn btn-warning" id="receivedOrder"><i class="fas fa-check"></i> Received</button>
+                        `);
 
-                    $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
+                        $("#shipOrder").click(() => confirmUpdate(orderId, 4)); // ID 4 cho "To Ship"
+                        $("#receivedOrder").click(() => confirmUpdate(orderId, 5)); // ID 5 cho "Received"
+                    }
+                    else {
+                        $("#orderActions").html(`
+                        <button class="btn btn-primary" id="shipOrder"><i class="fas fa-truck"></i>To Ship</button>
+                        <button class="btn btn-warning" id="receivedOrder"><i class="fas fa-check"></i> Received</button>
+                        <button class="btn btn-danger" id="cancelOrder"><i class="fas fa-times"></i> Cancel</button>
+                    `);
+                        $("#shipOrder").click(() => confirmUpdate(orderId, 4)); // ID 4 cho "To Ship"
+                        $("#cancelOrder").click(() => confirmUpdate(orderId, 3)); // ID 3 cho "Canceled"
+                        $("#receivedOrder").click(() => confirmUpdate(orderId, 5)); // ID 5 cho "Received"
+                    }
                 }
-                if (deliveryState.toLowerCase() === "Pending" && order.payment_method.toLowerCase() === "momo") {
+                else if (deliveryState.toLowerCase() === "to ship") {
                     $("#orderActions").html(`
-                        <button class="btn btn-success me-2" id="approveOrder"><i class="fas fa-check"></i> Approve</button>
+                        <button class="btn btn-warning" id="receivedOrder"><i class="fas fa-check"></i> Received</button>
                     `);
-
-                    $("#cancelOrder").click(() => confirmUpdate(orderId, 2)); // ID 2 cho "Approved"
+                    $("#receivedOrder").click(() => confirmUpdate(orderId, 5)); // ID 5 cho "Received"
                 }
 
                 // Lấy thông tin người dùng
@@ -177,7 +198,7 @@ $orderId = $_GET['id'];
         });
 
         function confirmUpdate(orderId, newStateId) {
-            const action = newStateId === 2 ? "approve" : "cancel";
+            const action = newStateId === 2 ? "approve" : newStateId === 3 ? "cancel" : newStateId === 4 ? "ship" : "receive";
             if (confirm(`Are you sure you want to ${action} this order?`)) {
                 updateOrderStatus(orderId, newStateId);
             }
@@ -195,8 +216,8 @@ $orderId = $_GET['id'];
                 });
 
                 if (response.success) {
-                    alert(`Order has been ${newStateId === 2 ? 'approved' : 'canceled'} successfully.`);
-                    window.location.href = `index.php?page=pages/Order/details.php&id=${orderId}`;
+                    alert(`Order has been ${newStateId === 2 ? 'approved' : newStateId === 3 ? 'canceled' : newStateId === 4 ? 'shipped' : 'received'} successfully!`);
+                    window.location.href = `index.php?page=pages/Order/list.php`;
                 } else {
                     alert(`Failed to update order: ${response.message || 'Unknown error'}`);
                 }

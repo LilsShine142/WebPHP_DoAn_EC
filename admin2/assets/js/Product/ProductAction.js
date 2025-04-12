@@ -430,7 +430,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 const mergedProducts = mergeProductData(productsResponse.data, brandMap, categoryMap);
 
                 // Hiển thị dữ liệu
-                renderProductList(mergedProducts, offset);
+                //renderProductList(mergedProducts, offset);
+                prepareProductDataWithStock(mergedProducts).then((productsWithStock) => {
+                    renderProductList(productsWithStock, offset);
+                });
+
 
                 // Cập nhật thông tin phân trang
                 updatePaginationInfo(productsResponse.totalElements, page, limit, offset);
@@ -485,16 +489,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         tableBody.innerHTML = products.map((product, index) => {
-            const rowNumber = offset + index + 1;
-            const imageUrl = product.image_name
-                ? `${BASE_API_URL}/uploads/products/${product.image_name}`
-                : 'default-image.jpg';
 
+            const rowNumber = offset + index + 1;
+            // const imageUrl = product.image_name
+            //     ? `${BASE_API_URL}/uploads/products/${product.image_name}`
+            //     : 'default-image.jpg';
+            // Chỉ hiện ảnh ở variation, nên bỏ dòng này <td class="text-center"><img src="${imageUrl}" width="50" class="img-thumbnail" alt="${product.name}"></td>
             return `
         <tr class="align-middle">
             <td class="text-center">${rowNumber}</td>
             <td class="text-center">${product.id}</td>
-            <td class="text-center"><img src="${imageUrl}" width="50" class="img-thumbnail" alt="${product.name}"></td>
+            
             <td>${product.name}</td>
             <td>${product.brand_name}</td>
             <td>${product.category_name}</td>
@@ -1104,5 +1109,46 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Lỗi khi xóa sản phẩm:', deleteError);
         });
     }
+
+    // Lấy tất cả variation theo id của sản phẩm
+    async function getVariationByProductId(productId) {
+        try {
+            const response = await $.ajax({
+                url: `${BASE_API_URL}/api/products/variations?product_id=${productId}`,
+                type: "GET",
+                dataType: "json"
+            });
+
+            if (response.success) {
+                return response.data;
+            } else {
+                console.error("Lỗi khi tải dữ liệu biến thể sản phẩm");
+                return [];
+            }
+        } catch (error) {
+            console.error("Lỗi API:", error);
+            return [];
+        }
+    }
+
+    async function prepareProductDataWithStock(products) {
+        const preparedProducts = await Promise.all(products.map(async (product) => {
+            const variations = await getVariationByProductId(product.id);
+            const totalStock = totalStockQuantityProduct(variations);
+            return {
+                ...product,
+                stock_quantity: totalStock
+            };
+        }));
+        return preparedProducts;
+    }
+
+
+
+    // Hàm tính tổng stock quantity của variation cho sản phẩm
+    function totalStockQuantityProduct(variationList) {
+        return variationList.reduce((total, item) => total + (item.stock_quantity || 0), 0);
+    }
+
 
 });

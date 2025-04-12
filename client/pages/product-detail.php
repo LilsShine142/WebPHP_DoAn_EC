@@ -85,10 +85,66 @@ if (!$product_id) {
                         </div>
                     </div>
                 </div>
+
+                <div class="feedback-section mt-4">
+                    <h5>Customer Feedback</h5>
+                    <div id="feedback-list" class="feedback-list">
+                        <p>Loading feedback...</p>
+                    </div>
+                </div>
             </div>
         </div> 
     </div>
 </form>
+
+<style>
+    .feedback-item {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        background-color: #f8f9fa;
+        transition: background-color 0.3s;
+    }
+
+    .feedback-item:hover {
+        background-color: #e9ecef;
+    }
+
+    .feedback-user {
+        font-size: 1.1rem;
+        color: #343a40;
+    }
+
+    .feedback-content {
+        font-size: 0.95rem;
+        color: #495057;
+        margin: 0.5rem 0;
+    }
+
+    .user-icon {
+        width: 30px; /* Set the desired width */
+        height: 30px; /* Set the desired height */
+        border-radius: 50%; /* Make it a circle */
+        object-fit: cover; /* Ensure the image covers the area */
+        margin-right: 10px; /* Space between icon and text */
+    }
+
+    .feedback-meta {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .feedback-rating {
+        font-weight: bold;
+    }
+
+    .feedback-date {
+        font-style: italic;
+    }
+
+    .fa-star {
+        margin-right: 3px;
+    }
+</style>
 
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -392,10 +448,115 @@ if (!$product_id) {
             });
         }
 
+        // Fetch feedback for the selected variation
+        fetchFeedback(variation.id);
+
         if (element) {
             $(".product-thumbnails img").removeClass("active");
             $(element).addClass("active");
         }
+    }
+
+    function fetchFeedback(productVariationId) {
+        $.ajax({
+        url: `${BASE_API_URL}/api/feedbacks?product_variation_id=${productVariationId}`,
+        type: "GET",
+        success: function(response) {
+            if (response.success && response.data.length > 0) {
+                let feedbackHtml = "";
+                let userFetchPromises = []; // Array to hold promises for user fetch
+
+                response.data.forEach(feedback => {
+                    // Create a promise to fetch user details
+                    let userPromise = $.ajax({
+                        url: `${BASE_API_URL}/api/users/${feedback.user_id}`,
+                        type: "GET"
+                    }).then(userResponse => {
+                        // If user fetch is successful, return user's full name
+                        if (userResponse.success) {
+                            return userResponse.data.full_name; // Assuming data.full_name exists
+                        }
+                        return "Unknown User"; // Fallback if user fetch fails
+                    });
+
+                    userFetchPromises.push(userPromise); // Add promise to array
+                });
+
+                // Wait for all user fetches to complete
+                Promise.all(userFetchPromises).then(userNames => {
+                    // Build feedback HTML with user names
+                    const feedbackPromises = response.data.map((feedback, index) => {
+                        return new Promise((resolve) => {
+                            // Create an outer div to contain both feedback and admin responses
+                            let feedbackItemHtml = `
+                            <div class="feedback-wrapper mb-3">
+                                <div class="feedback-item p-3 border rounded bg-light">
+                                    <div class="d-flex align-items-center">
+                                        <img src="../client/images/icons/default_user_icon.png" alt="User Icon" class="user-icon me-2" />
+                                        <h6 class="feedback-user fw-bold">${userNames[index]}</h6>
+                                    </div>
+                                    <div class="feedback-meta">
+                                        <span class="feedback-rating">
+                                            ${getStarRating(feedback.rating)}
+                                        </span> <br>
+                                        <span class="feedback-date ms-2 text-muted">${new Date(feedback.created_at).toLocaleDateString()}</span>
+                                    </div>
+                                    <p class="feedback-content">${feedback.content}</p>
+                                </div>
+                                <div class="admin-responses mt-2">`; // Add a div to hold admin responses
+
+                            // Fetch admin responses for this feedback
+                            $.ajax({
+                                url: `${BASE_API_URL}/api/feedbacks/responses?feedback_id=${feedback.id}`,
+                                type: "GET"
+                            }).then(response => {
+                                if (response.success && response.data.length > 0) {
+                                    response.data.forEach(responseItem => {
+                                        feedbackItemHtml += `
+                                        <div class="admin-response p-2 border rounded bg-light">
+                                            <strong>Admin:</strong> ${responseItem.response_content}
+                                            <br><span class="feedback-date ms-2 text-muted">${new Date(responseItem.created_at).toLocaleDateString()}</span>
+                                        </div>`;
+                                    });
+                                } else {
+                                    feedbackItemHtml += `<p class="text-muted">No admin responses.</p>`; // Optional message if no responses
+                                }
+                                feedbackItemHtml += `</div>`; // Close the admin responses div
+                                feedbackItemHtml += `</div>`; // Close the outer feedback-wrapper div
+                                resolve(feedbackItemHtml); // Resolve the promise with the constructed HTML
+                            }).catch(() => {
+                                console.error("Error loading admin responses.");
+                                feedbackItemHtml += `</div>`; // Close the admin responses div even if there's an error
+                                feedbackItemHtml += `</div>`; // Close the outer feedback-wrapper div
+                                resolve(feedbackItemHtml); // Resolve with existing feedback
+                            });
+                        });
+                    });
+
+                    // Wait for all feedback and their responses to be processed
+                    Promise.all(feedbackPromises).then(allFeedbackHtml => {
+                        $("#feedback-list").html(allFeedbackHtml.join("")); // Join all HTML and update the feedback list
+                    });
+                }).catch(() => {
+                    $("#feedback-list").html("<p>Error loading user names.</p>");
+                });
+            } else {
+                $("#feedback-list").html("<p>No feedback available for this product.</p>");
+            }
+        },
+        error: function() {
+            console.error("Error loading feedback.");
+            $("#feedback-list").html("<p>Error loading feedback.</p>");
+        }
+    });
+}
+
+    function getStarRating(rating) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            starsHtml += `<i class="fa fa-star ${i <= rating ? 'text-warning' : 'text-muted'}"></i>`;
+        }
+        return starsHtml;
     }
 
     function fetchOSName(osId, callback) {

@@ -54,6 +54,17 @@
                         <input type="number" id="maxPrice" class="form-control" placeholder="Max Price">
                     </div>
                 </div>
+                <div class="row g-2 mt-2" style="display: flex; flex-wrap: nowrap;">
+                    <div class="col-md-4">
+                        <select id="deliveryState" class="form-select">
+                            <option value="">All</option>
+                            <!-- Các trạng thái giao hàng sẽ được tải vào đây -->
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="approveOrderBtn">Approve Order</button>
+                    </div>
+                </div>
             </div>
 
 
@@ -61,10 +72,11 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>ID</th>
                             <th>User ID</th>
                             <th>Total (cents)</th>
-                            <th>Delivery Address</th>
+                            <th style="width: 24%;">Delivery Address</th>
                             <th>State</th>
                             <th>Order Date</th>
                             <th>Received Date</th>
@@ -94,6 +106,7 @@
                         if (response.success && response.data.length > 0) {
                             response.data.forEach(state => {
                                 deliveryStateMap[state.id] = state.name;
+                                $("#deliveryState").append(`<option value="${state.id}">${state.name}</option>`);
                             });
                         } else {
                             console.warn("No delivery states found");
@@ -106,6 +119,8 @@
             }
 
             function loadOrders() {
+                // reset nút checkall
+                $("#selectAll").prop("checked", false);   
                 $.ajax({
                     url: `${BASE_API_URL}/api/orders`,
                     type: "GET",
@@ -114,11 +129,11 @@
                         if (response.success && response.data.length > 0) {
                             renderOrders(response.data);
                         } else {
-                            $("#orderTableBody").html("<tr><td colspan='9' class='text-center'>No orders found</td></tr>");
+                            $("#orderTableBody").html("<tr><td colspan='10' class='text-center'>No orders found</td></tr>");
                         }
                     },
                     error: function() {
-                        $("#orderTableBody").html("<tr><td colspan='9' class='text-center text-danger'>Failed to load data</td></tr>");
+                        $("#orderTableBody").html("<tr><td colspan='10' class='text-center text-danger'>Failed to load data</td></tr>");
                     }
                 });
             }
@@ -132,6 +147,7 @@
                         currency: 'USD'
                     }).format(amount);
                     html += `<tr>
+                        <td><input type="checkbox" class="order-checkbox" value="${order.id}"></td>
                         <td>${order.id}</td>
                         <td>${order.user_id}</td>
                         <td>${formatCurrency(order.total_cents)}</td>
@@ -162,6 +178,7 @@
                 let endDate = $("#endDate").val();
                 let minPrice = $("#minPrice").val();
                 let maxPrice = $("#maxPrice").val();
+                let selectedState = $("#deliveryState").val();
 
                 $.ajax({
                     url: `${BASE_API_URL}/api/orders`,
@@ -177,20 +194,20 @@
 
                                 let matchesStartDate = startDate === "" || new Date(order.order_date) >= new Date(startDate);
                                 let matchesEndDate = endDate === "" || new Date(order.order_date) <= new Date(endDate);
-
                                 let matchesMinPrice = minPrice === "" || order.total_cents >= parseInt(minPrice);
                                 let matchesMaxPrice = maxPrice === "" || order.total_cents <= parseInt(maxPrice);
+                                let matchesDeliveryState = selectedState === "" || order.delivery_state_id.toString() === selectedState;
 
-                                return matchesSearch && matchesStartDate && matchesEndDate && matchesMinPrice && matchesMaxPrice;
+                                return matchesSearch && matchesStartDate && matchesEndDate && matchesMinPrice && matchesMaxPrice && matchesDeliveryState;
                             });
 
                             renderOrders(filteredData);
                         } else {
-                            $("#orderTableBody").html("<tr><td colspan='9' class='text-center'>No matching orders</td></tr>");
+                            $("#orderTableBody").html("<tr><td colspan='10' class='text-center'>No matching orders</td></tr>");
                         }
                     },
                     error: function() {
-                        $("#orderTableBody").html("<tr><td colspan='9' class='text-center text-danger'>Failed to filter data</td></tr>");
+                        $("#orderTableBody").html("<tr><td colspan='10' class='text-center text-danger'>Failed to filter data</td></tr>");
                     }
                 });
             }
@@ -200,9 +217,48 @@
                 loadOrders();
             });
 
-            // Cho phép lọc ngay khi nhập vào các ô
-            $("#searchInput, #startDate, #endDate, #minPrice, #maxPrice").on("input", function() {
+            // Select/Deselect all checkboxes
+            $("#selectAll").on("change", function() {
+                $(".order-checkbox").prop("checked", this.checked);
+            });
+
+            // Allow filtering when input changes
+            $("#searchInput, #startDate, #endDate, #minPrice, #maxPrice, #deliveryState").on("change input", function() {
                 filterOrders();
+            });
+
+            // Approve selected orders
+            $("#approveOrderBtn").on("click", function() {
+                // Lấy danh sách các ID đơn hàng đã chọn nhưng phải là pending
+                const selectedOrders = $(".order-checkbox:checked").filter(function() {
+                    const orderId = $(this).val();
+                    const orderRow = $(this).closest('tr');
+                    const stateCell = orderRow.find('td:nth-child(6)'); // Adjust index based on your table structure
+
+                    return stateCell.text().trim() === "Pending"; // Check if the state is 'Pending'
+                }).map(function() {
+                    return $(this).val();
+                }).get();
+
+                if (selectedOrders.length === 0) {
+                    alert("Please select at least one order with state 'Pending' to approve.");
+                    return;
+                }
+                // nhắc nhở người dùng trước khi phê duyệt
+                if (confirm(`Are you sure you want to approve the selected orders?`)) {
+                    selectedOrders.forEach(orderId => {
+                    $.ajax({
+                        url: `${BASE_API_URL}/api/orders/${orderId}`,
+                        type: 'PUT', // Cập nhật đơn hàng
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            delivery_state_id: 2, // Cập nhật trạng thái giao hàng thành "Approved"
+                        })
+                    });
+                    });
+                    alert("Orders approved successfully!");
+                    loadOrders(); // Tải lại danh sách đơn hàng sau khi phê duyệt
+                }
             });
         });
     </script>

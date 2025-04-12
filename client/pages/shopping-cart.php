@@ -226,6 +226,7 @@
     });
 
     $(".purchase-button").click(function (e) {
+        console.log("click purchase button");
         e.preventDefault(); // Ngăn form submit ngay lập tức
 
         let selectedProducts = [];

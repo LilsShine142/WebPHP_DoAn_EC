@@ -52,7 +52,6 @@
                     <tr>
                         <th>#</th>
                         <th>ID</th>
-                        <th>Image</th>
                         <th>Product name</th>
                         <th>Brand</th>
                         <th>Category</th>

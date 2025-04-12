@@ -185,6 +185,15 @@
              <p>Permission</p>
            </a>
          </li>
+
+         <!-- feedback -->
+          <li class="nav-item">
+            <a href="index.php?page=pages/Feedback/list.php" class="nav-link">
+              <i class="nav-icon fas fa-comments"></i>
+              <p>Feedback</p>
+            </a>
+          </li>
+
          <li class="nav-item">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-users"></i>

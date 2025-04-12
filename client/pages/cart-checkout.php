@@ -12,9 +12,7 @@
             </div>
 
             <div class="size-209">
-                <span id="" class="mtext-110 cl2 address-out">
-                    address..
-                </span>
+                <span id="" class="mtext-110 cl2 address-out"></span>
                 <span class="default-tag" style="background-color: #ffcc00; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px; display: none;">
                     Default
                 </span>
@@ -593,7 +591,7 @@
                                 // Tạo body dữ liệu từ các input trong modal
                                 const updatedAddressData = {
                                     name: $("#fullName").val(),
-                                    street: $("#specificAddress").val().split(" ")[1], // Lấy tên đường
+                                    street: $("#specificAddress").val().split(" ").slice(1).join(" "), // Lấy tên đường
                                     apartment_number: $("#specificAddress").val().split(" ")[0], // Lấy số nhà
                                     ward: selectedWard,
                                     district: selectedDistrict,
@@ -699,6 +697,20 @@
     }
 
     $(".checkout-button").click(function() {
+        if($(".address-out").text() == "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Please select a delivery address!",
+                text: "You need to select a delivery address before checking out.",
+                showConfirmButton: true,
+                confirmButtonText: "Add address",
+                confirmButtonColor: "#3085d6"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `${BASE_API_URL}/client/index.php?content=pages/profile.php`;
+                }
+            });
+        }
         const userData = localStorage.getItem("user");
         if (!userData) {
             Swal.fire({

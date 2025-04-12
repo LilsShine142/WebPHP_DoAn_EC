@@ -636,7 +636,8 @@
                                 // Tạo body dữ liệu từ các input trong modal
                                 const updatedAddressData = {
                                     name: $(".fullName").val(),
-                                    street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                    // lấy hết phần tử trừ phần tử đầu tiên
+                                    street: $(".specificAddress").val().split(" ").slice(1).join(" "), // Lấy tên đường
                                     apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
                                     ward: selectedWard,
                                     district: selectedDistrict,
@@ -763,7 +764,7 @@
                             const newAddressData = {
                                 user_id: user_id,
                                 name: $(".fullName").val(),
-                                street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                street: $(".specificAddress").val().split(" ").slice(1).join(" "), // Lấy tên đường
                                 apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
                                 ward: selectedWard,
                                 district: selectedDistrict,

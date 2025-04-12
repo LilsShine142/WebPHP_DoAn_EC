@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách đơn hàng</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .limiter-menu-desktop, .content-topbar{
+            padding: 0px 178px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 p-5">
     <div style="width: 80%; margin: auto; margin-bottom: 40px;">
@@ -14,6 +19,8 @@
                 <button class="filter-btn px-4 py-2 bg-blue-500 text-white" data-status="all">All</button>
                 <button class="filter-btn px-4 py-2" data-status="1">Pending</button>
                 <button class="filter-btn px-4 py-2" data-status="2">Approve</button>
+                <button class="filter-btn px-4 py-2" data-status="4">To Ship</button>
+                <button class="filter-btn px-4 py-2" data-status="5">Received</button>
                 <button class="filter-btn px-4 py-2" data-status="3">Canceled</button>
             </div>
             <div class="w-full flex justify-center">

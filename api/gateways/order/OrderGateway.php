@@ -120,8 +120,8 @@ class OrderGateway {
     $stmt->bindValue(":received_date", $data["received_date"] ?? null, PDO::PARAM_STR);
     $stmt->bindValue(":payment_method", $data["payment_method"] ?? 'COD', PDO::PARAM_STR);
     $stmt->execute();
-
-    return $this->get($this->conn->lastInsertId());
+    
+    return $this->getForUpdate($this->conn->lastInsertId());
   }
 
   public function getForUpdate(int $id): array | false {

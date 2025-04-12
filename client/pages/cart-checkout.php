@@ -51,7 +51,7 @@
                         <div class="flex-w flex-t p-l-20" style="display: flex;
     align-items: center;">
                             <input class="m-r-10" type="radio" id="cod" name="payment" value="COD">
-                            <label class="m-b-0" for="cod">Payment on Receipt</label>
+                            <label class="m-b-0" for="cod">COD</label>
                         </div>
                         <div class="flex-w flex-t p-l-20" style="display: flex;
     align-items: center;">

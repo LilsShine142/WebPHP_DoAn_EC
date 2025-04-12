@@ -66,8 +66,8 @@ if (!$product_id) {
                     <h5 class="mb-3">Technical Specifications</h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Size:</strong> <span id="watch-size"></span></p>
-                            <p><strong>Color:</strong> <span id="watch-color"></span></p>
+                            <p><strong>Size:</strong> <span style="font-weight: 800;" id="watch-size"></span></p>
+                            <p><strong>Color:</strong> <span style="font-weight: 800;" id="watch-color"></span></p>
                             <p><strong>Display:</strong> <span id="display-type"></span> (<span id="display-size"></span> inches)</p>
                             <p><strong>Resolution:</strong> <span id="resolution"></span> px</p>
                             <p><strong>RAM/ROM:</strong> <span id="ram-rom"></span></p>
@@ -79,7 +79,7 @@ if (!$product_id) {
                             <p><strong>Water Resistance:</strong> <span id="water-resistance"></span></p>
                             <p><strong>Sensors:</strong> <span id="sensor"></span></p>
                             <p><strong>Case Material:</strong> <span id="case-material"></span></p>
-                            <p><strong>Band:</strong> <span id="band-material"></span> (<span id="band-size"></span> mm, <span id="band-color"></span>)</p>
+                            <p><strong>Band:</strong> <span style="font-weight: 800;" id="band-material"></span> (<span style="font-weight: 800;" id="band-size"></span> mm, <span style="font-weight: 800;" id="band-color"></span>)</p>
                             <p><strong>Weight:</strong> <span id="weight"></span> g</p>
                             <p><strong>Release Date:</strong> <span id="release-date"></span></p>
                         </div>
@@ -432,7 +432,7 @@ if (!$product_id) {
         }
         else {
             // Update specifications
-            $("#watch-size").text(variation.watch_size_mm);
+            $("#watch-size").text(variation.watch_size_mm + " mm");
             $("#watch-color").text(variation.watch_color);
             $("#display-type").text(variation.display_type);
             $("#display-size").text(variation.display_size_mm);

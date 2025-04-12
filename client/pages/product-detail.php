@@ -364,6 +364,11 @@ if (!$product_id) {
         $("#product-image-link").attr("href", `../backend/uploads/products/${variation.image_name}`);
         $("#product-price").text(formatDollarCurrency(variation.price_cents));
         $("#stock-quantity").text(`${variation.stock_quantity} products available`);
+        if(variation.stock_quantity == 0) {
+            // unable button Buy now
+            $(".buynow").prop("disabled", true).css("background-color", "#ccc").css("cursor", "not-allowed");
+            $("#stock-quantity").text("Out of stock").css("color", "red");
+        } 
 
         maxStock = variation.stock_quantity;
         $(".num-product").val(1).attr("max", maxStock);

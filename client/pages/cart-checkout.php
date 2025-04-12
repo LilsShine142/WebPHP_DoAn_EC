@@ -504,6 +504,11 @@
                             modal.show();
                             addressList.empty(); // Xóa danh sách cũ
 
+                            // Sắp xếp địa chỉ, đưa địa chỉ mặc định lên đầu tiên
+                            response.data.sort((a, b) => {
+                                return parseInt(b.is_default) - parseInt(a.is_default);
+                            });
+
                             response.data.forEach((address, index) => {
                                 let isDefault = parseInt(address.is_default) === 1;
                                 let defaultTag = isDefault 

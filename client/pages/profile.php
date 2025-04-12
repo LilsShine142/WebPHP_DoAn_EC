@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,59 +9,73 @@
         .profilePage-container {
             display: flex;
         }
+
         .profilePage-slidebar {
             width: 250px;
             padding: 20px;
             background: #fff;
             border-right: 1px solid #ddd;
         }
+
         .profile-info {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .username {
             font-size: 18px;
             font-weight: bold;
         }
+
         nav ul {
             list-style: none;
             padding: 0;
         }
+
         nav ul li {
             padding: 10px;
             cursor: pointer;
             border-radius: 5px;
         }
-        nav ul li.active, nav ul li:hover {
+
+        nav ul li.active,
+        nav ul li:hover {
             background: #f5f5f5;
         }
+
         .profile-section {
             flex-grow: 1;
             padding: 20px;
         }
+
         h2 {
             margin-bottom: 5px;
         }
+
         form {
             display: flex;
             flex-direction: column;
             max-width: 500px;
         }
+
         label {
             font-weight: bold;
             margin-top: 10px;
         }
+
         input {
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .gender-options {
             display: flex;
             gap: 10px;
             margin-top: 5px;
         }
+
         button {
             margin-top: 20px;
             padding: 10px;
@@ -71,16 +86,18 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background: #e04e50;
         }
-        
+
         button {
             margin-top: 0;
             padding: 2px 6px;
         }
     </style>
 </head>
+
 <body>
     <div class="profilePage-container" style="margin: 40px 200px;">
         <aside class="profilePage-slidebar">
@@ -97,16 +114,16 @@
                 <h2>My Profile</h2>
                 <p>Manage and protect your account</p>
                 <form>
-                    
+
                     <label>Full name</label>
                     <input id="fullName" type="text" value="Đào Thanh Tú">
-                    
+
                     <label>Email</label>
                     <input id="email" type="email" value="th************@gmail.com" disabled>
-                    
+
                     <label>Phone Number</label>
                     <input id="phoneNumber" type="text" value="********43">
-                    
+
                     <button class="update-user-infor" style="margin-top: 20px;">Save</button>
                 </form>
             </div>
@@ -118,13 +135,13 @@
                         Add New Address
                     </button>
                 </div>
-                
+
                 <div class="address-list">
                     <!-- Danh sách địa chỉ sẽ được đổ vào đây -->
                 </div>
             </div>
 
-            
+
             <div class="change-password" style="display: none;">
                 <h2>Change Password</h2>
                 <div class="input-group">
@@ -133,13 +150,13 @@
                     <!-- hiện thông báo -->
                     <div class="message" id="current-password-message" style="color: red; display: none;">Current password is incorrect</div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="new-password">New Password</label>
                     <input type="password" id="new-password" placeholder="Enter your new password">
                     <div class="message" id="new-password-message" style="color: red; display: none;">New password must be at least 8 characters long and contain at least one number and one letter</div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="confirm-password">Confirm New Password</label>
                     <input type="password" id="confirm-password" placeholder="Confirm your new password">
@@ -166,7 +183,7 @@
                         <input type="text" class="phoneNumber" value="">
                     </div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="prov-dist-ward">Province/City, District, Ward/Commune</label>
                     <input id="pdw-address" type="text">
@@ -174,7 +191,7 @@
                         <div class="pdw-container">
                             <div class="switch-active province-btn pdw-active">Provinve</div>
                             <div class="switch-active district-btn">District</div>
-                            <div class="switch-active ward-btn">Ward</div> 
+                            <div class="switch-active ward-btn">Ward</div>
                         </div>
                         <div class="p-w-r-choices">
                             <div class="choices">
@@ -195,6 +212,7 @@
         </div>
     </div>
 </body>
+
 </html>
 
 <style>
@@ -202,13 +220,16 @@
         cursor: pointer;
         padding: 0px 10px;
         text-align: start;
-    }   
-    .choice span {    
+    }
+
+    .choice span {
         color: rgb(76 48 48);
     }
+
     .choice:hover {
         background-color: #f9f9f9;
     }
+
     .modal {
         display: none;
         position: fixed;
@@ -229,7 +250,8 @@
     }
 
     .input-group {
-        flex: 1; /* Chia đều không gian */
+        flex: 1;
+        /* Chia đều không gian */
         display: flex;
         flex-direction: column;
         margin-bottom: 20px;
@@ -241,7 +263,7 @@
         margin-bottom: 5px;
     }
 
-    .input-group input{
+    .input-group input {
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -262,7 +284,8 @@
 
 
 
-    #confirmSwitchAddress, #confirmChangeAddress{
+    #confirmSwitchAddress,
+    #confirmChangeAddress {
         padding: 10px 20px;
         background-color: #007bff;
         color: #fff;
@@ -271,31 +294,38 @@
         cursor: pointer;
         margin-top: 20px;
     }
-    .closeUpdateAddressModal, .closeSwitchAddressModal {
+
+    .closeUpdateAddressModal,
+    .closeSwitchAddressModal {
         padding: 10px 20px;
-        background-color:rgb(255, 219, 222);
+        background-color: rgb(255, 219, 222);
         color: #333;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         margin-top: 20px;
     }
-    .closeUpdateAddressModal:hover, .closeSwitchAddressModal:hover {
-        background-color:rgb(200, 101, 101);
+
+    .closeUpdateAddressModal:hover,
+    .closeSwitchAddressModal:hover {
+        background-color: rgb(200, 101, 101);
         color: #fff;
     }
+
     .buttons {
         display: flex;
         justify-content: center;
         gap: 20px;
         margin-top: 20px;
     }
+
     .input-row {
         display: flex;
-        gap: 20px; /* Khoảng cách giữa các ô nhập */
+        gap: 20px;
+        /* Khoảng cách giữa các ô nhập */
     }
 
-    .update-address-modal-content { 
+    .update-address-modal-content {
         margin: 4% auto;
         width: 36%;
     }
@@ -308,6 +338,7 @@
         border-radius: 5px;
         flex-direction: column;
     }
+
     .pdw-container {
         width: 100%;
         display: flex;
@@ -321,33 +352,39 @@
         justify-content: space-between;
     }
 
-    .choices{
+    .choices {
         width: 100%;
-        max-height: 100px; /* Giới hạn chiều cao để kích hoạt thanh cuộn */
-        overflow-y: auto; /* Bật thanh cuộn theo chiều dọc */
+        max-height: 100px;
+        /* Giới hạn chiều cao để kích hoạt thanh cuộn */
+        overflow-y: auto;
+        /* Bật thanh cuộn theo chiều dọc */
     }
 
     /* Thiết lập kiểu thanh cuộn cho trình duyệt WebKit (Chrome, Edge, Safari) */
     .choices::-webkit-scrollbar {
-        width: 8px; /* Độ rộng thanh cuộn */
+        width: 8px;
+        /* Độ rộng thanh cuộn */
     }
 
     .choices::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Màu nền của thanh cuộn */
+        background: #f1f1f1;
+        /* Màu nền của thanh cuộn */
         border-radius: 5px;
     }
 
     .choices::-webkit-scrollbar-thumb {
-        background: #888; /* Màu của thanh cuộn */
+        background: #888;
+        /* Màu của thanh cuộn */
         border-radius: 5px;
     }
 
     .choices::-webkit-scrollbar-thumb:hover {
-        background: #555; /* Màu thanh cuộn khi hover */
+        background: #555;
+        /* Màu thanh cuộn khi hover */
     }
 
     .pdw-container div {
-        width: 33.33%;        
+        width: 33.33%;
         padding: 8px 0;
     }
 
@@ -394,7 +431,7 @@
     let selectedDistrictCode = null;
 
     // load dự liệu tỉnh huyện xã Việt Nam
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const choicesContainer = document.querySelector(".choices");
         const provinceBtn = document.querySelector(".province-btn");
         const districtBtn = document.querySelector(".district-btn");
@@ -444,7 +481,7 @@
                     choiceDiv.classList.add("selected");
                 }
 
-                choiceDiv.addEventListener("click", function () {
+                choiceDiv.addEventListener("click", function() {
                     if (type === "province") {
                         selectedProvince = item.name;
                         selectedProvinceCode = item.code;
@@ -473,11 +510,11 @@
             loadFunction();
         }
 
-        provinceBtn.addEventListener("click", function () {
+        provinceBtn.addEventListener("click", function() {
             switchTab(provinceBtn, () => loadProvinces(selectedProvinceCode));
         });
 
-        districtBtn.addEventListener("click", function () {
+        districtBtn.addEventListener("click", function() {
             if (selectedProvinceCode) {
                 switchTab(districtBtn, () => loadDistricts(selectedProvinceCode, selectedDistrictCode));
             } else {
@@ -485,7 +522,7 @@
             }
         });
 
-        wardBtn.addEventListener("click", function () {
+        wardBtn.addEventListener("click", function() {
             if (selectedDistrictCode) {
                 switchTab(wardBtn, () => loadWards(selectedDistrictCode));
             } else {
@@ -493,11 +530,11 @@
             }
         });
 
-        pdwAddressInput.addEventListener("click", function () {
+        pdwAddressInput.addEventListener("click", function() {
             document.querySelector(".prov-dist-ward").style.display = "block";
         });
 
-        document.addEventListener("click", function (event) {
+        document.addEventListener("click", function(event) {
             if (!event.target.closest("#pdw-address, .prov-dist-ward")) {
                 document.querySelector(".prov-dist-ward").style.display = "none";
             }
@@ -522,11 +559,11 @@
     });
 
     // Xử lý sự kiện switch-active cho tỉnh huyện xã btn
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const switchButtons = document.querySelectorAll(".switch-active");
 
         switchButtons.forEach(button => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function() {
                 // Xóa class "pdw-active" khỏi tất cả các nút
                 switchButtons.forEach(btn => btn.classList.remove("pdw-active"));
 
@@ -560,7 +597,7 @@
                 }
             });
             // sự kiện update-user-infor
-            $(".update-user-infor").on("click", function (event) {
+            $(".update-user-infor").on("click", function(event) {
                 event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
                 const updatedUserData = {
                     full_name: $("#fullName").val(),
@@ -572,7 +609,7 @@
                     type: "PUT",
                     contentType: "application/json",
                     data: JSON.stringify(updatedUserData),
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             alert("Cập nhật thông tin thành công!");
                             location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
@@ -580,7 +617,7 @@
                             alert("Có lỗi xảy ra khi cập nhật thông tin.");
                         }
                     },
-                    error: function () {
+                    error: function() {
                         alert("Không thể kết nối đến server.");
                     }
                 });
@@ -590,11 +627,14 @@
             $.ajax({
                 url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
                 type: "GET",
-                success: function (response) {
+                success: function(response) {
                     if (response.success === true) {
                         $(".address-list").empty(); // Clear the list before adding the default address
+                        response.data.sort((a, b) => {
+                            return parseInt(a.is_default) - parseInt(b.is_default);
+                        });
                         response.data.forEach(address => {
-                                $(".address-list").prepend(`
+                            $(".address-list").prepend(`
                                     <div class="address-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between;">
                                         <div>
                                             <p><strong>${address.name}</strong> <br> <span>${address.phone_number}</span> <br> ${address.apartment_number} ${address.street} <br> ${address.ward}, ${address.district}, ${address.city_province}</p>
@@ -608,7 +648,7 @@
                                         </div>
                                     </div>`);
                         });
-                        $(document).on("click", ".edit-address", function () {
+                        $(document).on("click", ".edit-address", function() {
                             // lấy thông tin address cần update
                             const selectedAddressId = $(this).siblings("input[name='selectedAddress']").val();
                             const selectedAddress = response.data.find(address => address.id == selectedAddressId);
@@ -625,15 +665,16 @@
                             $("#pdw-address").val(`${selectedAddress.city_province}, ${selectedAddress.district}, ${selectedAddress.ward}`);
                             // specificAddress
                             $(".specificAddress").val(`${selectedAddress.apartment_number} ${selectedAddress.street}`);
-                            
+
 
                             // Xử lý khi nhấn nút Confirm Change Address trong updateAddressModal
-                            $("#confirmChangeAddress").on("click", function () {
-                                
+                            $("#confirmChangeAddress").on("click", function() {
+
                                 // Tạo body dữ liệu từ các input trong modal
                                 const updatedAddressData = {
                                     name: $(".fullName").val(),
-                                    street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                    // lấy hết phần tử trừ phần tử đầu tiên
+                                    street: $(".specificAddress").val().split(" ").slice(1).join(" "), // Lấy tên đường
                                     apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
                                     ward: selectedWard,
                                     district: selectedDistrict,
@@ -648,7 +689,7 @@
                                     type: "PUT",
                                     contentType: "application/json",
                                     data: JSON.stringify(updatedAddressData),
-                                    success: function (response) {
+                                    success: function(response) {
                                         if (response.success) {
                                             alert("Cập nhật địa chỉ thành công!");
                                             $("#updateAddressModal").hide();
@@ -657,7 +698,7 @@
                                             alert("Có lỗi xảy ra khi cập nhật địa chỉ.");
                                         }
                                     },
-                                    error: function () {
+                                    error: function() {
                                         console.log("Dữ liệu gửi lên:", updatedAddressData);
 
                                         alert("Không thể kết nối đến server.");
@@ -669,13 +710,13 @@
 
 
                         // Xử lý sự kiện nhấn nút Delete
-                        $(document).on("click", ".delete-address", function () {
+                        $(document).on("click", ".delete-address", function() {
                             const selectedAddressId = $(this).siblings("input[name='selectedAddress']").val();
                             if (confirm("Bạn có chắc chắn muốn xóa địa chỉ này không?")) {
                                 $.ajax({
                                     url: `${BASE_API_URL}/api/users/addresses/${selectedAddressId}`,
                                     type: "DELETE",
-                                    success: function (response) {
+                                    success: function(response) {
                                         if (response.success) {
                                             alert("Xóa địa chỉ thành công!");
                                             location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
@@ -683,7 +724,7 @@
                                             alert("Có lỗi xảy ra khi xóa địa chỉ.");
                                         }
                                     },
-                                    error: function () {
+                                    error: function() {
                                         alert("Không thể kết nối đến server.");
                                     }
                                 });
@@ -691,19 +732,19 @@
                         });
 
                         // Đóng modal khi nhấn nút X hoặc nút Cancel
-                        $("#updateAddressModal .closeUpdateAddressModal").on("click", function () {
+                        $("#updateAddressModal .closeUpdateAddressModal").on("click", function() {
                             $("#updateAddressModal").hide();
                         });
 
                         // Ẩn modal khi click ra ngoài
-                        $(window).on("click", function (event) {
+                        $(window).on("click", function(event) {
                             if ($(event.target).is("#updateAddressModal")) {
                                 $("#updateAddressModal").hide();
                             }
                         });
 
                         // set-default
-                        $(".set-default").on("click", function () {
+                        $(".set-default").on("click", function() {
                             const addressId = $(this).siblings("input[name='selectedAddress']").val();
                             $.ajax({
                                 url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
@@ -712,7 +753,7 @@
                                 data: JSON.stringify({
                                     is_default: false
                                 }),
-                                success: function (response) {
+                                success: function(response) {
                                     if (response.success) {
                                         $.ajax({
                                             url: `${BASE_API_URL}/api/users/addresses/${addressId}`,
@@ -721,7 +762,7 @@
                                             data: JSON.stringify({
                                                 is_default: true
                                             }),
-                                            success: function (response) {
+                                            success: function(response) {
                                                 if (response.success) {
                                                     alert("Đặt địa chỉ làm mặc định thành công!");
                                                     location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
@@ -729,7 +770,7 @@
                                                     alert("Có lỗi xảy ra khi đặt địa chỉ làm mặc định.");
                                                 }
                                             },
-                                            error: function () {
+                                            error: function() {
                                                 alert("Không thể kết nối đến server.");
                                             }
                                         });
@@ -737,7 +778,7 @@
                                         alert("Có lỗi xảy ra khi đặt địa chỉ làm mặc định.");
                                     }
                                 },
-                                error: function () {
+                                error: function() {
                                     alert("Không thể kết nối đến server.");
                                 }
                             });
@@ -745,7 +786,7 @@
                     }
 
                     // Xử lý sự kiện nhấn nút Add New Address
-                    $("#add-new-address").on("click", function () {
+                    $("#add-new-address").on("click", function() {
                         // reset dữ liệu trong modal
                         $(".modal-title").text("Add New Address");
                         $(".fullName").val("");
@@ -755,12 +796,12 @@
                         // hiển thị modal update
                         $("#updateAddressModal").show();
                         // gọi api thêm address khi nhấn nút comfirm
-                        $("#confirmChangeAddress").on("click", function () {
+                        $("#confirmChangeAddress").on("click", function() {
                             // Tạo body dữ liệu từ các input trong modal
                             const newAddressData = {
                                 user_id: user_id,
                                 name: $(".fullName").val(),
-                                street: $(".specificAddress").val().split(" ")[1], // Lấy tên đường
+                                street: $(".specificAddress").val().split(" ").slice(1).join(" "), // Lấy tên đường
                                 apartment_number: $(".specificAddress").val().split(" ")[0], // Lấy số nhà
                                 ward: selectedWard,
                                 district: selectedDistrict,
@@ -775,7 +816,7 @@
                                 type: "POST",
                                 contentType: "application/json",
                                 data: JSON.stringify(newAddressData),
-                                success: function (response) {
+                                success: function(response) {
                                     if (response.success) {
                                         alert("Thêm địa chỉ thành công!");
                                         $("#updateAddressModal").hide();
@@ -784,7 +825,7 @@
                                         alert("Có lỗi xảy ra khi thêm địa chỉ.");
                                     }
                                 },
-                                error: function () {
+                                error: function() {
                                     console.log("Dữ liệu gửi lên:", newAddressData);
 
                                     alert("Không thể kết nối đến server.");
@@ -793,13 +834,13 @@
                         });
                     });
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.error("Error fetching addresses:", error);
                 }
             });
 
             // sự kiện change-password
-            $("#change-password").on("click", function (event) {
+            $("#change-password").on("click", function(event) {
                 event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
                 let email = userObject.email;
                 const currentPassword = $("#current-password").val();
@@ -809,7 +850,7 @@
                     url: `${BASE_API_URL}/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(currentPassword)}`,
                     method: "GET",
                     dataType: "json",
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             // Nếu mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
                             $("#current-password-message").hide();
@@ -817,7 +858,7 @@
                             alert("Mật khẩu hiện tại không đúng!");
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         //show div message 
                         $("#current-password-message").show();
                         console.error("Error fetching user data:", xhr.responseText);
@@ -835,16 +876,17 @@
                     $("#new-password-message").show();
                     $("#confirm-password-message").hide();
                     return;
-                } 
-                else {
+                } else {
                     $("#new-password-message").hide();
                     $("#confirm-password-message").hide();
                     $.ajax({
                         url: `${BASE_API_URL}/api/users/${user_id}`,
                         method: "PUT",
                         contentType: "application/json",
-                        data: JSON.stringify({ password: newPassword }),
-                        success: function (response) {
+                        data: JSON.stringify({
+                            password: newPassword
+                        }),
+                        success: function(response) {
                             if (response.success) {
                                 alert("Đổi mật khẩu thành công!");
                                 location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
@@ -852,15 +894,15 @@
                                 alert("Có lỗi xảy ra khi đổi mật khẩu.");
                             }
                         },
-                        error: function () {
+                        error: function() {
                             alert("Không thể kết nối đến server.");
                         }
                     });
-                 }
+                }
 
             });
         } else {
             console.error("User data not found in localStorage.");
-        }   
+        }
     });
 </script>

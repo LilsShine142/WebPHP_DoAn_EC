@@ -593,6 +593,9 @@
                 success: function (response) {
                     if (response.success === true) {
                         $(".address-list").empty(); // Clear the list before adding the default address
+                        response.data.sort((a, b) => {
+                            return parseInt(a.is_default) - parseInt(b.is_default);
+                        });
                         response.data.forEach(address => {
                                 $(".address-list").prepend(`
                                     <div class="address-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between;">

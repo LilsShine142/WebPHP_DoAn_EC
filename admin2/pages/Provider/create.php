@@ -63,7 +63,7 @@
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
     <script src="assets/js/Provider/validationProvider.js"></script>
-    <script src="assets/js/Provider/providerActions.js"></script>
+    <script src="assets/js/Provider/addProvider.js"></script>
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

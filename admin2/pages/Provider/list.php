@@ -13,7 +13,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
+    <!-- Import file pagination -->
+    <script src="assets/Components/Pagination.js"></script>
 </head>
 
 <body>
@@ -87,7 +88,7 @@
             </form>
         </div>
         <!-- JS ẩn hiện bộ lọc khi bấm nút lọc -->
-        <script>
+        <!-- <script>
             document.getElementById("toggleFilter").addEventListener("click", function() {
                 toggleFilter();
             });
@@ -111,7 +112,7 @@
                     closeIcon.style.display = "none";
                 }
             }
-        </script>
+        </script> -->
         <!-- Table -->
         <div class="card-body">
             <table class="table table-striped table-hover table-bordered">
@@ -131,6 +132,14 @@
                     <!-- CHÈN DỮ LIỆU TỪ SCRIPT  -->
                 </tbody>
             </table>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div id="record-info" class="text-muted">Đang hiển thị 0-0 trên tổng số 0 mục</div>
+                </div>
+                <div class="col-md-6">
+                    <div id="pagination-container" class="d-flex justify-content-end"></div>
+                </div>
+            </div>
         </div>
     </div>
 

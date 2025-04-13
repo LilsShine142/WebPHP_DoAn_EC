@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ======================== BIẾN TOÀN CỤC VÀ CẤU HÌNH ========================
     const PROVIDER_CONFIG = {
-        DEFAULT_ITEMS_PER_PAGE: 1,
+        DEFAULT_ITEMS_PER_PAGE: 2,
         DEFAULT_EXTRA_PARAMS: ""
     };
 

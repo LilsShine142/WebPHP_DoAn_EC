@@ -132,13 +132,9 @@
                     <!-- CHÈN DỮ LIỆU TỪ SCRIPT  -->
                 </tbody>
             </table>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <div id="record-info" class="text-muted">Đang hiển thị 0-0 trên tổng số 0 mục</div>
-                </div>
-                <div class="col-md-6">
-                    <div id="pagination-container" class="d-flex justify-content-end"></div>
-                </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div id="record-info" class="ms-2">Đang hiển thị 0–0 trên tổng số 0 mục</div>
+                <div id="pagination-container" class="me-2"></div>
             </div>
         </div>
     </div>

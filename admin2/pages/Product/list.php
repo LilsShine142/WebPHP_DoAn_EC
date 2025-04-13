@@ -65,9 +65,17 @@
 
                 </tbody>
             </table>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div id="record-info" class="ms-2">Đang hiển thị 0–0 trên tổng số 0 mục</div>
-                <div id="pagination-container" class="me-2"></div>
+            <div class="d-flex flex-wrap justify-content-between align-items-end px-2 pt-1 pb-0 bg-white">
+                <div id="record-info" class="small text-muted mb-1 mb-sm-0 me-2">
+                    Showing <span class="fw-medium">0-0</span> of <span class="fw-medium">0</span>
+                </div>
+                <div id="pagination-container" class="mt-4">
+                    <nav aria-label="Page navigation" class="pb-0">
+                        <ul class="pagination pagination-sm mb-0 pb-0">
+                            <!-- pagination items -->
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>

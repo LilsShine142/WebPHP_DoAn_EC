@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // Cập nhật thông tin phân trang
-                updatePaginationInfo(productsResponse.totalElements, page, limit, offset);
+                updatePaginationInfo(productsResponse.totalElements, offset, limit);
             })
             .catch(error => {
                 console.error("Lỗi API:", error);
@@ -465,14 +465,19 @@ document.addEventListener("DOMContentLoaded", function () {
             stop_selling: product.stop_selling ? 'Yes' : 'No'
         }));
     }
+    function updatePaginationInfo(totalItems, startIndex, perPage) {
+        const displayStart = totalItems > 0 ? startIndex + 1 : 0;
+        const displayEnd = Math.min(startIndex + perPage, totalItems);
+        const currentPage = Math.floor(startIndex / perPage) + 1;
+        // Cập nhật thông tin hiển thị
+        productPagination.updateRecordInfo(displayStart, displayEnd, totalItems);
+        // Cập nhật thông tin phân trang
+        productPagination.totalItems = totalItems;
+        productPagination.currentPage = currentPage;
+        productPagination.itemsPerPage = perPage;
 
-    function updatePaginationInfo(totalElements, page, limit, offset) {
-        productPagination.updateRecordInfo(
-            offset + 1,
-            Math.min(offset + limit, totalElements),
-            totalElements
-        );
-        productPagination.render(totalElements);
+        // Render lại phân trang
+        productPagination.render(totalItems);
     }
 
     // Hàm hiển thị danh sách sản phẩm
@@ -484,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (products.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="10" class="text-center">Không có dữ liệu</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="10" class="text-center">No data available</td></tr>`;
             return;
         }
 

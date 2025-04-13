@@ -353,15 +353,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updatePaginationInfo(totalItems, startIndex, perPage) {
-        const recordInfo = document.getElementById('record-info');
-        if (recordInfo) {
-            const endIndex = Math.min(startIndex + perPage, totalItems);
-            recordInfo.textContent = `Đang hiển thị ${startIndex + 1}-${endIndex} trên tổng số ${totalItems} mục`;
-        }
-
+        const displayStart = totalItems > 0 ? startIndex + 1 : 0;
+        const displayEnd = Math.min(startIndex + perPage, totalItems);
+        const currentPage = Math.floor(startIndex / perPage) + 1;
+        // Cập nhật thông tin hiển thị
+        pagination.updateRecordInfo(displayStart, displayEnd, totalItems);
         // Cập nhật thông tin phân trang
         pagination.totalItems = totalItems;
-        pagination.currentPage = Math.floor(startIndex / perPage) + 1;
+        pagination.currentPage = currentPage;
         pagination.itemsPerPage = perPage;
 
         // Render lại phân trang

@@ -77,64 +77,63 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
         <!-- Bộ lọc -->
         <div id="filterContainer" class="card p-3 my-4 mx-4" style="display: none;"> <!-- my-3: margin trên/dưới, mx-4: margin trái/phải -->
             <div _ngcontent-obg-c192="" class="d-flex align-items-center justify-content-between" bis_skin_checked="1">
-                <h6 _ngcontent-obg-c192="">Filter</h6>
-                <span id="closeIcon" class="btn-close" disabled aria-label="Close" style="cursor:pointer"></span>
+                <h5 class="mb-0 text-primary">
+                    <i class="fas fa-filter me-2"></i>Advanced Filters
+                </h5>
+                <button id="closeIcon" class="btn-close" aria-label="Close"></button>
             </div>
             <form id="filterForm" method="GET">
                 <input type="hidden" name="type" value="<?= $type ?>">
-                <div class="row">
+
+                <div class="row g-3">
+                    <!-- User ID Field -->
                     <div class="col-md-3">
-                        <label class="form-label">User ID</label>
-                        <input type="text" name="id" class="form-control" placeholder="Enter User ID" value="<?= $_GET['id'] ?? '' ?>">
+                        <label class="form-label small text-muted fw-bold mb-1">USER ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                            <input type="text" name="id" class="form-control form-control-sm" placeholder="Enter ID" value="<?= $_GET['id'] ?? '' ?>">
+                        </div>
                     </div>
 
+                    <!-- Contact Field -->
                     <div class="col-md-3">
-                        <label class="form-label">Contact information</label>
-                        <input type="text" name="contact" class="form-control" placeholder="Enter phone number or email" value="<?= $_GET['contact'] ?? '' ?>">
+                        <label class="form-label small text-muted fw-bold mb-1">CONTACT INFO</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <input type="text" name="contact" class="form-control form-control-sm" placeholder="Phone or email" value="<?= $_GET['contact'] ?? '' ?>">
+                        </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="form-label">From date</label>
-                        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">To day</label>
-                        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+                    <!-- Date Range Field -->
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted fw-bold mb-1">DATE RANGE</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                            <input type="date" name="from_date" class="form-control form-control-sm" value="<?= $_GET['from_date'] ?? '' ?>">
+                            <span class="input-group-text bg-light small">to</span>
+                            <input type="date" name="to_date" class="form-control form-control-sm" value="<?= $_GET['to_date'] ?? '' ?>">
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <button type="button" class="btn btn-success btn-filter">Apply</button>
-                    <button type="button" id="resetFilter" class="btn btn-secondary resetFilter">Cancel</button>
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end mt-4 pt-2 border-top">
+                    <button type="button" id="resetFilter" class="btn btn-outline-secondary btn-sm me-2">
+                        <i class="fas fa-undo me-1"></i> Reset
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm btn-filter">
+                        <i class="fas fa-check me-1"></i> Apply Filters
+                    </button>
                 </div>
             </form>
         </div>
-        <!-- JS ẩn hiện bộ lọc khi bấm nút lọc -->
-        <script>
-            // document.getElementById("toggleFilter").addEventListener("click", function() {
-            //     toggleFilter();
-            // });
 
-            // document.getElementById("closeIcon").addEventListener("click", function() {
-            //     toggleFilter();
-            // });
-
-            // function toggleFilter() {
-            //     let filterContainer = document.getElementById("filterContainer");
-            //     let filterIcon = document.getElementById("filterIcon");
-            //     let closeIcon = document.getElementById("closeIcon");
-
-            //     if (filterContainer.style.display === "none") {
-            //         filterContainer.style.display = "block";
-            //         filterIcon.style.display = "none";
-            //         closeIcon.style.display = "inline";
-            //     } else {
-            //         filterContainer.style.display = "none";
-            //         filterIcon.style.display = "inline";
-            //         closeIcon.style.display = "none";
-            //     }
-            // }
-        </script>
         <div class="card-body">
             <table id="customerTable" class="table table-bordered table-striped table-hover">
                 <thead id="table-head">
@@ -178,6 +177,18 @@ array_push($jsStack, '<script src="plugins/datatables-buttons/js/buttons.colVis.
                                 <!-- Dữ liệu sẽ được load bằng AJAX -->
                             </tbody>
                         </table>
+                        <div class="d-flex flex-wrap justify-content-between align-items-end px-2 pt-1 pb-0 bg-white">
+                            <div id="record-info" class="small text-muted mb-1 mb-sm-0 me-2">
+                                Showing <span class="fw-medium">0-0</span> of <span class="fw-medium">0</span>
+                            </div>
+                            <div id="pagination-container" class="mt-4">
+                                <nav aria-label="Page navigation" class="pb-0">
+                                    <ul class="pagination pagination-sm mb-0 pb-0">
+                                        <!-- pagination items -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

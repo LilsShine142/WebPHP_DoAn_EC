@@ -30,7 +30,7 @@ class Pagination {
     updateRecordInfo(start, end, total) {
         const recordInfo = document.getElementById('record-info');
         if (recordInfo) {
-            recordInfo.textContent = `Đang hiển thị ${start}–${end} trên tổng số ${total} mục`;
+            recordInfo.innerHTML = `Showing <span class="fw-bold">${start} – ${end}</span> of <span class="fw-bold">${total}</span> items`;
         }
     }
 
@@ -51,8 +51,12 @@ class Pagination {
             return; // Ẩn phân trang nếu chỉ có 1 trang
         }
 
+        const nav = document.createElement('nav');
+        nav.className = 'd-flex align-items-center';
+        nav.style.minHeight = '32px'; // Match pagination height
+
         const ul = document.createElement('ul');
-        ul.className = 'pagination justify-content-center';
+        ul.className = 'pagination mb-0 justify-content-center';
 
         // Nút Previous
         ul.appendChild(this.createPageItem(
@@ -157,4 +161,3 @@ const pagination = new Pagination();
 
 // Export để sử dụng ở các file khác
 window.pagination = pagination;
-window.Pagination = Pagination;

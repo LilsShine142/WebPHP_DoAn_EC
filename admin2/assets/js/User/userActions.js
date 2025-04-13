@@ -347,7 +347,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     const params = new URLSearchParams(extraParams);
                     params.append('limit', limit);
                     params.append('offset', offset);
-                    params.append('full_name', searchValue);
+                    if (searchValue) {
+                        params.append('full_name', searchValue);
+                    }
                     // 1. Lấy danh sách user đã phân trang từ server
                     const { users, totalCount } = await fetchPaginatedUsers(params.toString());
 
@@ -369,13 +371,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Render bảng và cập nhật phân trang
                     const isEmployeeList = type !== 'customer';
                     renderTable(finalUsers, isEmployeeList);
-                    pagination.updateRecordInfo(
-                        offset + 1,
-                        offset + finalUsers.length,
-                        totalCount
-                    );
-                    pagination.render(totalCount);
-
+                    // pagination.updateRecordInfo(
+                    //     offset + 1,
+                    //     offset + finalUsers.length,
+                    //     totalCount
+                    // );
+                    // pagination.render(totalCount);
+                    // Cập nhật thông tin phân trang
+                    updatePaginationInfo(totalCount, offset, limit);
                 } catch (error) {
                     console.error("Lỗi khi xử lý dữ liệu:", error);
                     showErrorToast("Lỗi khi xử lý dữ liệu người dùng");
@@ -470,13 +473,20 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-    function updatePaginationInfo(totalElements, page, limit, offset) {
-        pagination.updateRecordInfo(
-            offset + 1,
-            Math.min(offset + limit, totalElements),
-            totalElements
-        );
-        pagination.render(totalElements);
+    function updatePaginationInfo(totalItems, startIndex, perPage) {
+        const displayStart = totalItems > 0 ? startIndex + 1 : 0;
+        const displayEnd = Math.min(startIndex + perPage, totalItems);
+        const currentPage = Math.floor(startIndex / perPage) + 1;
+        // Cập nhật thông tin hiển thị
+        pagination.updateRecordInfo(displayStart, displayEnd, totalItems);
+
+        // Update pagination instance
+        pagination.totalItems = totalItems;
+        pagination.currentPage = currentPage;
+        pagination.itemsPerPage = perPage;
+
+        // Render pagination controls
+        pagination.render(totalItems);
     }
 
     function renderTable(users, isEmployeeList) {
@@ -490,11 +500,15 @@ document.addEventListener("DOMContentLoaded", function () {
             <th>Email</th>
             <th>Phone</th>
             ${isEmployeeList ? '<th>Role</th>' : ''} 
-            <th>Status</th>
             <th>Create At</th>
             <th>Actions</th>
         </tr>
     `;
+
+        if (!users || users.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="9" class="text-center">No data available</td></tr>`;
+            return;
+        }
 
         tableBody.innerHTML = users.map(user => `
         <tr id="user-${user.id}">
@@ -503,7 +517,6 @@ document.addEventListener("DOMContentLoaded", function () {
             <td class="user-email">${user.email}</td>
             <td class="user-phone">${user.phone_number}</td>
             ${isEmployeeList ? `<td class="user-role">${user.role_name}</td>` : ''} 
-            <td class="user-status">${user.status}</td>
             <td>${user.created_at}</td>
             <td>
                 <button class="btn btn-info btn-view" data-id="${user.id}">

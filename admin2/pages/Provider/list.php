@@ -54,67 +54,68 @@
             </a>
         </div>
         <!-- Bộ lọc -->
-        <div id="filterContainer" class="card p-3 my-4 mx-4" style="display: none;"> <!-- my-3: margin trên/dưới, mx-4: margin trái/phải -->
-            <div _ngcontent-obg-c192="" class="d-flex align-items-center justify-content-between" bis_skin_checked="1">
-                <h6 _ngcontent-obg-c192="">Filter</h6>
-                <span id="closeIcon" class="btn-close" disabled aria-label="Close" style="cursor:pointer"></span>
+        <div id="filterContainer" class="card border-primary p-3 my-4 mx-4 shadow-sm" style="display: none;">
+            <!-- Header với nút đóng -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="m-0 text-primary">
+                    <i class="fas fa-filter me-2"></i>PROVIDER FILTERS
+                </h5>
+                <button id="closeIcon" class="btn-close" aria-label="Close"></button>
             </div>
+
+            <!-- Form lọc dữ liệu -->
             <form id="filterForm" method="GET">
-                <div class="row">
+                <div class="row g-3">
+                    <!-- Ô nhập ID nhà cung cấp -->
                     <div class="col-md-3">
-                        <label class="form-label">Provider ID</label>
-                        <input type="text" name="id" class="form-control" placeholder="Enter Provider ID" value="<?= $_GET['id'] ?? '' ?>">
+                        <label class="form-label small fw-bold text-muted">PROVIDER ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                            <input type="text" name="id" class="form-control form-control-sm" placeholder="Enter provider ID" value="<?= $_GET['id'] ?? '' ?>">
+                        </div>
                     </div>
 
+                    <!-- Ô nhập thông tin liên hệ -->
                     <div class="col-md-3">
-                        <label class="form-label">Contact information</label>
-                        <input type="text" name="contact" class="form-control" placeholder="Enter phone number or email" value="<?= $_GET['contact'] ?? '' ?>">
+                        <label class="form-label small fw-bold text-muted">CONTACT INFO</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-address-book"></i>
+                            </span>
+                            <input type="text" name="contact" class="form-control form-control-sm" placeholder="Phone or email" value="<?= $_GET['contact'] ?? '' ?>">
+                        </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="form-label">From date</label>
-                        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">To day</label>
-                        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+                    <!-- Ô chọn khoảng thời gian -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">DATE RANGE</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                            <input type="date" name="from_date" class="form-control form-control-sm" value="<?= $_GET['from_date'] ?? '' ?>">
+                            <span class="input-group-text bg-light">to</span>
+                            <input type="date" name="to_date" class="form-control form-control-sm" value="<?= $_GET['to_date'] ?? '' ?>">
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <button type="button" class="btn btn-success btn-filter">Apply</button>
-                    <button type="button" id="resetFilter" class="btn btn-secondary resetFilter">Cancel</button>
+                <!-- Nhóm nút thao tác -->
+                <div class="mt-4 d-flex justify-content-end border-top pt-3">
+                    <button type="button" id="resetFilter" class="btn btn-outline-secondary btn-sm me-2">
+                        <i class="fas fa-redo me-1"></i> Reset
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm btn-filter">
+                        <i class="fas fa-check-circle me-1"></i> Apply
+                    </button>
                 </div>
             </form>
         </div>
-        <!-- JS ẩn hiện bộ lọc khi bấm nút lọc -->
-        <!-- <script>
-            document.getElementById("toggleFilter").addEventListener("click", function() {
-                toggleFilter();
-            });
 
-            document.getElementById("closeIcon").addEventListener("click", function() {
-                toggleFilter();
-            });
-
-            function toggleFilter() {
-                let filterContainer = document.getElementById("filterContainer");
-                let filterIcon = document.getElementById("filterIcon");
-                let closeIcon = document.getElementById("closeIcon");
-
-                if (filterContainer.style.display === "none") {
-                    filterContainer.style.display = "block";
-                    filterIcon.style.display = "none";
-                    closeIcon.style.display = "inline";
-                } else {
-                    filterContainer.style.display = "none";
-                    filterIcon.style.display = "inline";
-                    closeIcon.style.display = "none";
-                }
-            }
-        </script> -->
         <!-- Table -->
-        <div class="card-body">
+        <!-- <div class="card-body">
             <table class="table table-striped table-hover table-bordered">
                 <thead>
                     <tr>
@@ -128,13 +129,49 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="provider-data-table">
-                    <!-- CHÈN DỮ LIỆU TỪ SCRIPT  -->
-                </tbody>
+                <tbody id="provider-data-table"> -->
+        <!-- CHÈN DỮ LIỆU TỪ SCRIPT  -->
+        <!-- </tbody>
             </table>
             <div class="d-flex justify-content-between align-items-center mt-3">
                 <div id="record-info" class="ms-2">Đang hiển thị 0–0 trên tổng số 0 mục</div>
                 <div id="pagination-container" class="me-2"></div>
+            </div>
+        </div> -->
+        <div class="card-body p-2">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ID</th>
+                            <th>Provider name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="provider-data-table" class="border-top">
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted small">Loading providers data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-between align-items-end px-2 pt-1 pb-0 bg-white">
+                <div id="record-info" class="small text-muted mb-1 mb-sm-0 me-2">
+                    Showing <span class="fw-medium">0-0</span> of <span class="fw-medium">0</span>
+                </div>
+                <div id="pagination-container" class="mt-4">
+                    <nav aria-label="Page navigation" class="pb-0">
+                        <ul class="pagination pagination-sm mb-0 pb-0">
+                            <!-- pagination items -->
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>

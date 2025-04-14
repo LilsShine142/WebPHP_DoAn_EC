@@ -37,13 +37,92 @@
                 </button>
             </div>
         </div>
-        <div class="card-search" style="display: flex; margin: 15px;">
-            <div class="search" style="width: 80%; margin-right: 30px;">
-                <input type="text" class="form-control" placeholder="Search...">
+        <div class="card-search d-flex align-items-center gap-3 p-3 bg-white rounded-3 shadow-sm mb-4">
+            <!-- Search Input -->
+            <div class="search flex-grow-1 position-relative">
+                <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                <input type="text" id="keyword" name="keyword" class="form-control ps-5" placeholder="Search products...">
             </div>
-            <a href="index.php?page=pages/Product/create.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Add new product
+
+            <!-- Nút filter -->
+            <button id="toggleFilter" class="btn d-flex align-items-center justify-content-center rounded"
+                style="width: 40px; height: 40px; background-color: #d5e2d2; border: none;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.249995 1.61C2.56999 4.59 5.99999 9 5.99999 9V14C5.99999 15.1 6.89999 16 7.99999 16C9.09999 16 10 15.1 10 14V9C10 9 13.43 4.59 15.75 1.61C16.26 0.95 15.79 0 14.95 0H1.03999C0.209995 0 -0.260005 0.95 0.249995 1.61Z" fill="#00A64F"></path>
+                </svg>
+            </button>
+
+            <!-- Add Product Button -->
+            <a href="index.php?page=pages/Product/create.php" class="btn btn-primary d-flex align-items-center">
+                <i class="fas fa-plus me-2"></i> Add Product
             </a>
+        </div>
+
+        <!-- Filter Panel -->
+        <div id="filterContainer" class="card p-3 my-4 mx-4 shadow-sm" style="display: none;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="m-0 text-primary">
+                    <i class="fas fa-sliders-h me-2"></i>Product Filters
+                </h5>
+                <span id="closeIcon" class="btn-close" aria-label="Close" style="cursor:pointer"></span>
+            </div>
+
+            <form id="filterForm" method="GET">
+                <div class="row g-3">
+                    <!-- Row 1 -->
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Product ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <input type="text" name="id" class="form-control form-control-sm" placeholder="Enter product ID" value="<?= $_GET['id'] ?? '' ?>">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Brand</label>
+                        <select name="brand_id" class="form-select form-select-sm select2" id="brandSelect">
+                            <option value="">All Brands</option>
+                            <!-- Brands will be loaded via API -->
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Category</label>
+                        <select name="category_id" class="form-select form-select-sm select2" id="categorySelect">
+                            <option value="">All Categories</option>
+                            <!-- Categories will be loaded via API -->
+                        </select>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Stop Selling</label>
+                        <select name="stop_selling" class="form-select form-select-sm">
+                            <option value="">All Status</option>
+                            <option value="1" <?= isset($_GET['stop_selling']) && $_GET['stop_selling'] == '1' ? 'selected' : '' ?>>Yes</option>
+                            <option value="0" <?= isset($_GET['stop_selling']) && $_GET['stop_selling'] == '0' ? 'selected' : '' ?>>No</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Stock Quantity</label>
+                        <div class="input-group">
+                            <input type="number" name="min_stock" class="form-control form-control-sm" placeholder="Min" value="<?= $_GET['min_stock'] ?? '' ?>">
+                            <span class="input-group-text">-</span>
+                            <input type="number" name="max_stock" class="form-control form-control-sm" placeholder="Max" value="<?= $_GET['max_stock'] ?? '' ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="button" id="resetFilter" class="btn btn-outline-secondary btn-sm me-2">
+                        <i class="fas fa-redo me-1"></i> Reset
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm btn-filter">
+                        <i class="fas fa-check me-1"></i> Apply Filters
+                    </button>
+                </div>
+            </form>
         </div>
 
         <div class="card-body">
@@ -187,6 +266,14 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="saveChanges">Save Changes</button>
+                </div>
+            </div>
+            <div id="loading-indicator" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Loading...</p>
                 </div>
             </div>
         </div>

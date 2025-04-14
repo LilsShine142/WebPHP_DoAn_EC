@@ -116,7 +116,7 @@ if (!$order_id) {
             </div>
         </div>
 
-        <div id="orderDetails" class="bg-white p-5 rounded-lg shadow-md">
+        <div id="orderDetails" class="bg-white p-5 rounded-lg shadow-md" style="width: 80%;">
             <!-- Thông tin đơn hàng sẽ được tải ở đây -->
         </div>
     </div>

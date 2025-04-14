@@ -61,6 +61,14 @@
                             <!-- Các trạng thái giao hàng sẽ được tải vào đây -->
                         </select>
                     </div>
+                    <div class="col-md-4" style="margin-top: 0px;">
+                        <!-- COD và Momo -->
+                        <select id="paymentMethod" class="form-select mt-2">
+                            <option value="">All Payment Methods</option>
+                            <option value="COD">COD</option>
+                            <option value="Momo">Momo</option>
+                        </select>
+                    </div>
                     <div class="col-md-12">
                         <button class="btn btn-primary" id="approveOrderBtn">Approve Order</button>
                     </div>
@@ -89,12 +97,18 @@
                     </tbody>
                 </table>
             </div>
+
+            <div id="pagination" class="mt-3" style="display: flex; justify-content: center;"></div>
         </div>
     </div>
 
     <!-- JavaScript xử lý AJAX -->
     <script>
         $(document).ready(function() {
+            let currentPage = 1;
+            let productsPerPage = 8; // Số đơn hàng trên mỗi trang
+            let allOrders = []; // Lưu trữ tất cả đơn hàng
+            let totalOrders = 0; // Tổng số đơn hàng
             let deliveryStateMap = {};
 
             function loadDeliveryStates() {
@@ -127,7 +141,9 @@
                     dataType: "json",
                     success: function(response) {
                         if (response.success && response.data.length > 0) {
-                            renderOrders(response.data);
+                            allOrders = response.data; // Lưu trữ tất cả đơn hàng
+                            totalOrders = allOrders.length; // Cập nhật tổng số đơn hàng
+                            updateOrderTable(); // Cập nhật bảng đơn hàng
                         } else {
                             $("#orderTableBody").html("<tr><td colspan='10' class='text-center'>No orders found</td></tr>");
                         }
@@ -137,6 +153,24 @@
                     }
                 });
             }
+
+            function updateOrderTable() {
+                const start = (currentPage - 1) * productsPerPage;
+                const end = start + productsPerPage;
+                const ordersToShow = allOrders.slice(start, end);
+                renderOrders(ordersToShow);
+                
+                // Cập nhật phân trang
+                const totalPages = Math.ceil(totalOrders / productsPerPage);
+                renderPagination(totalPages);
+            }
+
+            // Xử lý sự kiện phân trang
+            $(document).on("click", ".pagination-btn", function() {
+                currentPage = $(this).data("page");
+                updateOrderTable();
+            });
+
 
             function renderOrders(data) {
                 let html = "";
@@ -179,6 +213,7 @@
                 let minPrice = $("#minPrice").val();
                 let maxPrice = $("#maxPrice").val();
                 let selectedState = $("#deliveryState").val();
+                let selectedPaymentMethod = $("#paymentMethod").val();
 
                 $.ajax({
                     url: `${BASE_API_URL}/api/orders`,
@@ -197,8 +232,9 @@
                                 let matchesMinPrice = minPrice === "" || order.total_cents >= parseInt(minPrice);
                                 let matchesMaxPrice = maxPrice === "" || order.total_cents <= parseInt(maxPrice);
                                 let matchesDeliveryState = selectedState === "" || order.delivery_state_id.toString() === selectedState;
+                                let matchesPaymentMethod = selectedPaymentMethod === "" || order.payment_method.toString() === selectedPaymentMethod;
 
-                                return matchesSearch && matchesStartDate && matchesEndDate && matchesMinPrice && matchesMaxPrice && matchesDeliveryState;
+                                return matchesSearch && matchesStartDate && matchesEndDate && matchesMinPrice && matchesMaxPrice && matchesDeliveryState && matchesPaymentMethod;
                             });
 
                             renderOrders(filteredData);
@@ -212,6 +248,16 @@
                 });
             }
 
+            function renderPagination(totalPages) {
+                let paginationHtml = "";
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHtml += `<button class="pagination-btn btn" data-page="${i}" style="margin: 0px 5px 20px; border: 1px solid #007bff; border-radius: 5px; background-color: #007bff; color: white; transition: background-color 0.3s, color 0.3s;">
+                        ${i}
+                    </button>`;
+                }
+                $("#pagination").html(paginationHtml);
+            }
+
             // Load dữ liệu ban đầu
             loadDeliveryStates().done(function() {
                 loadOrders();
@@ -223,7 +269,7 @@
             });
 
             // Allow filtering when input changes
-            $("#searchInput, #startDate, #endDate, #minPrice, #maxPrice, #deliveryState").on("change input", function() {
+            $("#searchInput, #startDate, #endDate, #minPrice, #maxPrice, #deliveryState, #paymentMethod").on("change input", function() {
                 filterOrders();
             });
 
@@ -264,5 +310,4 @@
     </script>
 
 </body>
-
 </html>

@@ -71,7 +71,7 @@
 
             <div class="size-208 p-t-1">
                 <span class="mtext-110 cl2 total">
-                    
+
                 </span>
             </div>
             <button name="momo" class="checkout-button flex-c-m stext-101 cl0 bg3 bor7 hov-btn3 p-lr-15 p-tb-8 trans-04 pointer">
@@ -88,7 +88,7 @@
         <h2 class="m-b-20">Delivery address</h2>
         <div id="addressList">
             <!-- Danh sách địa chỉ sẽ được đổ vào đây -->
-             
+
         </div>
         <div class="buttons">
             <!-- btn cancel -->
@@ -114,7 +114,7 @@
                     <input type="text" id="phoneNumber" value="(+84) 886 766 143">
                 </div>
             </div>
-            
+
             <div class="input-group">
                 <label for="prov-dist-ward">Province/City, District, Ward/Commune</label>
                 <input id="pdw-address" type="text">
@@ -122,7 +122,7 @@
                     <div class="pdw-container">
                         <div class="switch-active province-btn pdw-active">Provinve</div>
                         <div class="switch-active district-btn">District</div>
-                        <div class="switch-active ward-btn">Ward</div> 
+                        <div class="switch-active ward-btn">Ward</div>
                     </div>
                     <div class="p-w-r-choices">
                         <div class="choices">
@@ -155,13 +155,16 @@
         cursor: pointer;
         padding: 0px 10px;
         text-align: start;
-    }   
-    .choice span {    
+    }
+
+    .choice span {
         color: rgb(76 48 48);
     }
+
     .choice:hover {
         background-color: #f9f9f9;
     }
+
     .modal {
         display: none;
         position: fixed;
@@ -182,7 +185,8 @@
     }
 
     .input-group {
-        flex: 1; /* Chia đều không gian */
+        flex: 1;
+        /* Chia đều không gian */
         display: flex;
         flex-direction: column;
         margin-bottom: 20px;
@@ -194,7 +198,7 @@
         margin-bottom: 5px;
     }
 
-    .input-group input{
+    .input-group input {
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -215,7 +219,8 @@
 
 
 
-    #confirmSwitchAddress, #confirmChangeAddress{
+    #confirmSwitchAddress,
+    #confirmChangeAddress {
         padding: 10px 20px;
         background-color: #007bff;
         color: #fff;
@@ -224,31 +229,38 @@
         cursor: pointer;
         margin-top: 20px;
     }
-    .closeUpdateAddressModal, .closeSwitchAddressModal {
+
+    .closeUpdateAddressModal,
+    .closeSwitchAddressModal {
         padding: 10px 20px;
-        background-color:rgb(255, 219, 222);
+        background-color: rgb(255, 219, 222);
         color: #333;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         margin-top: 20px;
     }
-    .closeUpdateAddressModal:hover, .closeSwitchAddressModal:hover {
-        background-color:rgb(200, 101, 101);
+
+    .closeUpdateAddressModal:hover,
+    .closeSwitchAddressModal:hover {
+        background-color: rgb(200, 101, 101);
         color: #fff;
     }
+
     .buttons {
         display: flex;
         justify-content: center;
         gap: 20px;
         margin-top: 20px;
     }
+
     .input-row {
         display: flex;
-        gap: 20px; /* Khoảng cách giữa các ô nhập */
+        gap: 20px;
+        /* Khoảng cách giữa các ô nhập */
     }
 
-    .update-address-modal-content { 
+    .update-address-modal-content {
         margin: 4% auto;
         width: 36%;
     }
@@ -261,6 +273,7 @@
         border-radius: 5px;
         flex-direction: column;
     }
+
     .pdw-container {
         width: 100%;
         display: flex;
@@ -274,33 +287,39 @@
         justify-content: space-between;
     }
 
-    .choices{
+    .choices {
         width: 100%;
-        max-height: 100px; /* Giới hạn chiều cao để kích hoạt thanh cuộn */
-        overflow-y: auto; /* Bật thanh cuộn theo chiều dọc */
+        max-height: 100px;
+        /* Giới hạn chiều cao để kích hoạt thanh cuộn */
+        overflow-y: auto;
+        /* Bật thanh cuộn theo chiều dọc */
     }
 
     /* Thiết lập kiểu thanh cuộn cho trình duyệt WebKit (Chrome, Edge, Safari) */
     .choices::-webkit-scrollbar {
-        width: 8px; /* Độ rộng thanh cuộn */
+        width: 8px;
+        /* Độ rộng thanh cuộn */
     }
 
     .choices::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Màu nền của thanh cuộn */
+        background: #f1f1f1;
+        /* Màu nền của thanh cuộn */
         border-radius: 5px;
     }
 
     .choices::-webkit-scrollbar-thumb {
-        background: #888; /* Màu của thanh cuộn */
+        background: #888;
+        /* Màu của thanh cuộn */
         border-radius: 5px;
     }
 
     .choices::-webkit-scrollbar-thumb:hover {
-        background: #555; /* Màu thanh cuộn khi hover */
+        background: #555;
+        /* Màu thanh cuộn khi hover */
     }
 
     .pdw-container div {
-        width: 33.33%;        
+        width: 33.33%;
         padding: 8px 0;
     }
 
@@ -314,7 +333,6 @@
 
 
 <script>
-    
     let selectedProvince = "";
     let selectedDistrict = "";
     let selectedWard = "";
@@ -322,7 +340,7 @@
     let selectedDistrictCode = null;
 
     // load dự liệu tỉnh huyện xã Việt Nam
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const choicesContainer = document.querySelector(".choices");
         const provinceBtn = document.querySelector(".province-btn");
         const districtBtn = document.querySelector(".district-btn");
@@ -372,7 +390,7 @@
                     choiceDiv.classList.add("selected");
                 }
 
-                choiceDiv.addEventListener("click", function () {
+                choiceDiv.addEventListener("click", function() {
                     if (type === "province") {
                         selectedProvince = item.name;
                         selectedProvinceCode = item.code;
@@ -401,11 +419,11 @@
             loadFunction();
         }
 
-        provinceBtn.addEventListener("click", function () {
+        provinceBtn.addEventListener("click", function() {
             switchTab(provinceBtn, () => loadProvinces(selectedProvinceCode));
         });
 
-        districtBtn.addEventListener("click", function () {
+        districtBtn.addEventListener("click", function() {
             if (selectedProvinceCode) {
                 switchTab(districtBtn, () => loadDistricts(selectedProvinceCode, selectedDistrictCode));
             } else {
@@ -413,7 +431,7 @@
             }
         });
 
-        wardBtn.addEventListener("click", function () {
+        wardBtn.addEventListener("click", function() {
             if (selectedDistrictCode) {
                 switchTab(wardBtn, () => loadWards(selectedDistrictCode));
             } else {
@@ -421,11 +439,11 @@
             }
         });
 
-        pdwAddressInput.addEventListener("click", function () {
+        pdwAddressInput.addEventListener("click", function() {
             document.querySelector(".prov-dist-ward").style.display = "block";
         });
 
-        document.addEventListener("click", function (event) {
+        document.addEventListener("click", function(event) {
             if (!event.target.closest("#pdw-address, .prov-dist-ward")) {
                 document.querySelector(".prov-dist-ward").style.display = "none";
             }
@@ -450,11 +468,11 @@
     });
 
     // Xử lý sự kiện switch-active cho tỉnh huyện xã btn
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const switchButtons = document.querySelectorAll(".switch-active");
 
         switchButtons.forEach(button => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function() {
                 // Xóa class "pdw-active" khỏi tất cả các nút
                 switchButtons.forEach(btn => btn.classList.remove("pdw-active"));
 
@@ -464,14 +482,14 @@
         });
     });
 
-    $(document).ready(function () {
-        $("#pdw-address").on("click", function (event) {
+    $(document).ready(function() {
+        $("#pdw-address").on("click", function(event) {
             $(".prov-dist-ward").show(); // Hiển thị danh sách
             event.stopPropagation(); // Ngăn sự kiện lan ra ngoài
         });
 
         // Ẩn khi click ra ngoài
-        $(document).on("click", function (event) {
+        $(document).on("click", function(event) {
             if (!$(event.target).closest("#pdw-address, .prov-dist-ward").length) {
                 $(".prov-dist-ward").hide();
             }
@@ -485,7 +503,7 @@
             $.ajax({
                 url: `${BASE_API_URL}/api/users/addresses?user_id=${user_id}`,
                 type: "GET",
-                success: function (response) {
+                success: function(response) {
                     if (response.success === true) {
                         response.data.forEach(address => {
                             if (parseInt(address.is_default) === 1) {
@@ -498,7 +516,7 @@
                         const modal = $("#addressModal");
                         const addressList = $("#addressList");
 
-                        $(".change-address").on("click", function () {
+                        $(".change-address").on("click", function() {
                             modal.show();
                             addressList.empty(); // Xóa danh sách cũ
 
@@ -509,11 +527,11 @@
 
                             response.data.forEach((address, index) => {
                                 let isDefault = parseInt(address.is_default) === 1;
-                                let defaultTag = isDefault 
-                                    ? `<span style="background-color: #ffcc00; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px;">
+                                let defaultTag = isDefault ?
+                                    `<span style="background-color: #ffcc00; color: #fff; font-size: 12px; padding: 3px 6px; border-radius: 3px; margin-left: 10px;">
                                         Default
-                                    </span>` 
-                                    : "";
+                                    </span>` :
+                                    "";
                                 addressList.append(`
                                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
                                         <input type="radio" id="${address.id}" name="selectedAddress" value="${address.id}" ${address.id == addressOutId ? "checked" : ""}>
@@ -529,12 +547,12 @@
                             });
                         });
                         // ckeck radio when click on address-in 
-                        $(document).on("click", ".address-in", function () {
+                        $(document).on("click", ".address-in", function() {
                             $(this).prev("input[type='radio']").prop("checked", true);
                         });
 
                         // address-out = address-in khi nhấn nút "Confirm"
-                        $("#confirmSwitchAddress").on("click", function () {
+                        $("#confirmSwitchAddress").on("click", function() {
                             const selectedAddressId = $("input[name='selectedAddress']:checked").val();
                             const selectedAddress = response.data.find(address => address.id == selectedAddressId);
                             $(".address-out").text(`${selectedAddress.name}, ${selectedAddress.phone_number}, ${selectedAddress.name}, ${selectedAddress.apartment_number} ${selectedAddress.street}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city_province}`);
@@ -548,18 +566,18 @@
                             modal.hide();
                         });
 
-                        $(".closeSwitchAddressModal").on("click", function () {
+                        $(".closeSwitchAddressModal").on("click", function() {
                             modal.hide();
                         });
 
                         // Ẩn modal khi click ra ngoài
-                        $(window).on("click", function (event) {
+                        $(window).on("click", function(event) {
                             if ($(event.target).is(modal)) {
                                 modal.hide();
                             }
                         });
 
-                        $(document).on("click", ".edit-address", function () {
+                        $(document).on("click", ".edit-address", function() {
                             // lấy thông tin address cần update
                             const selectedAddressId = $(this).siblings("input[name='selectedAddress']").val();
                             const selectedAddress = response.data.find(address => address.id == selectedAddressId);
@@ -586,8 +604,8 @@
                             }
 
                             // Xử lý khi nhấn nút Confirm Change Address trong updateAddressModal
-                            $("#confirmChangeAddress").on("click", function () {
-                                
+                            $("#confirmChangeAddress").on("click", function() {
+
                                 // Tạo body dữ liệu từ các input trong modal
                                 const updatedAddressData = {
                                     name: $("#fullName").val(),
@@ -606,7 +624,7 @@
                                     type: "PUT",
                                     contentType: "application/json",
                                     data: JSON.stringify(updatedAddressData),
-                                    success: function (response) {
+                                    success: function(response) {
                                         if (response.success) {
                                             alert("Cập nhật địa chỉ thành công!");
                                             $("#updateAddressModal").hide();
@@ -616,7 +634,7 @@
                                             alert("Có lỗi xảy ra khi cập nhật địa chỉ.");
                                         }
                                     },
-                                    error: function () {
+                                    error: function() {
                                         console.log("Dữ liệu gửi lên:", updatedAddressData);
 
                                         alert("Không thể kết nối đến server.");
@@ -627,14 +645,14 @@
                         });
 
                         // Đóng modal khi nhấn nút X hoặc nút Cancel
-                        $("#updateAddressModal .closeUpdateAddressModal").on("click", function () {
+                        $("#updateAddressModal .closeUpdateAddressModal").on("click", function() {
                             $("#updateAddressModal").hide();
                             // Hiển thị lại modal chọn địa chỉ
                             modal.show();
                         });
 
                         // Ẩn modal khi click ra ngoài
-                        $(window).on("click", function (event) {
+                        $(window).on("click", function(event) {
                             if ($(event.target).is("#updateAddressModal")) {
                                 $("#updateAddressModal").hide();
                                 modal.show();
@@ -642,7 +660,7 @@
                         });
                     }
                 },
-                error: function () {
+                error: function() {
                     console.log("Có lỗi xảy ra.");
                 }
             });
@@ -682,7 +700,10 @@
     });
 
     function formatCurrency(amount) {
-        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD"
+        }).format(amount);
     }
 
     function unformatCurrency(amount) {
@@ -743,7 +764,7 @@
             formData.append("orderId", randomOrderId);
             getExchangeRate().then(rate => {
                 if (rate !== null) {
-                    amount = parseInt((parseFloat(amount) * rate / 100)/1000)*1000;
+                    amount = parseInt((parseFloat(amount) * rate / 100) / 1000) * 1000;
                     formData.append("amount", amount);
                     formData.append("paymentMethod", "Momo");
 
@@ -763,13 +784,13 @@
                     let xhr = new XMLHttpRequest();
                     xhr.open("POST", `${BASE_API_URL}/client/pages/momoCheckout.php`, true);
 
-                    xhr.onload = function () {
+                    xhr.onload = function() {
                         if (xhr.status === 200) {
                             try {
                                 let response = JSON.parse(xhr.responseText);
                                 if (response.status === "success") {
                                     window.location.href = `${BASE_API_URL}/client/pages/momoCheckout.php`;
-                                    
+
                                 } else {
                                     alert("Lỗi: " + response.message);
                                 }
@@ -782,7 +803,7 @@
                         }
                     };
 
-                    xhr.onerror = function () {
+                    xhr.onerror = function() {
                         console.error("Không thể kết nối đến server.");
                     };
 
@@ -791,10 +812,9 @@
                     console.log('Không thể lấy tỷ giá.');
                 }
             });
-            
 
-        }
-        else if (paymentMethod === "COD") {
+
+        } else if (paymentMethod === "COD") {
             createOrder();
         }
 
@@ -814,8 +834,9 @@
                     received_date: receivedDate,
                     payment_method: paymentMethod
                 }),
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
+                        console.log("response1", response);
                         const order_id = response.data.id;
                         // Lưu order_id vào sessionStorage để sử dụng sau này
                         sessionStorage.setItem("order_id", order_id);
@@ -837,7 +858,7 @@
                             $.ajax({
                                 url: `${BASE_API_URL}/api/products/instances?product_variation_id=${product.product_variation_id}&quantity=${product.quantity}`,
                                 type: "GET",
-                                success: function (response) {
+                                success: function(response) {
                                     if (response.success) {
                                         response.data.forEach(instance => {
                                             const sku = instance.sku;
@@ -850,14 +871,14 @@
                                                     product_instance_sku: sku,
                                                     price_cents: product.price * 1000
                                                 }),
-                                                success: function (response) {
+                                                success: function(response) {
                                                     if (response.success) {
                                                         console.log("Đặt hàng sku thành công!");
                                                     } else {
                                                         alert("Có lỗi xảy ra khi đặt hàng.");
                                                     }
                                                 },
-                                                error: function () {
+                                                error: function() {
                                                     alert("Không thể kết nối đến server.");
                                                 }
                                             });
@@ -866,11 +887,11 @@
                                         alert("Có lỗi xảy ra khi lấy SKU.");
                                     }
                                 },
-                                error: function () {
+                                error: function() {
                                     alert("Không thể kết nối đến server.");
                                 }
                             });
-                            
+
                         });
                     } else {
                         alert("Có lỗi xảy ra khi đặt hàng.");
@@ -880,7 +901,7 @@
                     alert("Đặt hàng thành công!");
                     window.location.href = `${BASE_API_URL}/client/index.php?content=pages/shopping-cart.php`; // Chuyển hướng về trang giỏ hàng
                 },
-                error: function () {
+                error: function() {
                     alert("Không thể kết nối đến server.");
                 }
             });

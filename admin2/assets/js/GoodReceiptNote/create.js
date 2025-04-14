@@ -316,6 +316,28 @@ async function addProduct() {
         alert("Có lỗi xảy ra khi thêm sản phẩm");
     }
 }
+// Hàm cập nhật số lượng tồn kho
+async function updateStockQuantity(variationId, quantity) {
+    try {
+        const response = await $.ajax({
+            url: `${BASE_API_URL}/api/products/variations/${variationId}`,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                stock_quantity: quantity
+            })
+        });
+
+        if (!response.success) {
+            throw new Error(response.message || 'Cập nhật tồn kho thất bại');
+        }
+
+        console.log('Đã cập nhật tồn kho thành công');
+    } catch (error) {
+        console.error('Lỗi khi cập nhật tồn kho:', error);
+        throw error; // Re-throw để hàm addProduct bắt được
+    }
+}
 
 async function updateProduct() {
     try {
@@ -543,9 +565,16 @@ async function saveGoodsReceiptNote() {
             throw new Error(`${failed.length}/${results.length} instances thất bại`);
         }
 
+        // Duyệt qua từng sản phẩm và cập nhật tồn kho
+        for (const product of products) {
+            console.log("Đang cập nhật tồn kho cho:", product);
+            await updateStockQuantity(product.variationId, product.quantity);
+        }
+
         console.log("Đã tạo thành công", results.length, "instances");
         alert(`Lưu thành công! Đã tạo ${results.length} sản phẩm chi tiết`);
         resetProductForm();
+
 
     } catch (error) {
         console.error("Lỗi khi lưu phiếu nhập:", error);

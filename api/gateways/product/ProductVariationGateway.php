@@ -11,7 +11,19 @@ class ProductVariationGateway
 
   public function create(array $data): array | false
   { //TODO auto gen product_instances
-    
+    $imageFileName = null;
+
+    // Nếu có ảnh Base64, lưu vào thư mục và lấy tên file
+    if (!empty($data["image_base64"])) {
+      $imageFileName = $this->saveBase64Image($data["image_base64"]);
+      if ($imageFileName === false) {
+        return false;
+      }
+      $data["image_name"] = $imageFileName;
+    } else {
+      // Nếu không có ảnh, dùng ảnh mặc định
+      $data["image_name"] = $data["image_name"] ?? "default.webp";
+    }
     $sql = "INSERT INTO product_variations (
       product_id,
       watch_size_mm,
@@ -149,19 +161,38 @@ class ProductVariationGateway
 
   public function update(array $current, array $new): array | false
   {
-    // Kiểm tra nếu có ảnh mới (dưới dạng Base64)
-    if (isset($new["image_base64"])) {
-      // Giải mã Base64 và lưu ảnh
-      $imageName = $this->saveBase64Image($new["image_base64"]);
+    $oldImage = $current["image_name"];
 
-      // Nếu lưu ảnh thất bại, trả về false
-      if ($imageName === false) {
+    // Xử lý ảnh mới
+    if (!empty($new["image_base64"])) {
+      $newImage = $this->saveBase64Image($new["image_base64"]);
+      if ($newImage === false) {
         return false;
       }
+      $new["image_name"] = $newImage;
+
+      // Xóa ảnh cũ nếu không phải ảnh mặc định
+      if ($oldImage !== "default.webp") {
+        $this->deleteImage($oldImage);
+      }
     } else {
-      // Nếu không có ảnh mới, giữ ảnh cũ
-      $imageName = $current["image_name"];
+      $new["image_name"] = $oldImage;
     }
+
+    // Xử lý số lượng tồn kho
+    $currentStock = $current["stock_quantity"];
+    $stockChange = $new["stock_quantity"] ?? 0; // Số lượng thay đổi
+    // Nếu có yêu cầu thay đổi số lượng
+    if (isset($new["stock_quantity"])) {
+      $newStock = $currentStock + $stockChange; // Cộng dồn
+      if ($newStock < 0) {
+        throw new Exception("Số lượng tồn kho không thể âm");
+      }
+      $new["stock_quantity"] = $newStock;
+    } else {
+      $new["stock_quantity"] = $currentStock;
+    }
+
 
     $sql = "UPDATE product_variations SET
       product_id = :product_id,
@@ -188,7 +219,8 @@ class ProductVariationGateway
       band_color = :band_color,
       weight_milligrams = :weight_milligrams,
       release_date = :release_date,
-      stop_selling = :stop_selling
+      stop_selling = :stop_selling,
+      stock_quantity = :stock_quantity    
       WHERE id = :id
     ";
 
@@ -198,7 +230,7 @@ class ProductVariationGateway
     $stmt->bindValue(":watch_color", $new["watch_color"] ?? $current["watch_color"], PDO::PARAM_STR);
     $stmt->bindValue(":price_cents", $new["price_cents"] ?? $current["price_cents"], PDO::PARAM_INT);
     $stmt->bindValue(":base_price_cents", $new["base_price_cents"] ?? $current["base_price_cents"], PDO::PARAM_INT);
-    $stmt->bindValue(":image_name", $imageName, PDO::PARAM_STR);
+    $stmt->bindValue(":image_name", $new["image_name"], PDO::PARAM_STR);
     $stmt->bindValue(":display_size_mm", $new["display_size_mm"] ?? $current["display_size_mm"], PDO::PARAM_INT);
     $stmt->bindValue(":display_type", $new["display_type"] ?? $current["display_type"], PDO::PARAM_STR);
     $stmt->bindValue(":resolution_h_px", $new["resolution_h_px"] ?? $current["resolution_h_px"], PDO::PARAM_INT);
@@ -218,12 +250,24 @@ class ProductVariationGateway
     $stmt->bindValue(":weight_milligrams", $new["weight_milligrams"] ?? $current["weight_milligrams"], PDO::PARAM_INT);
     $stmt->bindValue(":release_date", $new["release_date"] ?? $current["release_date"], PDO::PARAM_STR);
     $stmt->bindValue(":stop_selling", $new["stop_selling"] ?? $current["stop_selling"], PDO::PARAM_BOOL);
+    $stmt->bindValue(":stock_quantity", $new["stock_quantity"], PDO::PARAM_INT);
     $stmt->bindValue(":id", $current["id"], PDO::PARAM_INT);
     $stmt->execute();
 
     return $this->get($current["id"]);
   }
+  private function deleteImage(string $imageName): bool
+  {
+    if ($imageName === "default.webp") {
+      return true; // Không xóa ảnh mặc định
+    }
 
+    $filePath = __DIR__ . "/../../../backend/uploads/products/" . $imageName;
+    if (file_exists($filePath)) {
+      return unlink($filePath);
+    }
+    return false;
+  }
   public function delete(int $id): bool
   {
     $sql = $this->hasConstrain($id)
@@ -261,19 +305,52 @@ class ProductVariationGateway
     return (bool) $stmt->fetchColumn();
   }
 
+  // private function saveBase64Image(string $base64Image): string | false
+  // {
+  //   $uploadDir = __DIR__ . "/../../../backend/uploads/products/";
+  //   if (!is_dir($uploadDir)) {
+  //     mkdir($uploadDir, 0777, true); // Tạo thư mục nếu chưa tồn tại
+  //   }
+
+  //   // Tạo tên file duy nhất
+  //   $imageName = uniqid() . ".png"; // Mặc định lưu dưới dạng PNG
+  //   $targetFile = $uploadDir . $imageName;
+
+  //   // Giải mã Base64 và lưu file
+  //   $imageData = base64_decode($base64Image);
+  //   if (file_put_contents($targetFile, $imageData)) {
+  //     return $imageName;
+  //   } else {
+  //     error_log("Lỗi khi lưu ảnh từ Base64.");
+  //     return false;
+  //   }
+  // }
   private function saveBase64Image(string $base64Image): string | false
   {
     $uploadDir = __DIR__ . "/../../../backend/uploads/products/";
     if (!is_dir($uploadDir)) {
-      mkdir($uploadDir, 0777, true); // Tạo thư mục nếu chưa tồn tại
+      mkdir($uploadDir, 0777, true);
     }
 
-    // Tạo tên file duy nhất
-    $imageName = uniqid() . ".png"; // Mặc định lưu dưới dạng PNG
+    // Kiểm tra định dạng ảnh
+    if (strpos($base64Image, 'data:image/') === 0) {
+      $format = explode('/', explode(';', $base64Image)[0])[1];
+      $imageData = base64_decode(explode(',', $base64Image)[1]);
+    } else {
+      // Nếu không có header, mặc định là PNG
+      $format = 'png';
+      $imageData = base64_decode($base64Image);
+    }
+
+    $allowedFormats = ['jpg', 'jpeg', 'png', 'webp'];
+    if (!in_array(strtolower($format), $allowedFormats)) {
+      error_log("Định dạng ảnh không được hỗ trợ: $format");
+      return false;
+    }
+
+    $imageName = uniqid() . '.' . $format;
     $targetFile = $uploadDir . $imageName;
 
-    // Giải mã Base64 và lưu file
-    $imageData = base64_decode($base64Image);
     if (file_put_contents($targetFile, $imageData)) {
       return $imageName;
     } else {

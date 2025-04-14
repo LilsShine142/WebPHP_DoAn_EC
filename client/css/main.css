@@ -3546,7 +3546,7 @@ input.num-product::-webkit-inner-spin-button {
 .container .row {
     display: flex !important;
     flex-wrap: wrap !important;
-    /* justify-content: space-between !important; */
+    justify-content: space-between !important;
 }
 
 .col-md-2 {

@@ -112,6 +112,7 @@
         background: rgb(8, 182, 156);
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function() {
@@ -196,7 +197,19 @@
                 }
             });
         } else {
-            console.log("Không tìm thấy dữ liệu user trong localStorage.");
+            Swal.fire({
+                icon: "warning",
+                title: "You are not logged in!",
+                text: "Please log in to use your cart.",
+                showConfirmButton: true,
+                confirmButtonText: "Log in now",
+                confirmButtonColor: "#3085d6"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../client/pages/login.php";
+                }
+            });
+            return;
         }
         // Khi nhấn vào checkbox "Select All"
         $(".select-all").on("change", function() {

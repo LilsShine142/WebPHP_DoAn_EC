@@ -8,27 +8,19 @@
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Smartwatch
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Cables
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Chargers
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Bands
-							</a>
 						</li>
 					</ul>
 				</div>
@@ -40,21 +32,15 @@
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Track Order
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Momo Checkout
-							</a>
 						</li>
 
 						<!-- <li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Chatbot
-							</a>
 						</li> -->
 					</ul>
 				</div>

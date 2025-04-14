@@ -19,7 +19,7 @@ class ProductVariationGateway
       if ($imageFileName === false) {
         return false;
       }
-      $data["image_name"] = $imageFileName; 
+      $data["image_name"] = $imageFileName;
     } else {
       // Nếu không có ảnh, dùng ảnh mặc định
       $data["image_name"] = $data["image_name"] ?? "default.webp";
@@ -179,6 +179,21 @@ class ProductVariationGateway
       $new["image_name"] = $oldImage;
     }
 
+    // Xử lý số lượng tồn kho
+    $currentStock = $current["stock_quantity"];
+    $stockChange = $new["stock_quantity"] ?? 0; // Số lượng thay đổi
+    // Nếu có yêu cầu thay đổi số lượng
+    if (isset($new["stock_quantity"])) {
+      $newStock = $currentStock + $stockChange; // Cộng dồn
+      if ($newStock < 0) {
+        throw new Exception("Số lượng tồn kho không thể âm");
+      }
+      $new["stock_quantity"] = $newStock;
+    } else {
+      $new["stock_quantity"] = $currentStock;
+    }
+
+
     $sql = "UPDATE product_variations SET
       product_id = :product_id,
       watch_size_mm = :watch_size_mm,
@@ -204,7 +219,8 @@ class ProductVariationGateway
       band_color = :band_color,
       weight_milligrams = :weight_milligrams,
       release_date = :release_date,
-      stop_selling = :stop_selling
+      stop_selling = :stop_selling,
+      stock_quantity = :stock_quantity    
       WHERE id = :id
     ";
 
@@ -214,7 +230,7 @@ class ProductVariationGateway
     $stmt->bindValue(":watch_color", $new["watch_color"] ?? $current["watch_color"], PDO::PARAM_STR);
     $stmt->bindValue(":price_cents", $new["price_cents"] ?? $current["price_cents"], PDO::PARAM_INT);
     $stmt->bindValue(":base_price_cents", $new["base_price_cents"] ?? $current["base_price_cents"], PDO::PARAM_INT);
-    $stmt->bindValue(":image_name", $new, PDO::PARAM_STR);
+    $stmt->bindValue(":image_name", $new["image_name"], PDO::PARAM_STR);
     $stmt->bindValue(":display_size_mm", $new["display_size_mm"] ?? $current["display_size_mm"], PDO::PARAM_INT);
     $stmt->bindValue(":display_type", $new["display_type"] ?? $current["display_type"], PDO::PARAM_STR);
     $stmt->bindValue(":resolution_h_px", $new["resolution_h_px"] ?? $current["resolution_h_px"], PDO::PARAM_INT);
@@ -234,6 +250,7 @@ class ProductVariationGateway
     $stmt->bindValue(":weight_milligrams", $new["weight_milligrams"] ?? $current["weight_milligrams"], PDO::PARAM_INT);
     $stmt->bindValue(":release_date", $new["release_date"] ?? $current["release_date"], PDO::PARAM_STR);
     $stmt->bindValue(":stop_selling", $new["stop_selling"] ?? $current["stop_selling"], PDO::PARAM_BOOL);
+    $stmt->bindValue(":stock_quantity", $new["stock_quantity"], PDO::PARAM_INT);
     $stmt->bindValue(":id", $current["id"], PDO::PARAM_INT);
     $stmt->execute();
 

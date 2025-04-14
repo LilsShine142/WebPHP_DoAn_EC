@@ -111,9 +111,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">Brand ID</td>
+                            <td class="fw-bold">Brand</td>
                             <td>
-                                <input type="number" id="brand_id" name="brand_id" class="form-control" placeholder="Enter brand ID">
+                                <select id="brand_id" name="brand_id" class="form-control">
+                                    <option value="">Select a brand</option>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -123,9 +126,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">Category ID</td>
+                            <td class="fw-bold">Category</td>
                             <td>
-                                <input type="number" id="category_id" name="category_id" class="form-control" placeholder="Enter category ID">
+                                <select id="category_id" name="category_id" class="form-control">
+                                    <option value="">Select a category</option>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
                             </td>
                         </tr>
                         <tr>

@@ -1,4 +1,57 @@
 document.addEventListener("DOMContentLoaded", function () {
+    //===================================== LẤY BRAND VÀ CATEGORY ĐỂ THÊM VÀO SELECT TRONG FORM THÊM ============================================
+    $(document).ready(function () {
+        loadBrands(); // Tải danh sách thương hiệu
+        loadCategories(); // Tải danh sách danh mục
+    });
+
+    // Hàm chung để load dữ liệu vào select
+    function loadDataToSelect(url, selectId, displayField = 'name') {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        let selectElement = document.querySelector(selectId);
+                        // Clear existing options except the first one
+                        $(selectElement).find('option:not(:first)').remove();
+
+                        response.data.forEach(item => {
+                            let option = new Option(item[displayField], item.id);
+                            selectElement.add(option);
+                        });
+                        resolve();
+                    } else {
+                        console.error("Lỗi khi lấy dữ liệu:", response.message);
+                        reject(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Lỗi khi lấy dữ liệu:", error);
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    // Lấy danh sách danh mục từ API và thêm vào select
+    function loadCategories() {
+        return loadDataToSelect(
+            `${BASE_API_URL}/api/products/categories`,
+            "#category_id"
+        );
+    }
+
+    // Lấy danh sách thương hiệu từ API và thêm vào select
+    function loadBrands() {
+        return loadDataToSelect(
+            `${BASE_API_URL}/api/products/brands`,
+            "#brand_id"
+        );
+    }
+
 
     // ========================== THÊM SẢN PHẨM VÀ BIẾN THỂ SẢN PHẨM ==========================
     // Lấy dữ liệu từ modal khi người dùng nhấn "Save Product"

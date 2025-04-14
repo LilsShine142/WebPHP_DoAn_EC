@@ -1,4 +1,4 @@
-// FILE NÀY DÀNH CHO CÁC XỬ LÝ KHI BẤM VÀO VARIANTS CỦA SẢN PHẨM
+// FILE NÀY DÀNH CHO CÁC XỬ LÝ CỦA VARIATIONS CHƯA CÓ NHẬP HÀNG (CHƯA CÓ TRONG PRODUCT INSTANCE)
 document.addEventListener("DOMContentLoaded", function () {
     // Lấy id từ URL
     function getParameterByName(name) {

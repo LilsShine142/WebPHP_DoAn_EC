@@ -1,10 +1,12 @@
 <?php
 
-class ProductController extends ErrorHandler {
+class ProductController extends ErrorHandler
+{
   public function __construct(private ProductGateway $gateway, private Auths $auths) {}
 
-  public function processRequest(string $method, ?int $id, ?int $limit, ?int $offset): void {
-    if($id) {
+  public function processRequest(string $method, ?int $id, ?int $limit, ?int $offset): void
+  {
+    if ($id) {
       $this->processResourceRequest($method, $id);
       return;
     }
@@ -12,14 +14,15 @@ class ProductController extends ErrorHandler {
     $this->processCollectionRequest($method, $limit, $offset);
   }
 
-  private function processResourceRequest(string $method, int $id): void {
+  private function processResourceRequest(string $method, int $id): void
+  {
     $product = $this->gateway->get($id);
-    if(!$product) {
+    if (!$product) {
       $this->sendErrorResponse(404, "Product with an id $id not found");
       return;
     }
 
-    switch($method) {
+    switch ($method) {
       case "GET":
         echo json_encode([
           "success" => true,
@@ -31,7 +34,7 @@ class ProductController extends ErrorHandler {
         $this->auths->verifyAction("UPDATE_PRODUCT");
         $data = (array) json_decode(file_get_contents("php://input"));
         $errors = $this->getValidationErrors($data, false);
-        if(!empty($errors)) {
+        if (!empty($errors)) {
           $this->sendErrorResponse(422, $errors);
           break;
         }
@@ -58,30 +61,29 @@ class ProductController extends ErrorHandler {
         $this->sendErrorResponse(405, "only allow GET, PUT, DELETE method");
         header("Allow: GET, PUT, DELETE");
     }
-
   }
 
-  private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void {
-    switch($method) {
+  private function processCollectionRequest(string $method, ?int $limit, ?int $offset): void
+  {
+    switch ($method) {
       case "GET":
-        $total = $this->gateway->countAll(); // Đếm tổng số sản phẩm (chưa lọc)
-        $data = $this->gateway->getAll($limit, $offset); // Lấy danh sách phân trang
+        $filters = [
+          'id' => isset($_GET['id']) ? (int)$_GET['id'] : null,
+          'name' => trim($_GET['name'] ?? '') ?: null,
+          'brand_id' => isset($_GET['brand_id']) ? (int)$_GET['brand_id'] : null,
+          'category_id' => isset($_GET['category_id']) ? (int)$_GET['category_id'] : null,
+          'stop_selling' => isset($_GET['stop_selling']) ? (int)$_GET['stop_selling'] : null
+        ];
 
-        echo json_encode([
-          "success" => true,
-          "totalElements" => $total, // Tổng số bản ghi
-          "limit" => $limit,
-          "offset" => $offset,
-          "length" => count($data), // Số lượng phần tử thực tế trong trang hiện tại
-          "data" => $data
-        ]);
+        $this->handleProductList($filters, $limit ?? 0, $offset ?? 0);
         break;
+
 
       case "POST":
         $this->auths->verifyAction("CREATE_PRODUCT");
         $data = (array) json_decode(file_get_contents("php://input"));
         $errors = $this->getValidationErrors($data);
-        if(!empty($errors)) {
+        if (!empty($errors)) {
           $this->sendErrorResponse(422, $errors);
           break;
         }
@@ -101,24 +103,58 @@ class ProductController extends ErrorHandler {
     }
   }
 
-  private function getValidationErrors(array $data, bool $new=true): array {
-    $errors = [];
+  private function handleProductList(array $filters, int $limit, int $offset): void
+  {
+    $hasFilters = !empty(array_filter($filters));
 
-    if($new) { //check all fields for new product
-      if(empty($data["name"])) $errors[] = "name is required";
-      if(empty($data["brand_id"]) || !is_numeric($data["brand_id"])) $errors[] = "brand_id is required with integer value";
-      if(empty($data["model"])) $errors[] = "model is required";
-      if(empty($data["category_id"]) || !is_numeric($data["category_id"])) $errors[] = "category_id is required with integer value";
-      if(empty($data["description"])) $errors[] = "description is required";
-    } else { //check fields that exist
-      if(array_key_exists("name", $data) && empty($data["name"])) $errors[] = "name is empty";
-      if(array_key_exists("brand_id", $data) && (empty($data["brand_id"]) || !is_numeric($data["brand_id"]))) $errors[] = "brand_id is empty or not an integer";
-      if(array_key_exists("model", $data) && empty($data["model"])) $errors[] = "model is empty";
-      if(array_key_exists("category_id", $data) && (empty($data["category_id"]) || !is_numeric($data["category_id"]))) $errors[] = "category_id is empty or not an integer";
-      if(array_key_exists("description", $data) && empty($data["description"])) $errors[] = "description is empty";
+    if ($hasFilters) {
+      $result = $this->gateway->getProductsByFiltersWithPagination(
+        $filters['id'],
+        $filters['name'],
+        $filters['brand_id'],
+        $filters['category_id'],
+        $filters['stop_selling'],
+        $limit,
+        $offset
+      );
+      $data = $result['data'];
+      $totalElements = $result['total'];
+    } else {
+      // Gọi getAll khi không có filter
+      $data = $this->gateway->getAll($limit, $offset);
+      $totalElements = $this->gateway->countAll();
     }
 
-    if(array_key_exists("stop_selling", $data) && !is_bool($data["stop_selling"])) $errors[] = "stop_selling must be a boolean value";
+    echo json_encode([
+      "success" => true,
+      "totalElements" => $totalElements,
+      "limit" => $limit,
+      "offset" => $offset,
+      "length" => count($data),
+      "filters" => array_filter($filters), // Chỉ trả về các filter đang active
+      "data" => $data
+    ]);
+  }
+
+  private function getValidationErrors(array $data, bool $new = true): array
+  {
+    $errors = [];
+
+    if ($new) { //check all fields for new product
+      if (empty($data["name"])) $errors[] = "name is required";
+      if (empty($data["brand_id"]) || !is_numeric($data["brand_id"])) $errors[] = "brand_id is required with integer value";
+      if (empty($data["model"])) $errors[] = "model is required";
+      if (empty($data["category_id"]) || !is_numeric($data["category_id"])) $errors[] = "category_id is required with integer value";
+      if (empty($data["description"])) $errors[] = "description is required";
+    } else { //check fields that exist
+      if (array_key_exists("name", $data) && empty($data["name"])) $errors[] = "name is empty";
+      if (array_key_exists("brand_id", $data) && (empty($data["brand_id"]) || !is_numeric($data["brand_id"]))) $errors[] = "brand_id is empty or not an integer";
+      if (array_key_exists("model", $data) && empty($data["model"])) $errors[] = "model is empty";
+      if (array_key_exists("category_id", $data) && (empty($data["category_id"]) || !is_numeric($data["category_id"]))) $errors[] = "category_id is empty or not an integer";
+      if (array_key_exists("description", $data) && empty($data["description"])) $errors[] = "description is empty";
+    }
+
+    if (array_key_exists("stop_selling", $data) && !is_bool($data["stop_selling"])) $errors[] = "stop_selling must be a boolean value";
 
     return $errors;
   }

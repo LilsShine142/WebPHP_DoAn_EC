@@ -62,9 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let index = 0;
         productVariationData.forEach((variation) => {
             const imageUrl = variation.image_name
-                ? `../backend/uploads/products/${variation.image_name}`
+                ? `${BASE_API_URL}/backend/uploads/products/${variation.image_name}`
                 : "default-image.jpg";
-
+            console.log("Image URL:", imageUrl);
             variation.instances.forEach((instance) => {
                 index += 1;
                 productVariationTable.innerHTML += `
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td class="text-center">${variation.id}</td>
                     <td class="text-center">
                         <img src="${imageUrl}" 
-                             width="50" 
+                             width="60" 
                              class="img-thumbnail"
                              onerror="this.onerror=null; this.src='default-image.jpg';"
                              alt="Variation ${variation.id}">

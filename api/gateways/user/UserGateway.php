@@ -67,9 +67,52 @@ class UserGateway
   }
 
   //Hàm lọc user
+  // public function getByFilters($id, $name, $contact, $from_date, $to_date, $type): array
+  // {
+  //   $query = "SELECT u.*, r.name as role_name 
+  //             FROM users u
+  //             LEFT JOIN user_roles ur ON u.id = ur.user_id
+  //             LEFT JOIN roles r ON ur.role_id = r.id
+  //             WHERE 1=1";
+  //   $params = [];
+
+  //   if (!empty($id)) {
+  //     $query .= " AND u.id = ?";
+  //     $params[] = $id;
+  //   }
+  //   if (!empty($name)) {
+  //     $query .= " AND u.full_name LIKE ?";
+  //     $params[] = "%{$name}%";
+  //   }
+  //   if (!empty($contact)) {
+  //     $query .= " AND (u.email LIKE ? OR u.phone_number LIKE ?)";
+  //     $params[] = "%{$contact}%";
+  //     $params[] = "%{$contact}%";
+  //   }
+  //   if (!empty($from_date)) {
+  //     $query .= " AND u.created_at >= ?";
+  //     $params[] = $from_date;
+  //   }
+  //   if (!empty($to_date)) {
+  //     $query .= " AND u.created_at <= ?";
+  //     $params[] = $to_date;
+  //   }
+  //   // Lọc theo loại người dùng (Nhân viên / Khách hàng)
+  //   if (!empty($type)) {
+  //     if ($type === "employee") {
+  //       $query .= " AND ur.role_id NOT IN (2)";  // Loại bỏ khách hàng
+  //     } elseif ($type === "customer") {
+  //       $query .= " AND ur.role_id = 2";  // Chỉ lấy khách hàng
+  //     }
+  //   }
+  //   $stmt = $this->conn->prepare($query);
+  //   $stmt->execute($params);
+
+  //   return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  // }
   public function getByFilters($id, $name, $contact, $from_date, $to_date, $type): array
   {
-    $query = "SELECT u.*, r.name as role_name 
+    $query = "SELECT u.*, GROUP_CONCAT(DISTINCT r.name SEPARATOR ', ') as role_names
               FROM users u
               LEFT JOIN user_roles ur ON u.id = ur.user_id
               LEFT JOIN roles r ON ur.role_id = r.id
@@ -80,36 +123,44 @@ class UserGateway
       $query .= " AND u.id = ?";
       $params[] = $id;
     }
+
     if (!empty($name)) {
       $query .= " AND u.full_name LIKE ?";
       $params[] = "%{$name}%";
     }
+
     if (!empty($contact)) {
       $query .= " AND (u.email LIKE ? OR u.phone_number LIKE ?)";
       $params[] = "%{$contact}%";
       $params[] = "%{$contact}%";
     }
+
     if (!empty($from_date)) {
       $query .= " AND u.created_at >= ?";
       $params[] = $from_date;
     }
+
     if (!empty($to_date)) {
       $query .= " AND u.created_at <= ?";
       $params[] = $to_date;
     }
-    // Lọc theo loại người dùng (Nhân viên / Khách hàng)
+
     if (!empty($type)) {
       if ($type === "employee") {
-        $query .= " AND ur.role_id NOT IN (3)";  // Loại bỏ khách hàng
+        $query .= " AND ur.role_id IS NOT NULL AND ur.role_id <> 2";
       } elseif ($type === "customer") {
-        $query .= " AND ur.role_id = 3";  // Chỉ lấy khách hàng
+        $query .= " AND ur.role_id = 2";
       }
     }
+
+    $query .= " GROUP BY u.id";
+
     $stmt = $this->conn->prepare($query);
     $stmt->execute($params);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
 
   public function update(array $current, array $new): array | false
   {
@@ -185,7 +236,7 @@ class UserGateway
     $sql = "SELECT COUNT(DISTINCT u.id) 
                 FROM users u
                 JOIN user_roles ur ON u.id = ur.user_id
-                WHERE ur.role_id NOT IN (3)"; // Loại bỏ role customer (3)
+                WHERE ur.role_id NOT IN (2)"; // Loại bỏ role customer (2)
 
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
@@ -200,7 +251,7 @@ class UserGateway
     $sql = "SELECT COUNT(DISTINCT u.id) 
                 FROM users u
                 JOIN user_roles ur ON u.id = ur.user_id
-                WHERE ur.role_id = 3"; // Chỉ lấy role customer (3)
+                WHERE ur.role_id = 2"; // Chỉ lấy role customer (2)
 
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
@@ -262,9 +313,9 @@ class UserGateway
 
     if (!empty($type)) {
       if ($type === "employee") {
-        $conditions[] = "ur.role_id NOT IN (3)";
+        $conditions[] = "ur.role_id NOT IN (2)";
       } elseif ($type === "customer") {
-        $conditions[] = "ur.role_id = 3";
+        $conditions[] = "ur.role_id = 2";
       }
     }
 

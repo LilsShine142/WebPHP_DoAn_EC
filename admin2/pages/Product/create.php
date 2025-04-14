@@ -111,9 +111,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">Brand ID</td>
+                            <td class="fw-bold">Brand</td>
                             <td>
-                                <input type="number" id="brand_id" name="brand_id" class="form-control" placeholder="Enter brand ID">
+                                <select id="brand_id" name="brand_id" class="form-control">
+                                    <option value="">Select a brand</option>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -123,9 +126,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">Category ID</td>
+                            <td class="fw-bold">Category</td>
                             <td>
-                                <input type="number" id="category_id" name="category_id" class="form-control" placeholder="Enter category ID">
+                                <select id="category_id" name="category_id" class="form-control">
+                                    <option value="">Select a category</option>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -311,7 +317,7 @@
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
     <script src="assets/js/Product/Validation.js"></script>
-    <script src="assets/js/Product/ProductAction.js"></script>
+    <script src="assets/js/Product/addProduct.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

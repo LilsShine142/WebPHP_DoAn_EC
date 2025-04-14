@@ -54,39 +54,62 @@
         </div>
         <!-- CÓ THỂ BỎ BỘ LỌC THÌ CATEGORY ÍT THAM SỐ ĐỂ LỌC, CHỈ CẦN TÌM KIẾM THEO TÊN Ở Ô SEARCH LÀ ĐỦ -->
         <!-- Bộ lọc -->
-        <div id="filter_cateContainer" class="card p-3 my-4 mx-4" style="display: none;"> <!-- my-3: margin trên/dưới, mx-4: margin trái/phải -->
-            <div _ngcontent-obg-c192="" class="d-flex align-items-center justify-content-between" bis_skin_checked="1">
-                <h6 _ngcontent-obg-c192="">Bộ lọc</h6>
-                <span id="closeIcon" class="btn-close" disabled aria-label="Close" style="cursor:pointer"></span>
+        <div id="filter_cateContainer" class="card border-primary p-3 my-4 mx-4 shadow-sm" style="display: none;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="m-0 text-primary">
+                    <i class="fas fa-filter me-2"></i>ADVANCED FILTERS
+                </h5>
+                <button id="closeIcon" class="btn-close" aria-label="Close"></button>
             </div>
+
             <form id="filter_cateForm" method="GET">
-                <input type="hidden">
-                <div class="row">
+                <div class="row g-3">
+                    <!-- User ID -->
                     <div class="col-md-3">
-                        <label class="form-label">Mã User</label>
-                        <input type="text" name="id" class="form-control" value="<?= $_GET['id'] ?? '' ?>">
+                        <label class="form-label small fw-bold text-muted">USER ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-user-circle"></i>
+                            </span>
+                            <input type="text" name="id" class="form-control form-control-sm" placeholder="Enter user ID" value="<?= $_GET['id'] ?? '' ?>">
+                        </div>
                     </div>
 
-                    <!-- <div class="col-md-3">
-                        <label class="form-label">Thông tin liên hệ</label>
-                        <input type="text" name="contact" class="form-control" placeholder="Nhập tên danh mục" value="<?= $_GET['name'] ?? '' ?>">
-                    </div> -->
-                    <div class="col-md-3">
-                        <label class="form-label">Từ ngày</label>
-                        <input type="date" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Đến ngày</label>
-                        <input type="date" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+                    <!-- Date Range -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">DATE RANGE</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                            <input type="date" name="from_date" class="form-control form-control-sm" value="<?= $_GET['from_date'] ?? '' ?>">
+                            <span class="input-group-text bg-light">to</span>
+                            <input type="date" name="to_date" class="form-control form-control-sm" value="<?= $_GET['to_date'] ?? '' ?>">
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <button type="button" class="btn btn-success btn-filter_cate">Áp dụng</button>
-                    <button type="button" id="resetFilter" class="btn btn-secondary resetFilter">Hủy</button>
+                <div class="mt-4 d-flex justify-content-end border-top pt-3">
+                    <button type="button" id="resetFilter" class="btn btn-outline-secondary btn-sm me-2">
+                        <i class="fas fa-redo me-1"></i> Reset
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm btn-filter_cate">
+                        <i class="fas fa-filter me-1"></i> Apply
+                    </button>
                 </div>
             </form>
         </div>
+
+        <style>
+            #filter_cateContainer {
+                border-left: 4px solid #0d6efd;
+            }
+
+            .input-group-text {
+                min-width: 40px;
+                justify-content: center;
+            }
+        </style>
         <!-- JS ẩn hiện bộ lọc khi bấm nút lọc -->
         <script>
             document.getElementById("toggleFilter").addEventListener("click", function() {

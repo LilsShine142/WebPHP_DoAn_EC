@@ -180,6 +180,8 @@
                         style: 'currency',
                         currency: 'USD'
                     }).format(amount);
+                    // Check if the order is COD and in a deletable state
+                    let canCancle = order.payment_method === "COD" && (stateName === "Pending" || stateName === "Approved");
                     html += `<tr>
                         <td><input type="checkbox" class="order-checkbox" value="${order.id}"></td>
                         <td>${order.id}</td>
@@ -197,14 +199,35 @@
                             <a href='index.php?page=pages/Order/update.php&id=${order.id}' class='btn btn-warning btn-sm' title='Edit'>
                                 <i class='fas fa-edit'></i>
                             </a>
-                            <button class='btn btn-danger btn-sm' title='Delete' onclick='deleteOrder(${order.id})'>
-                                <i class='fas fa-trash'></i>
-                            </button>
+                            ${canCancle ? `<button class='btn btn-danger btn-sm' title='Delete' onclick='cancleOrder(${order.id})'>
+                                <i class='fas fa-xmark'></i>
+                            </button>` : ""}
                         </td>
                     </tr>`;
                 });
                 $("#orderTableBody").html(html);
             }
+
+            // Xử lý sự kiện cancelling order bằng cách thay đổi trạng thái đơn hàng = 3 (đã huỷ)
+            window.cancleOrder = function(orderId) {
+                if (confirm("Are you sure you want to cancel this order?")) {
+                    $.ajax({
+                        url: `${BASE_API_URL}/api/orders/${orderId}`,
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            delivery_state_id: 3 // Cập nhật trạng thái giao hàng thành "Cancelled"
+                        }),
+                        success: function() {
+                            alert("Order cancelled successfully!");
+                            loadOrders(); // Tải lại danh sách đơn hàng sau khi huỷ
+                        },
+                        error: function() {
+                            alert("Failed to cancel the order.");
+                        }
+                    });
+                }
+            };
 
             function filterOrders() {
                 let searchValue = $("#searchInput").val().toLowerCase();

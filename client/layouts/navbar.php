@@ -9,10 +9,6 @@
 				</div>
 
 				<div class="right-top-bar flex-w h-full">
-					<a href="#" class="flex-c-m trans-04 p-lr-25">
-						Chatbot
-					</a>
-
 					<a href="#" class="flex-c-m trans-04 p-lr-25 account-menu">
 						Account
 					</a>

@@ -167,6 +167,8 @@ if (!$order_id) {
 
                             <p class="text-lg">Shipping Address: ${order[0].delivery_address}</p>
 
+                            <p class="font-bold text-lg">Delivery State: ${order[0].delivery_state_id == 1 ? "Pending" : order[0].delivery_state_id == 2 ? "Approved" : order[0].delivery_state_id == 3 ? "Canceled" : order[0].delivery_state_id == 4 ? "To Ship" : "Received"}</p>
+
                             <p class="text-lg">Payment Method: ${order[0].payment_method}</p>
 
                             <div class="grid grid-cols-1 gap-3 mt-3" id="orderItems">

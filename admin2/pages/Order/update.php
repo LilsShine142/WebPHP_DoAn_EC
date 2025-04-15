@@ -216,6 +216,20 @@ $orderId = $_GET['id'];
                 });
 
                 if (response.success) {
+                    // nếu newStateId là 4 thì gọi /api/orders/items?order_id=989536 để lấy danh sách sku. Lưu tất cả data.product_instance_sku vào 1 mảng sau đó gọi PUT api/products/instances/SKU48001 với body là "is_sold": true
+                    if (newStateId === 4) {
+                        const itemsRes = await $.getJSON(`${BASE_API_URL}/api/orders/items?order_id=${orderId}`);
+                        if (itemsRes.success && itemsRes.data.length) {
+                            const skuList = itemsRes.data.map(item => item.product_instance_sku);
+                            await Promise.all(skuList.map(sku => $.ajax({
+                                url: `${BASE_API_URL}/api/products/instances/${sku}`,
+                                type: 'PUT',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ is_sold: true }),
+                            })));
+                        }
+                    }
+                    // Hiển thị thông báo thành công và chuyển hướng về danh sách đơn hàng
                     alert(`Order has been ${newStateId === 2 ? 'approved' : newStateId === 3 ? 'canceled' : newStateId === 4 ? 'shipped' : 'received'} successfully!`);
                     window.location.href = `index.php?page=pages/Order/list.php`;
                 } else {

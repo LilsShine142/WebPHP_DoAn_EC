@@ -826,7 +826,7 @@
                 contentType: "application/json",
                 data: JSON.stringify({
                     user_id: user_id,
-                    total_cents: total,
+                    total_cents: total/100,
                     delivery_address: deliveryAddress,
                     order_date: orderDate,
                     delivery_state_id: 1,
@@ -869,7 +869,7 @@
                                                 data: JSON.stringify({
                                                     order_id: order_id,
                                                     product_instance_sku: sku,
-                                                    price_cents: product.price * 1000
+                                                    price_cents: product.price
                                                 }),
                                                 success: function(response) {
                                                     if (response.success) {

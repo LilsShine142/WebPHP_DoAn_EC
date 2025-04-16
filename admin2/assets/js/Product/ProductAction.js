@@ -162,195 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
             bindProductFilterEvents();
         }
     });
-    // //=========================================== CẤU HÌNH TOÀN CỤC =========================================
-
-    // // Thêm phần cấu hình đầu file
-    // const PRODUCTS_CONFIG = {
-    //     DEFAULT_ITEMS_PER_PAGE: 5,
-    //     DEFAULT_EXTRA_PARAMS: "stop_selling=false"
-    // };
-
-    // // Tạo instance pagination riêng cho product
-    // const productPagination = new Pagination(PRODUCTS_CONFIG.DEFAULT_ITEMS_PER_PAGE);
-
-    // // Hàm chính để fetch và xử lý sản phẩm
-    // function filterProducts(searchValue = "", extraParams = PRODUCTS_CONFIG.DEFAULT_EXTRA_PARAMS, page = 1, limit = productPagination.itemsPerPage) {
-    //     console.log("Filter Products - limit:", limit, "page:", page);
-    //     const offset = (page - 1) * limit;
-    //     let apiUrl = `${BASE_API_URL}/api/products?limit=${limit}&offset=${offset}`;
-
-    //     // Thêm tham số tìm kiếm nếu có
-    //     if (searchValue) {
-    //         apiUrl += `&name=${encodeURIComponent(searchValue)}`;
-    //     }
-
-    //     // Thêm extra params nếu có
-    //     if (extraParams) {
-    //         apiUrl += `&${extraParams}`;
-    //     }
-
-    //     console.log("API URL:", apiUrl); // Debug URL
-
-    //     const brandsAPI = `${BASE_API_URL}/api/products/brands`;
-    //     const categoriesAPI = `${BASE_API_URL}/api/products/categories`;
-
-    //     showLoading();
-
-    //     // Gọi API song song
-    //     Promise.all([
-    //         $.ajax({ url: apiUrl, type: "GET", dataType: "json" }),
-    //         $.ajax({ url: brandsAPI, type: "GET", dataType: "json" }),
-    //         $.ajax({ url: categoriesAPI, type: "GET", dataType: "json" })
-    //     ])
-    //         .then(([productsResponse, brandsResponse, categoriesResponse]) => {
-    //             if (!productsResponse.success || !brandsResponse.success || !categoriesResponse.success) {
-    //                 throw new Error("API response not successful");
-    //             }
-
-    //             // Xử lý dữ liệu
-    //             const brandMap = createBrandMap(brandsResponse.data);
-    //             const categoryMap = createCategoryMap(categoriesResponse.data);
-
-    //             const mergedProducts = mergeProductData(productsResponse.data, brandMap, categoryMap);
-
-    //             // Hiển thị dữ liệu
-    //             //renderProductList(mergedProducts, offset);
-    //             prepareProductDataWithStock(mergedProducts).then((productsWithStock) => {
-    //                 renderProductList(productsWithStock, offset);
-    //             });
-
-
-    //             // Cập nhật thông tin phân trang
-    //             updatePaginationInfo(productsResponse.totalElements, offset, limit);
-    //         })
-    //         .catch(error => {
-    //             console.error("Lỗi API:", error);
-    //             showError("Không thể tải dữ liệu sản phẩm");
-    //         })
-    //         .finally(() => {
-    //             hideLoading();
-    //         });
-    // }
-
-    // // Các hàm helper
-    // function createBrandMap(brands) {
-    //     return Object.fromEntries(brands.map(b => [b.id, b.name]));
-    // }
-
-    // function createCategoryMap(categories) {
-    //     return Object.fromEntries(categories.map(c => [c.id, c.name]));
-    // }
-
-    // function mergeProductData(products, brandMap, categoryMap) {
-    //     return products.map(product => ({
-    //         ...product,
-    //         brand_name: brandMap[product.brand_id] || "Không xác định",
-    //         category_name: categoryMap[product.category_id] || "Không xác định",
-    //         stop_selling: product.stop_selling ? 'Yes' : 'No'
-    //     }));
-    // }
-    // function updatePaginationInfo(totalItems, startIndex, perPage) {
-    //     const displayStart = totalItems > 0 ? startIndex + 1 : 0;
-    //     const displayEnd = Math.min(startIndex + perPage, totalItems);
-    //     const currentPage = Math.floor(startIndex / perPage) + 1;
-    //     // Cập nhật thông tin hiển thị
-    //     productPagination.updateRecordInfo(displayStart, displayEnd, totalItems);
-    //     // Cập nhật thông tin phân trang
-    //     productPagination.totalItems = totalItems;
-    //     productPagination.currentPage = currentPage;
-    //     productPagination.itemsPerPage = perPage;
-
-    //     // Render lại phân trang
-    //     productPagination.render(totalItems);
-    // }
-
-    // // Hàm hiển thị danh sách sản phẩm
-    // function renderProductList(products, offset) {
-    //     const tableBody = document.getElementById('product-table');
-    //     if (!tableBody) {
-    //         console.error("Không tìm thấy bảng sản phẩm");
-    //         return;
-    //     }
-
-    //     if (products.length === 0) {
-    //         tableBody.innerHTML = `<tr><td colspan="10" class="text-center">No data available</td></tr>`;
-    //         return;
-    //     }
-
-    //     tableBody.innerHTML = products.map((product, index) => {
-
-    //         const rowNumber = offset + index + 1;
-    //         // const imageUrl = product.image_name
-    //         //     ? `${BASE_API_URL}/uploads/products/${product.image_name}`
-    //         //     : 'default-image.jpg';
-    //         // Chỉ hiện ảnh ở variation, nên bỏ dòng này <td class="text-center"><img src="${imageUrl}" width="50" class="img-thumbnail" alt="${product.name}"></td>
-    //         return `
-    //     <tr class="align-middle">
-    //         <td class="text-center">${rowNumber}</td>
-    //         <td class="text-center">${product.id}</td>
-            
-    //         <td>${product.name}</td>
-    //         <td>${product.brand_name}</td>
-    //         <td>${product.category_name}</td>
-    //         <td class="text-center">${product.stock_quantity || 0}</td>
-    //         <td class="text-center">${product.stop_selling}</td>
-    //         <td class="text-center">
-    //             <a href="index.php?page=pages/Product/productVariationsList.php&product_id=${product.id}" 
-    //                class="btn btn-primary btn-sm py-1 px-2">
-    //                <i class="bi bi-boxes"></i> Variants
-    //             </a>
-    //         </td>
-    //         <td class="text-center">
-    //             <div class="d-flex gap-1 justify-content-center">
-    //                 <button class="btn btn-info btn-sm py-1 px-2 btn-view" data-id="${product.id}" title="View">
-    //                     <i class="fas fa-eye"></i>
-    //                 </button>
-    //                 <button class="btn btn-warning btn-sm py-1 px-2 btn-update" data-id="${product.id}" title="Edit">
-    //                     <i class="fas fa-edit"></i>
-    //                 </button>
-    //                 <button class="btn btn-danger btn-sm py-1 px-2 btn-delete" data-id="${product.id}" title="Delete">
-    //                     <i class="fas fa-trash"></i>
-    //                 </button>
-    //             </div>
-    //         </td>
-    //     </tr>`;
-    //     }).join('');
-
-    //     addProductButtonEvents();
-    // }
-
-    // // Hàm xử lý tìm kiếm sản phẩm
-    // // function handleProductSearch() {
-    // //     const searchValue = document.getElementById('keyword').value;
-    // //     productPagination.currentPage = 1;
-    // //     filterProducts(searchValue, productPagination.extraParams, productPagination.currentPage);
-    // // }
-
-    // // Hàm thêm sự kiện cho các nút sản phẩm
-    // function addProductButtonEvents() {
-    //     $(document).off('click', '.btn-view, .btn-update, .btn-delete');
-
-    //     $(document).on('click', '.btn-view', function () {
-    //         const id = $(this).data('id');
-    //         console.log("View product:", id);
-    //         // Thêm logic xem chi tiết
-    //     });
-
-    //     $(document).on('click', '.btn-update', function () {
-    //         const id = $(this).data('id');
-    //         console.log("Update product:", id);
-    //         // Thêm logic cập nhật
-    //     });
-
-    //     $(document).on('click', '.btn-delete', function () {
-    //         const id = $(this).data('id');
-    //         if (confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) {
-    //             console.log("Delete product:", id);
-    //             // Thêm logic xóa
-    //         }
-    //     });
-    // }
-
 
     // =========================================== CẤU HÌNH TOÀN CỤC =========================================
     const PRODUCTS_CONFIG = {
@@ -542,11 +353,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Các hàm utility
     function showLoading() {
-        const loader = $("#loading-indicator");
-        if (loader.length) {
-            loader.show();
+        if ($('#loading-indicator').length === 0) {
+            $('body').append(`
+            <div id="loading-indicator" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;justify-content:center;align-items:center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        `);
         } else {
-            console.warn("Không tìm thấy loading indicator");
+            $('#loading-indicator').show();
         }
     }
 

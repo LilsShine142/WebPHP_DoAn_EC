@@ -1,6 +1,6 @@
 <footer class="bg3 p-t-75 p-b-32">
 		<div class="container">
-			<div class="row">
+			<div class="row" style="justify-content: space-between;">
 				<div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
 						Categories
@@ -8,27 +8,19 @@
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Smartwatch
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Cables
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Chargers
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Bands
-							</a>
 						</li>
 					</ul>
 				</div>
@@ -40,21 +32,15 @@
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Track Order
-							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Momo Checkout
-							</a>
 						</li>
 
 						<!-- <li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
 								Chatbot
-							</a>
 						</li> -->
 					</ul>
 				</div>

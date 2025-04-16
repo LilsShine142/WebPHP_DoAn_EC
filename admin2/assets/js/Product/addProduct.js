@@ -155,32 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
             stop_selling: modal.querySelector('#stop_selling').checked
             // image_name: modal.querySelector('#image_name').value,
         };
-        // return {
-        //     //image_name: modal.querySelector('#image_name').value,
-        //     os_id: modal.querySelector('#os_select').value,
-        //     watch_size_mm: 44,
-        //     watch_color: "Black",
-        //     display_type: "AMOLED",
-        //     display_size_mm: 1.78,
-        //     resolution_w_px: 368,
-        //     resolution_h_px: 448,
-        //     ram_bytes: 1024, // 1GB
-        //     rom_bytes: 8192, // 8GB
-        //     connectivity: "Bluetooth 5.2, Wi-Fi",
-        //     sensor: "Heart Rate, SpO2, GPS",
-        //     case_material: "Titanium",
-        //     band_material: "Silicone",
-        //     band_size_mm: 22,
-        //     band_color: "Black",
-        //     battery_life_mah: 450,
-        //     water_resistance_value: 50,
-        //     water_resistance_unit: "meters",
-        //     weight_milligrams: 35000, // 35g
-        //     base_price_cents: 19900, // $199.00
-        //     price_cents: 24900, // $249.00
-        //     release_date: formattedDate, // Thêm ngày hiện tại vào đây
-        //     stop_selling: false,
-        // };
     }
 
     // Hàm lưu sản phẩm và biến thể

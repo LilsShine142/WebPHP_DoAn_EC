@@ -11,6 +11,7 @@ spl_autoload_register(function ($class) use ($classMap): void {
     require_once $classMap[$class];
   }
 });
+require_once __DIR__ . "/../api/config/constants.php";
 
 set_exception_handler("ErrorHandler::handleException");
 

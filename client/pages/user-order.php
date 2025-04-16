@@ -106,6 +106,8 @@
                                 <div class="grid grid-cols-1 gap-3 mt-3" id="orderItems"></div>
                                 <div class="mt-3 text-right font-bold text-lg">Total: ${formatCurrency(order.total_cents)}</div>
                                 <div class="mt-3 text-right">
+                                    ${order.payment_method == "COD" && (order.delivery_state_id == 1 || order.delivery_state_id == 2) ? `<button class="px-4 py-2 bg-red-500 text-white rounded-md" onclick="cancelOrder(${order.id})">Cancel</button>` : ''}
+
                                     <button class="px-4 py-2 bg-blue-500 text-white rounded-md">
                                         <a href="index.php?content=pages/order-detail.php&id=${order.id}">View Details</a>
                                     </button>
@@ -114,6 +116,26 @@
                         `);
 
                         $("#ordersList").append(orderElement);
+
+                        window.cancelOrder = function(orderId) {
+                            if (confirm("Are you sure you want to cancel this order?")) {
+                                $.ajax({
+                                    url: `${BASE_API_URL}/api/orders/${orderId}`,
+                                    type: 'PUT',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        delivery_state_id: 3 // Cập nhật trạng thái giao hàng thành "Cancelled"
+                                    }),
+                                    success: function() {
+                                        alert("Order cancelled successfully!");
+                                        location.reload(); // Reload the page to see updated order status
+                                    },
+                                    error: function() {
+                                        alert("Failed to cancel the order.");
+                                    }
+                                });
+                            }
+                        };
 
                         $.ajax({
                             url: `${BASE_API_URL}/api/orders/${order.id}`,

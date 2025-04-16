@@ -187,6 +187,16 @@
 							</li>
 						</ul>
 					</div>
+
+					<div class="filter-col3 p-r-15 p-b-27" style="width: 20%;">
+						<div class="bor8 dis-flex p-l-15" style="padding-left: 0;">
+						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+							<i class="zmdi zmdi-search"></i>
+						</button>
+
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search" style="padding-left: 12px;">
+					</div>
+				</div>
 				</div>
 			</div>
 		</div>

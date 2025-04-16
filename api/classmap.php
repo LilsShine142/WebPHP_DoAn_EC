@@ -37,6 +37,7 @@ return [
   "ProductCategoryGateway" => PRODUCT_GATEWAY_PATH . "/ProductCategoryGateway.php",
   "ProductOSGateway" => PRODUCT_GATEWAY_PATH . "/ProductOSGateway.php",
   "ProductInstanceGateway" => PRODUCT_GATEWAY_PATH . "/ProductInstanceGateway.php",
+  "ProductVariationInstanceGateway" => PRODUCT_GATEWAY_PATH . "/ProductVariationInstanceGateway.php",
 
   "UserGateway" => USER_GATEWAY_PATH . "/UserGateway.php",
   "UserRoleGateway" => USER_GATEWAY_PATH . "/UserRoleGateway.php",
@@ -63,6 +64,7 @@ return [
   "ProductCategoryController" => PRODUCT_CONTROLLER_PATH . "/ProductCategoryController.php",
   "ProductOSController" => PRODUCT_CONTROLLER_PATH . "/ProductOSController.php",
   "ProductInstanceController" => PRODUCT_CONTROLLER_PATH . "/ProductInstanceController.php",
+  "ProductVariationInstanceController" => PRODUCT_CONTROLLER_PATH . "/ProductVariationInstanceController.php",
 
   "UserController" => USER_CONTROLLER_PATH . "/UserController.php",
   "UserRoleController" => USER_CONTROLLER_PATH . "/UserRoleController.php",

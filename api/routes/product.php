@@ -54,6 +54,12 @@ switch (true) {
       $controller->processRequest($method, $action, $id, $limit, $offset);
     }
     break;
+  // Xử lý route /products/variations/instance
+  case $uri === SOURCE_URI . "/products/variations/instances":
+    $gateway = new ProductVariationInstanceGateway($db);
+    $controller = new ProductVariationInstanceController($gateway, $auths);
+    $controller->processRequest($method, null, $id, $limit, $offset);
+    break;
 
   default:
     $errorHandler = new ErrorHandler();

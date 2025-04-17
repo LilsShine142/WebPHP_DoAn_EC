@@ -573,6 +573,11 @@
         });
     });
 
+    function validatePhoneNumber(phoneNumber) {
+        const phoneRegex = /^(0[3|5|7|8|9][0-9]{8})$/;
+        return phoneRegex.test(phoneNumber);
+    }
+
     $(document).ready(function() {
         const userData = localStorage.getItem("user");
         if (userData) {
@@ -599,10 +604,17 @@
             // sự kiện update-user-infor
             $(".update-user-infor").on("click", function(event) {
                 event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
+                // validate phone number
+                const phoneNumber = $("#phoneNumber").val();
+                if (!validatePhoneNumber(phoneNumber)) {
+                    alert("Số điện thoại không hợp lệ!");
+                    $("#phoneNumber").focus(); // Đưa con trỏ vào ô nhập số điện thoại
+                    return;
+                }
                 const updatedUserData = {
                     full_name: $("#fullName").val(),
                     email: $("#email").val(),
-                    phone_number: $("#phoneNumber").val()
+                    phone_number: phoneNumber
                 };
                 $.ajax({
                     url: `${BASE_API_URL}/api/users/${user_id}`,
@@ -669,6 +681,13 @@
 
                             // Xử lý khi nhấn nút Confirm Change Address trong updateAddressModal
                             $("#confirmChangeAddress").on("click", function() {
+                                // validate phone number
+                                const phoneNumber = $(".phoneNumber").val();
+                                if (!validatePhoneNumber(phoneNumber)) {
+                                    alert("Số điện thoại không hợp lệ!");
+                                    $(".phoneNumber").focus(); // Đưa con trỏ vào ô nhập số điện thoại
+                                    return;
+                                }
 
                                 // Tạo body dữ liệu từ các input trong modal
                                 const updatedAddressData = {
@@ -679,7 +698,7 @@
                                     ward: selectedWard,
                                     district: selectedDistrict,
                                     city_province: selectedProvince,
-                                    phone_number: $(".phoneNumber").val(),
+                                    phone_number: phoneNumber,
                                     is_default: false
                                 };
 
@@ -797,6 +816,13 @@
                         $("#updateAddressModal").show();
                         // gọi api thêm address khi nhấn nút comfirm
                         $("#confirmChangeAddress").on("click", function() {
+                            // validate phone number
+                            const phoneNumber = $(".phoneNumber").val();
+                            if (!validatePhoneNumber(phoneNumber)) {
+                                alert("Số điện thoại không hợp lệ!");
+                                $(".phoneNumber").focus(); // Đưa con trỏ vào ô nhập số điện thoại
+                                return;
+                            }
                             // Tạo body dữ liệu từ các input trong modal
                             const newAddressData = {
                                 user_id: user_id,
@@ -806,7 +832,7 @@
                                 ward: selectedWard,
                                 district: selectedDistrict,
                                 city_province: selectedProvince,
-                                phone_number: $(".phoneNumber").val(),
+                                phone_number: phoneNumber,
                                 is_default: false
                             };
 

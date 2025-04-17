@@ -15,6 +15,12 @@ $(document).ready(function () {
         $("#login-form").fadeIn();
         document.title = "Login"; // Đổi tiêu đề thành "Login"
     });
+
+    // hàm validateEmail
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
     
     // Xử lý đăng ký bằng AJAX
     $("#register-form").submit(function (e) {
@@ -24,6 +30,12 @@ $(document).ready(function () {
         let password = $("input[name='newPassword']").val().trim();
         if (!email || !password) {
             alert("Email and password are required.");
+            return;
+        }
+
+        // Kiểm tra định dạng email
+        if (!validateEmail(email)) {
+            alert("Invalid email format.");
             return;
         }
         
@@ -62,6 +74,12 @@ $(document).ready(function () {
         // Kiểm tra nếu email hoặc password bị trống
         if (!email || !password) {
             alert("Vui lòng nhập đầy đủ email và mật khẩu.");
+            return; // Không gửi request
+        }
+
+        // Kiểm tra định dạng email
+        if (!validateEmail(email)) {
+            alert("Địa chỉ email không hợp lệ.");
             return; // Không gửi request
         }
         

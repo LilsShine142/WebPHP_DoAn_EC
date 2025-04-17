@@ -34,7 +34,7 @@
                     <label for="email">Email</label>
                     <input type="text" id="email" placeholder="Enter your email">
                     <!-- hiện thông báo -->
-                    <div class="message" id="email" style="color: red; display: none;">Email is incorrect</div>
+                    <div class="message" id="email-message" style="color: red; display: none;">Email is incorrect</div>
                 </div>
 
                 <div class="input-group">
@@ -402,6 +402,7 @@
     const container = document.querySelector('.container');
     const registerBtn = document.querySelector('.register-btn');
     const loginBtn = document.querySelector('.login-btn');
+    const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
 
     registerBtn.addEventListener('click', () => {
         container.classList.add('active');
@@ -423,6 +424,12 @@
         $('.form-box.login').show();
     });
 
+    // hàm validateEmail
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
+
     $("#change-password").on("click", function (event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
         let email = $("#email").val();
@@ -435,18 +442,37 @@
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
+
+        if (!validateEmail(email)) {
+            $("#email-message").show();
+            $("#email-message").text("Email không đúng định dạng!");
+            $("#email-message").css("color", "red");
+            $("#email-message").focus();
+            return;
+        } 
         
         if (newPassword !== confirmPassword) {
             $("#confirm-password-message").show();
             $("#new-password-message").hide();
+            // hide
+            $("#email-message").hide();
+            $("#current-password-message").hide();
+
             return;
         } else if (newPassword.length < 8 || !/\d/.test(newPassword) || !/[a-zA-Z]/.test(newPassword)) {
             $("#new-password-message").show();
             $("#confirm-password-message").hide();
+            // hide
+            $("#email-message").hide();
+            $("#current-password-message").hide();
+
             return;
         } else {
             $("#new-password-message").hide();
             $("#confirm-password-message").hide();
+            // hide
+            $("#email-message").hide();
+            $("#current-password-message").hide();  
         }
 
         // Kiểm tra mật khẩu hiện tại
@@ -456,6 +482,8 @@
             dataType: "json",
             success: function (response) {
                 if (response.success) {
+                    $("#email-message").hide();
+                    $("#current-password-message").hide();
                     // Nếu mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
                     $.ajax({
                         url: `${BASE_API_URL}/api/users/${response.data.id}`, // Sử dụng id từ phản hồi
@@ -475,13 +503,24 @@
                         }
                     });
                 } else {
-                    alert("Mật khẩu hiện tại không đúng!");
+                    
                 }
             },
             error: function (xhr) {
-                console.error("Error fetching user data:", xhr.responseText);
-                // alert("Không thể kết nối đến server.");
-                $("#current-password-message").show();
+                if (xhr.status === 404) {
+                    $("#email-message").text("Email không tồn tại!");
+                    $("#email-message").show();
+                    // hide
+                    $("#current-password-message").hide();
+                    $("#new-password-message").hide();
+                    $("#confirm-password-message").hide();
+                } else if (xhr.status === 401) {
+                    $("#current-password-message").text("Mật khẩu hiện tại không đúng!");
+                    $("#current-password-message").show();
+                    $("#email-message").hide();
+                    $("#new-password-message").hide();
+                    $("#confirm-password-message").hide();  
+                }
             }
         });
     });

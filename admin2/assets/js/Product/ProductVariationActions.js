@@ -1,225 +1,442 @@
+// FILE NÀY DÀNH CHO CÁC XỬ LÝ KHI BẤM VÀO VARIANTS CỦA SẢN PHẨM
 document.addEventListener("DOMContentLoaded", function () {
-    // Lấy id từ URL
+
+    // ======================== GLOBAL CONFIG ========================
+    const PRODUCT_VARIATION_CONFIG = {
+        DEFAULT_ITEMS_PER_PAGE: 10,
+        DEFAULT_EXTRA_PARAMS: ""
+    };
+
+    const pagination = new Pagination(PRODUCT_VARIATION_CONFIG.DEFAULT_ITEMS_PER_PAGE);
+    let productVariationListData = [];
+    let currentProductId = null;
+
+    // ======================== INITIALIZATION ========================
+    $(document).ready(function () {
+        initializePage();
+    });
+
+    function initializePage() {
+        currentProductId = getParameterByName('product_id');
+        console.log("Current Product ID:", currentProductId);
+        if (!currentProductId) {
+            console.error("Product ID not found in URL");
+            showError("Product not found");
+            return;
+        }
+        // Tạo nút thêm biến thể sản phẩm
+        createAddProductVariationButton(currentProductId);
+        // Load OS options
+        loadOSOptions();
+
+        // Initialize pagination
+        pagination.init(function (searchValue, extraParams, page, perPage) {
+            loadProductVariationData(searchValue, extraParams, page, perPage);
+        });
+
+        // Bind all events
+        bindFilterEvents();
+        bindTableEvents();
+
+        // Load initial data
+        pagination.loadData();
+    }
+
+    // ================ TẠO NÚT THÊM BIẾN THỂ SẢN PHẨM ===================
+    function createAddProductVariationButton(currentProductId) {
+        // Tạo thẻ <a> mới
+        const link = document.createElement('a');
+        link.href = `index.php?page=pages/Product/createVariation.php&product_Id=${currentProductId}`;
+        link.classList.add('btn', 'btn-primary', 'btn-sm', 'd-flex', 'align-items-center');
+
+        // Thêm icon vào thẻ <a>
+        const icon = document.createElement('i');
+        icon.classList.add('fas', 'fa-plus', 'me-1');
+        link.appendChild(icon);
+
+        // Thêm văn bản vào thẻ <a>
+        link.appendChild(document.createTextNode(' Add Product'));
+
+        // Chèn thẻ <a> vào trong phần tử có id 'filterFormContainer'
+        const container = document.getElementById('filterFormContainer');
+        const filterTitleDiv = container.querySelector('.d-flex.justify-content-between.align-items-center.mb-3');
+        const buttonContainer = filterTitleDiv.querySelector('.d-flex.gap-2');
+        buttonContainer.appendChild(link);
+    }
+
+    // ======================== DATA LOADING ========================
+    async function loadProductVariationData(searchValue = "", extraParams = "", page = 1, perPage = 10) {
+        try {
+            showLoading();
+
+            // Build query params
+            const params = new URLSearchParams({
+                product_id: currentProductId,
+                limit: perPage,
+                offset: (page - 1) * perPage
+            });
+
+            // Add search if exists
+            if (searchValue) {
+                params.append('search', searchValue);
+            }
+
+            // Add extra filters
+            if (extraParams) {
+                new URLSearchParams(extraParams).forEach((value, key) => {
+                    params.append(key, value);
+                });
+            }
+
+            // Call API
+            const response = await $.ajax({
+                url: `${BASE_API_URL}/api/products/variations/instances?${params.toString()}`,
+                type: 'GET',
+                dataType: 'json'
+            });
+
+            if (response.success) {
+                productVariationListData = response.data;
+                console.log("Product Variations:", productVariationListData);
+                renderProductVariationTable(productVariationListData);
+
+                // Update pagination info
+                updatePaginationInfo(
+                    response.meta.totalElements || 0,
+                    (page - 1) * perPage,
+                    perPage
+                );
+
+                // Update URL
+                updateBrowserURL(params);
+            }
+        } catch (error) {
+            console.error("Error loading variations:", error);
+            showError("Could not load product variations");
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // ======================== FILTER FUNCTIONS ========================
+    function bindFilterEvents() {
+        // Toggle filter form
+        $('#toggleFilterForm').click(function () {
+            $('#filterFormContainer').slideToggle();
+            $(this).find('i').toggleClass('fa-minus fa-plus');
+        });
+
+        // Quick search with debounce
+        // $("#keyword").on("input", debounce(function () {
+        //     const searchValue = $(this).val().trim();
+        //     applyFilters({ search: searchValue });
+        // }, 300));
+
+        // Apply advanced filters
+        $(".btn-filter").click(function () {
+            console.log("Filter button clicked");
+            applyFilters(getFormFilters());
+        });
+
+        // Reset all filters
+        $("#resetFilter").click(function () {
+            resetAllFilters();
+        });
+    }
+
+    function applyFilters(filters = {}) {
+        try {
+            // Validate filters
+            if (filters.price_cents_min && filters.price_cents_max &&
+                parseFloat(filters.price_cents_min) > parseFloat(filters.price_cents_max)) {
+                throw new Error("Minimum price must be less than maximum price");
+            }
+
+            // Reset to first page
+            pagination.currentPage = 1;
+
+            // Handle search separately
+            if (filters.search) {
+                pagination.setSearchValue(filters.search);
+                delete filters.search;
+            } else {
+                pagination.setSearchValue('');
+            }
+
+            // Update extra params
+            pagination.extraParams = new URLSearchParams(filters).toString();
+
+            // Reload data
+            pagination.loadData();
+
+        } catch (error) {
+            console.error("Filter error:", error);
+            showError(error.message);
+        }
+    }
+
+    function getFormFilters() {
+        const formData = $("#filterForm").serializeArray();
+        console.log("Form Data:", formData);
+        const filters = {};
+
+        formData.forEach(item => {
+            if (item.value) {
+                filters[item.name] = item.value;
+            }
+        });
+
+        // Add keyword search if exists
+        // const keyword = $("#keyword").val().trim();
+        // if (keyword) {
+        //     filters.search = keyword;
+        // }
+
+        return filters;
+    }
+
+    function resetAllFilters() {
+        // Reset form
+        $("#filterForm")[0].reset();
+        // $("#keyword").val('');
+        $('.select2').val(null).trigger('change');
+
+        // Reset pagination
+        pagination.currentPage = 1;
+        pagination.setSearchValue('');
+        pagination.extraParams = '';
+
+        // Clear URL except product_id
+        const cleanURL = window.location.pathname + '?product_id=' + currentProductId;
+        window.history.pushState({}, '', cleanURL);
+
+        // Reload data
+        pagination.loadData();
+    }
+
+    // ======================== OS SELECT FUNCTIONS ========================
+    function loadOSOptions() {
+        $.ajax({
+            url: `${BASE_API_URL}/api/products/os`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    const select = $('#osSelect');
+                    select.empty().append('<option value="">All OS</option>');
+
+                    // Add OS options
+                    response.data.forEach(os => {
+                        select.append(new Option(os.name, os.id));
+                    });
+
+                    // Initialize Select2
+                    if ($.fn.select2) {
+                        select.select2({
+                            placeholder: "Select OS",
+                            allowClear: true
+                        });
+                    }
+
+                    // Set selected value from URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.has('os_id')) {
+                        select.val(urlParams.get('os_id')).trigger('change');
+                    }
+                }
+            },
+            error: function (xhr) {
+                console.error('Error loading OS:', xhr.responseText);
+                showError('Error loading operating systems');
+            }
+        });
+    }
+
+    // ======================== TABLE RENDERING ========================
+    function renderProductVariationTable(variations) {
+        const table = $("#product-variations-table");
+        table.empty();
+
+        if (!variations || variations.length === 0) {
+            table.html(`
+            <tr>
+                <td colspan="11" class="text-center py-3">No data available</td>
+            </tr>
+        `);
+            return;
+        }
+
+        variations.forEach((variation, index) => {
+            const imageUrl = variation.image_url || "default-image.jpg";
+            const row = `
+        <tr class="align-middle">
+            <td class="text-center">${index + 1}</td>
+            <td class="text-center">${variation.product_id}</td>
+            <td class="text-center">${variation.id}</td>
+            <td class="text-center">
+                <img src="${imageUrl}" 
+                     width="60" 
+                     class="img-thumbnail"
+                     onerror="this.onerror=null; this.src='default-image.jpg';"
+                     alt="Variation ${variation.variation_id}">
+            </td>
+            <td class="text-center">${variation.sku}</td>
+            <td class="text-center">${variation.watch_size_mm || '-'}</td>
+            <td class="text-center">${variation.display_size_mm || '-'}</td>
+            <td class="text-center">${formatCurrency(variation.price_cents || 0)}</td>
+            <td class="text-center">${variation.stock_quantity || '0'}</td>
+            <td class="text-center">${variation.stop_selling ? 'Yes' : 'No'}</td>
+            <td class="text-center">
+                <div class="d-flex gap-1 justify-content-center">
+                    <button class="btn btn-info btn-sm py-1 px-2 btn-view" 
+                            data-id="${variation.variation_id}" 
+                            title="View">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-warning btn-sm py-1 px-2 btn-update" 
+                            data-id="${variation.variation_id}" 
+                            title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm py-1 px-2 btn-delete" 
+                            data-id="${variation.variation_id}" 
+                            title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>`;
+            table.append(row);
+        });
+    }
+
+    function bindTableEvents() {
+        // View button
+        $(document).on('click', '.btn-view', function () {
+            const variationId = $(this).data('id');
+            const variation = productVariationListData.find(v => v.variation_id == variationId);
+            showVariationDetail(variation);
+        });
+
+        // Edit button
+        $(document).on('click', '.btn-update', function () {
+            const variationId = $(this).data('id');
+            // Implement edit functionality
+            console.log("Edit variation:", variationId);
+        });
+
+        // Delete button
+        $(document).on('click', '.btn-delete', function () {
+            const variationId = $(this).data('id');
+            // Implement delete functionality
+            console.log("Delete variation:", variationId);
+        });
+    }
+
+    // ======================== DETAIL VIEW ========================
+    function showVariationDetail(variation) {
+        if (!variation) {
+            console.error("Invalid variation data");
+            return;
+        }
+
+        // Display basic info
+        $("#variationId").text(variation.variation_id);
+        $("#variationSku").text(variation.sku);
+
+        // Display specifications
+        $("#os_name").text(variation.os_name || "N/A");
+        $("#watch_size_mm").text(variation.watch_size_mm ? `${variation.watch_size_mm}mm` : "N/A");
+        $("#display_size_mm").text(variation.display_size_mm ? `${variation.display_size_mm}mm` : "N/A");
+        $("#ram_bytes").text(variation.ram_bytes ? `${(variation.ram_bytes / 1024).toFixed(1)} GB` : "N/A");
+        $("#rom_bytes").text(variation.rom_bytes ? `${(variation.rom_bytes / 1024).toFixed(1)} GB` : "N/A");
+
+        // Display pricing and stock
+        $("#price_cents").text(formatCurrency(variation.price_cents || 0));
+        $("#stock_quantity").text(variation.stock_quantity || "0");
+
+        // Show the modal
+        $("#variationDetailModal").modal('show');
+    }
+
+    // ======================== UTILITY FUNCTIONS ========================
     function getParameterByName(name) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);
     }
-    // =================================LẤY THÔNG TIN  BIẾN THỂ SẢN PHẨM (variations) =================================
-    // CALL API LẤY THÔNG TIN PHIÊN BẢN SẢN PHẨM
 
-    function fetchAPIProductsVariations(productId) {
-        let productsVariationsAPI = `${BASE_API_URL}/api/products/variations?product_id=${productId}`
+    function updatePaginationInfo(totalItems, startIndex, perPage) {
+        const displayStart = totalItems > 0 ? startIndex + 1 : 0;
+        const displayEnd = Math.min(startIndex + perPage, totalItems);
 
-        let productInstanceAPI = `${BASE_API_URL}/api/products/instances`;
-
-        console.log("API URL Variations:", productsVariationsAPI);
-        console.log("API URL Instances:", productInstanceAPI);
-
-        // Gọi API song song
-        Promise.all([
-            $.ajax({ url: productsVariationsAPI, type: "GET", dataType: "json" }),
-            $.ajax({ url: productInstanceAPI, type: "GET", dataType: "json" })
-        ])
-            .then(([productsVariationsResponse, productsInstanceResponse]) => {
-                if (productsVariationsResponse.success && productsInstanceResponse.success) {
-                    let variations = productsVariationsResponse.data;
-                    let instances = productsInstanceResponse.data;
-                    console.log("Variations:", variations);
-                    console.log("Instances:", instances);
-                    // Gộp dữ liệu vào sản phẩm
-                    let mergedProducts = variations.map(variation => ({
-                        ...variation,
-                        instances: instances.filter(i => i.product_variation_id === variation.id) // Lọc instances theo product_variation_id
-                    }));
-
-                    console.log("Merged Products:", mergedProducts);
-                    loadProductVariationsDataToTable(mergedProducts);
-                } else {
-                    console.error("Lỗi khi tải dữ liệu sản phẩm hoặc biến thể");
-                }
-            })
-            .catch(error => {
-                console.error("Lỗi API:", error);
-            });
+        pagination.updateRecordInfo(displayStart, displayEnd, totalItems);
+        pagination.totalItems = totalItems;
+        pagination.render(totalItems);
     }
 
+    function updateBrowserURL(params) {
+        const url = new URL(window.location);
 
+        // Keep only product_id
+        url.search = `?product_id=${currentProductId}`;
 
-    // LOAD DỮ LIỆU PHIÊN BẢN SẢN PHẨM LÊN FORM
-    function loadProductVariationsDataToTable(productVariationData) {
-        const productVariationTable = document.getElementById("product-variations-table");
-        productVariationTable.innerHTML = "";
-
-        // Xử lý trường hợp không có dữ liệu
-        if (!productVariationData || productVariationData.length === 0) {
-            productVariationTable.innerHTML = `
-            <tr>
-                <td colspan="11" class="text-center py-3">No data available</td>
-            </tr>`;
-            return;
-        }
-
-        let index = 0;
-        productVariationData.forEach((variation) => {
-            const imageUrl = variation.image_name
-                ? `${BASE_API_URL}/backend/uploads/products/${variation.image_name}`
-                : "default-image.jpg";
-            console.log("Image URL:", imageUrl);
-            variation.instances.forEach((instance) => {
-                index += 1;
-                productVariationTable.innerHTML += `
-                <tr class="align-middle">
-                    <td class="text-center">${index}</td>
-                    <td class="text-center">${variation.product_id}</td>
-                    <td class="text-center">${variation.id}</td>
-                    <td class="text-center">
-                        <img src="${imageUrl}" 
-                             width="60" 
-                             class="img-thumbnail"
-                             onerror="this.onerror=null; this.src='default-image.jpg';"
-                             alt="Variation ${variation.id}">
-                    </td>
-                    <td class="text-center">${instance.sku}</td>
-                    <td class="text-center">${variation.watch_size_mm || '-'}</td>
-                    <td class="text-center">${variation.display_size_mm || '-'}</td>
-                    <td class="text-center">${variation.price_cents || '0'}</td>
-                    <td class="text-center">${variation.stock_quantity || '0'}</td>
-                    <td class="text-center">${variation.stop_selling ? 'Yes' : 'No'}</td>
-                    <td class="text-center">
-                        <div class="d-flex gap-1 justify-content-center">
-                            <button class="btn btn-info btn-sm py-1 px-2 btn-view" 
-                                    data-id="${variation.id}" 
-                                    title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-warning btn-sm py-1 px-2 btn-update" 
-                                    data-id="${variation.id}" 
-                                    title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm py-1 px-2 btn-delete" 
-                                    data-id="${variation.id}" 
-                                    title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`;
-            });
+        // Add current filters
+        params.forEach((value, key) => {
+            url.searchParams.set(key, value);
         });
+
+        window.history.pushState({}, '', url);
     }
 
-    $(document).ready(function () {
-        let productId = getParameterByName('product_id'); // Lấy ID từ URL
-        console.log("Product ID:", productId);
-
-        if (productId) {
-            fetchAPIProductsVariations(productId);
-        }
-        loadProductVariationsDataToTable(null); // Gọi API để load danh sách sản phẩm
-    });
-
-    // ================================= CHI TIẾT PHIÊN BẢN SẢN PHẨM =================================
-    // CALL API LẤY CHI TIẾT PHIÊN BẢN SẢN PHẨM
-    async function fetchAPIProductOSAndVariations(productVariationId) {
-        let APIProductVariationDetailurl = `${BASE_API_URL}/api/products/variations/${productVariationId}`;
-        let APIOSProducturl = `${BASE_API_URL}/api/products/os`;
-
-        try {
-            let [variationResponse, osResponse] = await Promise.all([
-                $.ajax({ url: APIProductVariationDetailurl, type: "GET", contentType: "application/json", dataType: "json" }),
-                $.ajax({ url: APIOSProducturl, type: "GET", contentType: "application/json", dataType: "json" })
-            ]);
-
-            console.log("API Response Product Variation Detail:", variationResponse);
-            console.log("API Response OS List:", osResponse);
-
-            if (variationResponse.success && variationResponse.data && osResponse.success && osResponse.data) {
-                let variation = { ...variationResponse.data }; // Sao chép dữ liệu từ API
-                let osList = osResponse.data || [];
-
-                // Tạo biến os_name và gán giá trị từ danh sách OS
-                let foundOS = osList.find(os => os.id === variation.os_id);
-                variation.os_name = foundOS ? foundOS.name : "Unknown OS"; // Nếu không tìm thấy, gán "Unknown OS"
-
-                console.log("Product Detail (with OS):", variation);
-                return variation; // Trả về object đã cập nhật
-            } else {
-                throw new Error("Dữ liệu trả về không hợp lệ.");
-            }
-        } catch (error) {
-            console.error("API Error:", error);
-            throw error;
-        }
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        }).format(amount);
     }
 
-
-
-
-    // ========================== HIỆN MODAL CHI TIẾT SẢN PHẨM ========================== 
-    $(document).on('click', '.btn-view', async function () {
-        let productVariationId = $(this).data('id');
-        console.log("Product Variation ID:", productVariationId);
-
-        try {
-            let productVariationDetail = await fetchAPIProductOSAndVariations(productVariationId);
-            console.log("Product Detail (with OS):", productVariationDetail);
-            if (productVariationDetail) {
-                showDataProductVariation(productVariationDetail); // Hiển thị chi tiết phiên bản sản phẩm
-            } else {
-                alert("Không tìm thấy thông tin sản phẩm!");
-            }
-        } catch (error) {
-            alert("Failed to fetch product details!");
-        }
-    });
-
-
-
-    function showDataProductVariation(variation) {
-        console.log("Variation:", variation);
-        if (!variation) {
-            console.error("Invalid product variation data.");
-            return;
-        }
-
-        // View modal data
-        // Thông tin hệ điều hành
-        $("#os_name").text(variation.os_name ?? "No data available");
-
-        // Thông số kỹ thuật
-        $("#watch_size_mm").text(variation.watch_size_mm ? `${variation.watch_size_mm}mm` : "No data available");
-        $("#watch_color").text(variation.watch_color ?? "No data available");
-        $("#display_type").text(variation.display_type ?? "No data available");
-        $("#display_size_mm").text(variation.display_size_mm ? `${variation.display_size_mm}mm` : "No data available");
-        $("#resolution_w_px").text(variation.resolution_w_px && variation.resolution_h_px ? `${variation.resolution_w_px} × ${variation.resolution_h_px}px` : "No data available");
-        $("#ram_bytes").text(variation.ram_bytes ? `${(variation.ram_bytes / 1024).toFixed(2)} GB` : "No data available");
-        $("#rom_bytes").text(variation.rom_bytes ? `${(variation.rom_bytes / 1024).toFixed(2)} GB` : "No data available");
-        $("#connectivity").text(variation.connectivity ?? "No data available");
-        $("#sensors").text(variation.sensor ?? "No data available");
-
-        // Vật liệu & Kết cấu
-        $("#case_material").text(variation.case_material ?? "No data available");
-        $("#band_material").text(variation.band_material ?? "No data available");
-        $("#band_size_mm").text(variation.band_size_mm ? `${variation.band_size_mm}mm` : "No data available");
-        $("#band_color").text(variation.band_color ?? "No data available");
-
-        // Kích thước & Khả năng chống nước
-        $("#battery_life_mah").text(variation.battery_life_mah ? `${variation.battery_life_mah}mAh` : "No data available");
-        $("#water_resistance_value").text(variation.water_resistance_value ?? "No data available");
-        $("#water_resistance_unit").text(variation.water_resistance_unit ?? "No data available");
-        $("#weight_miligam").text(variation.weight_milligrams ? `${(variation.weight_milligrams / 1_000).toFixed(2)}g` : "No data available");
-
-        // Giá & Thời gian ra mắt
-        $("#stock_quantity").text(variation.stock_quantity ?? "No data available");
-        $("#base_price_cents").text(variation.base_price_cents ? `${(variation.base_price_cents / 1000).toFixed(3)} VND` : "Không có dữ liệu");
-        $("#price_cents").text(variation.price_cents ? `${(variation.price_cents / 1000).toFixed(3)} VND` : "Không có dữ liệu");
-        $("#release_date").text(variation.release_date ?? "No data available");
-        $("#stop_selling").text(variation.stop_selling ?? "No data available");
-
-        // Show modal
-        $("#modalView").modal("show");
+    function showLoading() {
+        $("#loading-indicator").show();
     }
+
+    function hideLoading() {
+        $("#loading-indicator").hide();
+    }
+
+    function showError(message) {
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+        }).showToast();
+    }
+
+    function showSuccess(message) {
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        }).showToast();
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function () {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+
 
     // ========================== HIỆN MODAL UPDATE SẢN PHẨM ==========================
     $(document).on('click', '.btn-update', async function () {
@@ -400,7 +617,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Gửi updatedProductVariation lên server bằng AJAX
             $.ajax({
-                url: `${BASE_API_URL}/api/products/variations/${updatedProductVariation.id}`, // URL API backend
+                url: `${BASE_API_URL}/api/products/variations/instances/${updatedProductVariation.id}`, // URL API backend
                 type: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify(updatedProductVariation), // Sửa lỗi: Dùng đúng biến

@@ -568,7 +568,7 @@ async function saveGoodsReceiptNote() {
         // Duyệt qua từng sản phẩm và cập nhật tồn kho
         for (const product of products) {
             console.log("Đang cập nhật tồn kho cho:", product);
-            await updateStockQuantity(product.variationId, product.quantity);
+            await updateStockQuantity(product.variationId, product.quantity); 
         }
 
         console.log("Đã tạo thành công", results.length, "instances");

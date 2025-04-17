@@ -5,15 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- jQuery -->
+    <!-- Thay thế đường dẫn cũ bằng phiên bản mới -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Toastify CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
+    <script src="assets/Components/Pagination.js"></script>
 </head>
 
 <body>
@@ -28,6 +32,84 @@
                 <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
                     <i class="fas fa-times"></i>
                 </button>
+            </div>
+        </div>
+
+        <div class="card-search bg-white rounded-3 shadow-sm mb-4">
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" id="toggleFilterForm" title="Toggle Filters">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+            <div class="card-body p-4" id="filterFormContainer">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="m-0 text-primary">
+                        <i class="fas fa-filter me-2"></i>Advanced Filters
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <!-- Render ra nút thêm variarion tại đây trong ProductVariationActions.js -->
+                    </div>
+                </div>
+
+                <form id="filterForm" method="GET">
+                    <!-- Các trường filter giữ nguyên như bạn đã thiết kế -->
+                    <div class="row g-3">
+                        <!-- ID Filter -->
+                        <div class="col-md-3 col-lg-2">
+                            <label class="form-label small fw-bold text-muted">Variation ID</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light"><i class="fas fa-hashtag text-muted"></i></span>
+                                <input type="number" name="id" class="form-control form-control-sm" placeholder="Variation ID"
+                                    value="<?= htmlspecialchars($_GET['id'] ?? '') ?>">
+                            </div>
+                        </div>
+                        <!-- OS Select -->
+                        <div class="col-md-4 col-lg-3">
+                            <label class="form-label small fw-bold text-muted">Operating System</label>
+                            <select name="os_id" class="form-select form-select-sm select2" id="osSelect">
+                                <option value="">All OS</option>
+                                <?php if (isset($_GET['os_id'])): ?>
+                                    <option value="<?= (int)$_GET['os_id'] ?>" selected>
+                                        Loading selected OS...
+                                    </option>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="col-md-6 col-lg-4">
+                            <label class="form-label small fw-bold text-muted">Price Range</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light"><i class="fas fa-dollar-sign text-muted"></i></span>
+                                <input type="number" name="price_cents_min" class="form-control"
+                                    placeholder="Min" value="<?= htmlspecialchars($_GET['price_cents_min'] ?? '') ?>">
+                                <span class="input-group-text bg-light">to</span>
+                                <input type="number" name="price_cents_max" class="form-control"
+                                    placeholder="Max" value="<?= htmlspecialchars($_GET['price_cents_max'] ?? '') ?>">
+                            </div>
+                        </div>
+
+                        <!-- Stop Selling -->
+                        <div class="col-md-3 col-lg-2">
+                            <label class="form-label small fw-bold text-muted">Status</label>
+                            <select name="stop_selling" class="form-select form-select-sm">
+                                <option value="">All</option>
+                                <option value="1" <?= isset($_GET['stop_selling']) && $_GET['stop_selling'] == '1' ? 'selected' : '' ?>>Sold</option>
+                                <option value="0" <?= isset($_GET['stop_selling']) && $_GET['stop_selling'] == '0' ? 'selected' : '' ?>>Not yet sold</option>
+                            </select>
+                        </div>
+
+                        <!-- Apply Button -->
+                        <div class="mt-4 d-flex justify-content-end">
+                            <button type="button" id="resetFilter" class="btn btn-outline-secondary btn-sm me-2">
+                                <i class="fas fa-redo me-1"></i> Reset
+                            </button>
+                            <button type="button" class="btn btn-success btn-sm btn-filter">
+                                <i class="fas fa-filter me-1"></i> Apply Filters
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -53,6 +135,18 @@
                     <!-- Dữ liệu sẽ được thêm vào đây bằng JavaScript -->
                 </tbody>
             </table>
+            <div class="d-flex flex-wrap justify-content-between align-items-end px-2 pt-1 pb-0 bg-white">
+                <div id="record-info" class="small text-muted mb-1 mb-sm-0 me-2">
+                    Showing <span class="fw-medium">0-0</span> of <span class="fw-medium">0</span>
+                </div>
+                <div id="pagination-container" class="mt-4">
+                    <nav aria-label="Page navigation" class="pb-0">
+                        <ul class="pagination pagination-sm mb-0 pb-0">
+                            <!-- pagination items -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
 

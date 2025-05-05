@@ -34,7 +34,7 @@ $limit = isset($_GET["limit"]) ? abs((int) $_GET["limit"]) : null;
 $offset = isset($_GET["offset"]) ? abs((int) $_GET["offset"]) : null;
 $id = is_numeric(end($uri_parts)) ? (int) end($uri_parts) : null;
 
-$db = new Database("localhost:3307", "webphp_ec", "root", "");
+$db = new Database("localhost:3306", "webphp_ec", "root", "");
 $auths = new Auths($db, $usr_email, $usr_pwd);
 
 $uri = preg_replace('/\/[0-9]+$/', '', $uri); //AI gen: remove {id} if exist

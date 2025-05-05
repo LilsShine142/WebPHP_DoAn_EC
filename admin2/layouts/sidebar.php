@@ -211,9 +211,49 @@
              </li>
            </ul>
          </li>
+
+         <!-- logout -->
+          <li class="nav-item">
+            <!-- btn logout -->
+             <button id="logout" class="nav-link" style="background: none; border: none; padding-right: 36px;">
+               <i class="nav-icon fas fa-sign-out-alt"></i>
+               <p>Logout</p>
+             </button>
+          </li>
        </ul>
      </nav>
      <!-- /.sidebar-menu -->
    </div>
    <!-- /.sidebar -->
  </aside>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- logout -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  $(document).ready(function() {
+    $('#logout').click(function(e) {
+      e.preventDefault(); // Prevent the default link behavior
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          e.preventDefault();
+
+          // Xóa thông tin đăng nhập khỏi localStorage
+          localStorage.removeItem("user");
+
+          // Chuyển hướng về trang đăng nhập
+          window.location.href = "../client/pages/login.php";
+        }
+      });
+    });
+  });
+</script>

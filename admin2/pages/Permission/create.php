@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Role</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
         <h2>Add Role</h2>
@@ -15,7 +17,7 @@
                 <label for="roleName">Role Name:</label>
                 <input type="text" class="form-control" id="roleName" name="role_name" required>
             </div>
-            
+
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -30,7 +32,7 @@
                     <!-- Data sẽ được load vào đây -->
                 </tbody>
             </table>
-            
+
             <button type="submit" class="btn btn-primary">Add Role</button>
             <a href="index.php?page=pages/Permission/role.php" class="btn btn-secondary">Cancel</a>
         </form>
@@ -38,20 +40,25 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Load danh sách permissions từ API
             $.ajax({
-                url: "http://localhost:81/WebPHP_DoAn_EC/api/users/permissions",
+                url: `${BASE_API_URL}/api/users/permissions`,
                 method: "GET",
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         let groupedPermissions = {};
                         response.data.forEach(permission => {
                             let key = permission.action_name.split(' ')[1];
                             let type = permission.action_name.split(' ')[0];
                             if (!groupedPermissions[key]) {
-                                groupedPermissions[key] = { "Create": "", "Read": "", "Update": "", "Delete": "" };
+                                groupedPermissions[key] = {
+                                    "Create": "",
+                                    "Read": "",
+                                    "Update": "",
+                                    "Delete": ""
+                                };
                             }
                             groupedPermissions[key][type] = `<input type='checkbox' name='permissions[]' value='${permission.id}'>`;
                         });
@@ -69,17 +76,17 @@
                         $("#permissionTableBody").html(tableContent);
                     }
                 },
-                error: function () {
+                error: function() {
                     alert("Failed to load permissions.");
                 }
             });
 
             // Bắt sự kiện khi submit form
-            $("#roleForm").submit(function (event) {
+            $("#roleForm").submit(function(event) {
                 event.preventDefault();
-                
+
                 let roleName = $("#roleName").val();
-                let selectedPermissions = $("input[name='permissions[]']:checked").map(function () {
+                let selectedPermissions = $("input[name='permissions[]']:checked").map(function() {
                     return $(this).val();
                 }).get();
 
@@ -98,11 +105,13 @@
                     url: "http://localhost:81/WebPHP_DoAn_EC/api/users/roles",
                     method: "POST",
                     contentType: "application/json",
-                    data: JSON.stringify({ name: roleName }),
-                    success: function (response) {
+                    data: JSON.stringify({
+                        name: roleName
+                    }),
+                    success: function(response) {
                         if (response.success) {
                             let roleId = response.data.id; // ID của Role mới tạo
-                            
+
                             // Gửi từng permission vào bảng role_permissions
                             let permissionPromises = selectedPermissions.map(permissionId => {
                                 return $.ajax({
@@ -130,7 +139,7 @@
                             alert("Failed to create role!");
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let response = xhr.responseJSON;
 
                         if (response && response.code === "23000") {
@@ -144,4 +153,5 @@
         });
     </script>
 </body>
+
 </html>

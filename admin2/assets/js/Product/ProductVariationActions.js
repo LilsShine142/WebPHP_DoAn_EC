@@ -267,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         variations.forEach((variation, index) => {
+            console.log("Rendering variation:", variation);
             const imageUrl = variation.image_url || "default-image.jpg";
             const row = `
         <tr class="align-middle">
@@ -278,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
                      width="60" 
                      class="img-thumbnail"
                      onerror="this.onerror=null; this.src='default-image.jpg';"
-                     alt="Variation ${variation.variation_id}">
+                     alt="Variation ${variation.id}">
             </td>
             <td class="text-center">${variation.sku}</td>
             <td class="text-center">${variation.watch_size_mm || '-'}</td>
@@ -288,18 +289,14 @@ document.addEventListener("DOMContentLoaded", function () {
             <td class="text-center">${variation.stop_selling ? 'Yes' : 'No'}</td>
             <td class="text-center">
                 <div class="d-flex gap-1 justify-content-center">
-                    <button class="btn btn-info btn-sm py-1 px-2 btn-view" 
-                            data-id="${variation.variation_id}" 
-                            title="View">
+                    <button class="btn btn-info btn-sm py-1 px-2 btn-view" data-id="${variation.id}" title="View">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-warning btn-sm py-1 px-2 btn-update" 
-                            data-id="${variation.variation_id}" 
-                            title="Edit">
+                    <button class="btn btn-warning btn-sm py-1 px-2 btn-update" data-id="${variation.id}" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="btn btn-danger btn-sm py-1 px-2 btn-delete" 
-                            data-id="${variation.variation_id}" 
+                            data-id="${variation.id}" 
                             title="Delete">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -440,7 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ========================== HIỆN MODAL UPDATE SẢN PHẨM ==========================
     $(document).on('click', '.btn-update', async function () {
-        let productVariationId = $(this).data('id');
+        let productVariationId = document.getElementById("data-id");
         console.log("productVariationId ID:", productVariationId);
         // Gán giá trị ID vào input hidden trong modal
         $("#productVariationId").val(productVariationId);

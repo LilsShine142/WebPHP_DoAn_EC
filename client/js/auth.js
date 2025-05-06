@@ -46,6 +46,15 @@ $(document).ready(function () {
             data: JSON.stringify({ email: email, password: password }),
             dataType: "json",
             success: function (response) {
+                console.log("response", response);
+                // Call api để tạo role cho user
+                $.ajax({
+                    url: `${BASE_API_URL}/api/users/user_roles`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ user_id: response.data.id, role_id: 2 }), // 2 là role_id cho khách hàng
+                    dataType: "json",
+                });
                 alert("Registration successful! You can now log in.");
                 // Chuyển về trang đăng nhập href="./pages/login.php"
                 window.location.href = `${BASE_API_URL}/client/pages/login.php`;
@@ -106,7 +115,7 @@ $(document).ready(function () {
                             const userWithRole = {
                                 role_id: response.data[0].role_id,
                                 ...userData
-                                
+
                             };
                             console.log("userWithRole", userWithRole);
                             // Lưu thông tin người dùng vào localStorage
@@ -124,7 +133,7 @@ $(document).ready(function () {
                                     break;
                                 case 3: // Staff
                                     alert("Đăng nhập thành công với quyền nhân viên!");
-                                    window.location.href = `${BASE_API_URL}/staff/index.php`;
+                                    window.location.href = `${BASE_API_URL}/admin2/index.php`;
                                     break;
                                 default:
                                     alert("Tài khoản không có quyền truy cập!");

@@ -5,6 +5,27 @@
      <span class="brand-text font-weight-light">GARMIN Shop</span>
    </a>
 
+   <script>
+     const rolePermissions = {
+       1: ['statistical', 'receipt', 'permission', 'user'], // admin
+       3: ['product', 'order', 'category', 'provider', 'feedback'] // staff
+     };
+
+     document.addEventListener('DOMContentLoaded', function() {
+       const user = JSON.parse(localStorage.getItem('user'));
+       const allowedMenus = rolePermissions[user?.role_id] || [];
+
+       document.querySelectorAll('.nav-item').forEach(item => {
+         const menuId = item.getAttribute('data-menu');
+         if (!menuId || allowedMenus.includes(menuId)) {
+           item.style.display = 'block';
+         } else {
+           item.style.display = 'none';
+         }
+       });
+     });
+   </script>
+
    <!-- Sidebar -->
    <div class="sidebar">
      <!-- Sidebar user panel (optional) -->
@@ -51,7 +72,7 @@
      <nav class="mt-2">
        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
          <!-- Thống kê -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="statistical">
            <a href="index.php?page=pages/Statistics/Statistical.php" class="nav-link">
              <i class="nav-icon fas fa-chart-bar"></i> <!-- Biểu đồ thống kê -->
              <p>Statistical</p>
@@ -59,7 +80,7 @@
          </li>
 
          <!-- Danh mục -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="category">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-tags"></i> <!-- Icon danh mục -->
              <p>
@@ -78,7 +99,7 @@
          </li>
 
          <!-- Sản phẩm -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="product">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-box-open"></i> <!-- Icon sản phẩm -->
              <p>
@@ -103,7 +124,7 @@
          </li>
 
          <!-- Đơn hàng -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="order">
            <a href="index.php?page=pages/Order/list.php" class="nav-link">
              <i class="nav-icon fas fa-shopping-cart"></i> <!-- Icon giỏ hàng -->
              <p>Order</p>
@@ -111,7 +132,7 @@
          </li>
 
          <!-- Người dùng -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="user">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-users-cog"></i> <!-- Icon quản lý người dùng -->
              <p>
@@ -142,7 +163,7 @@
          </li>
 
          <!-- Nhà cung cấp -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="provider">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-truck"></i> <!-- Icon nhà cung cấp -->
              <p>
@@ -167,7 +188,7 @@
          </li>
 
          <!-- Phiếu nhập kho -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="receipt">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-clipboard-list"></i> <!-- Icon phiếu nhập -->
              <p>
@@ -192,7 +213,7 @@
          </li>
 
          <!-- Phân quyền -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="permission">
            <a href="index.php?page=pages/Permission/role.php" class="nav-link">
              <i class="nav-icon fas fa-key"></i> <!-- Icon khóa phân quyền -->
              <p>Permission</p>
@@ -200,7 +221,7 @@
          </li>
 
          <!-- Phản hồi -->
-         <li class="nav-item">
+         <li class="nav-item" data-menu="feedback">
            <a href="index.php?page=pages/Feedback/list.php" class="nav-link">
              <i class="nav-icon fas fa-comment-dots"></i> <!-- Icon phản hồi -->
              <p>Feedback</p>

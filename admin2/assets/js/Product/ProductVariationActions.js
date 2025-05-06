@@ -311,6 +311,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // View button
         $(document).on('click', '.btn-view', function () {
             const variationId = $(this).data('id');
+            // $('#productId_view').val(variationId || "");
+            // $('#productId_update').val(variationId || "");
             console.log("View variation:", variationId);
             // console.log("Product Variation List Data:", productVariationListData);
             // const variation = productVariationListData.find(v => v.id == variationId);
@@ -498,6 +500,43 @@ document.addEventListener("DOMContentLoaded", function () {
     //     const modal = new bootstrap.Modal(document.getElementById('modalView'));
     //     modal.show();
     // }
+
+    function toggleFieldsByCategory(categoryId) {
+        // Ẩn tất cả các section theo danh mục
+        document.querySelectorAll('.category-specific-section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // Kiểm tra danh mục có hợp lệ không
+        if (categoryId) {
+            console.log("categoryId", categoryId);
+            const sectionId = getSectionIdByCategory(categoryId);
+            console.log("sectionId", sectionId);
+
+            if (sectionId) {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.style.display = 'block';
+                } else {
+                    console.warn(`No section found for categoryId: ${categoryId}`);
+                }
+            } else {
+                console.warn(`No section ID mapping found for categoryId: ${categoryId}`);
+            }
+        }
+    }
+
+    // Hàm ánh xạ category_id sang section ID tương ứng
+    function getSectionIdByCategory(categoryId) {
+        const categoryMap = {
+            1: 'smartwatch-section',
+            4: 'band-section',
+            2: 'cable-section',
+            3: 'charger-section'
+            // Thêm các ánh xạ khác nếu cần
+        };
+        return categoryMap[categoryId] || null; // Trả về null nếu không tìm thấy ánh xạ
+    }
     function showVariationDetail(variationId) {
         // Gọi API để lấy chi tiết biến thể sản phẩm
         fetchAPIProductVariationDetail(variationId)
@@ -512,6 +551,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Gọi API chi tiết sản phẩm chính
                 fetchAPIProductDetail(variation.product_id)
                     .done(function (productDetail) {
+                        if (productDetail && productDetail.category_id) {
+                            console.log("Product Detail:", productDetail.category_id);
+                            toggleFieldsByCategory(productDetail.category_id);
+                        }
                         console.log("Product Detail:", productDetail);
                         $("#product_name").text(productDetail.name || "N/A");
                     })
@@ -758,6 +801,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     fetchAPIProductDetail(productData.product_id)
                         .done(function (productDetail) {
                             console.log("Product Detail:", productDetail);
+                            if (productDetail && productDetail.category_id) {
+                                console.log("Product Detail:", productDetail.category_id);
+                                toggleFieldsByCategory(productDetail.category_id);
+                            }
                             $modal.find('[data-field="product_name"]').text(productDetail.name || "N/A");
                         })
                         .fail(function (error) {

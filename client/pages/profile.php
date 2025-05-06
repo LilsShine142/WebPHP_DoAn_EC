@@ -835,6 +835,7 @@
                                 phone_number: phoneNumber,
                                 is_default: false
                             };
+                            console.log("new address data", newAddressData);
 
                             // Gọi API thêm địa chỉ mới
                             $.ajax({

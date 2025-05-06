@@ -211,6 +211,7 @@ if (!$product_id) {
 
         $(".addcart").on("click", async function() {
             let userData = localStorage.getItem("user");
+            console.log("userData", userData);
             // Kiểm tra xem userData có tồn tại không
             if (!userData) {
                 Swal.fire({

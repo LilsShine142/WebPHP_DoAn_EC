@@ -11,7 +11,7 @@
     include("layouts/header.php");
 
     ?>
-    <!--Start of Fchat.vn--><script type="text/javascript" src="https://cdn.fchat.vn/assets/embed/webchat.js?id=67fa2cde64767456d7062a17" async="async"></script><!--End of Fchat.vn-->
+    <!--Start of Fchat.vn--><script type="text/javascript" src="https://cdn.fchat.vn/assets/embed/webchat.js?id=681940bee3af3c99dd029019" async="async"></script><!--End of Fchat.vn-->
 </head>
 <script>
     // Gán BASE_API_URL cho biến JS từ PHP

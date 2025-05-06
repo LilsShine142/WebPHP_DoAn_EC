@@ -353,7 +353,7 @@ class ProductVariationInstanceGateway
             ];
         }
 
-        $db = new Database("localhost:3307", "webphp_ec", "root", "");
+        $db = new Database("localhost:3306", "webphp_ec", "root", "123456");
         $instanceGateway = new ProductInstanceGateway($db);
         $flattened = [];
 

@@ -175,6 +175,7 @@ class ProductInstanceGateway
 
   public function getByProductVariationIdWithPagination(
     ?int $product_variation_id = null,
+    ?int $goods_receipt_note_id = null,
     // ?bool $is_sold = null,
     ?int $limit = 20,
     ?int $offset = 0
@@ -187,6 +188,12 @@ class ProductInstanceGateway
     if ($product_variation_id !== null) {
       $sql .= " AND product_variation_id = :product_variation_id";
       $params[':product_variation_id'] = $product_variation_id;
+    }
+
+    // Thêm điều kiện lọc theo goods_receipt_note_id
+    if ($goods_receipt_note_id !== null) {
+      $sql .= " AND goods_receipt_note_id = :goods_receipt_note_id";
+      $params[':goods_receipt_note_id'] = $goods_receipt_note_id;
     }
 
     // Thêm điều kiện lọc theo trạng thái bán

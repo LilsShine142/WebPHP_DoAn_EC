@@ -114,7 +114,7 @@
         </div>
 
         <div class="card-body">
-            <h2>Danh sách Phiên Bản Sản Phẩm</h2>
+            <h2>Product Variations List</h2>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -150,6 +150,9 @@
         </div>
     </div>
 
+
+
+    <!-- ModalView -->
     <!-- ModalView -->
     <div class="modal fade" id="modalView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalViewLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -163,12 +166,14 @@
                         <table id="viewProductTable" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th class="text-start bg-dark text-white p-2" colspan="2">Apple Watch Series 7</th>
+                                    <th class="text-start bg-dark text-white p-2" colspan="2" id="product_name"></th>
+                                    <input type="text" id="productId_view" name="productId_view" hidden>
                                 </tr>
-                                <!-- Nhóm tiêu đề theo tên sản phẩm -->
                             </thead>
                             <tbody id="data-viewproduct-table">
-                                <!-- Thông tin hệ điều hành -->
+                                <!-- Nhóm tiêu đề theo tên sản phẩm -->
+
+                                <!-- Hệ điều hành -->
                                 <tr>
                                     <th colspan="2" class="text-center bg-primary text-white">System Information</th>
                                 </tr>
@@ -285,7 +290,6 @@
                                     <td id="stop_selling"></td>
                                 </tr>
                             </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -295,6 +299,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Modal Update -->
     <div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalUpdateLabel" aria-hidden="true">
@@ -307,144 +312,318 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <form id="updateProductForm" enctype="multipart/form-data">
+                            <input type="hidden" id="productVariationId" data-field="productVariationId" value="">
+                            <input type="hidden" id="category_id" data-field="category_id" value="">
+                            <input type="text" id="productId_update" name="productId_update" hidden>
                             <!-- Product Info -->
                             <div class="mb-3 text-center bg-dark text-white p-2">
-                                <h5>Apple Watch Series 7</h5>
-                                <input type="hidden" id="productVariationId" value="">
+                                <h5 id="product_name" data-field="product_name">Product Name</h5>
                             </div>
 
                             <!-- Image Upload Section -->
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label class="fw-bold" for="image_name">Image Name</label>
-                                    <input type="text" id="image_name" class="form-control" readonly value="avatar.png">
-                                </div>
+                            <div class="row mb-3 common-fields">
                                 <div class="col">
                                     <label class="fw-bold" for="image_upload">Upload Image</label>
-                                    <input type="file" id="image_upload" class="form-control" accept="image/*">
+                                    <input type="file" id="image_upload" data-field="image_upload" class="form-control" accept="image/*">
                                 </div>
                             </div>
 
-                            <!-- Watch Specifications Section -->
-                            <div class="mb-3">
-                                <h5 class="text-center bg-success text-white p-2">Watch Specifications</h5>
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label class="fw-bold" for="watch_size_mm">Watch Size (mm)</label>
-                                        <input type="text" id="watch_size_mm" class="form-control" placeholder="Enter size (mm)">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="watch_color">Watch Color</label>
-                                        <input type="text" id="watch_color" class="form-control" placeholder="Enter color">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="display_type">Display Type</label>
-                                        <input type="text" id="display_type" class="form-control" placeholder="Enter display type">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="display_size_mm">Display Size (mm)</label>
-                                        <input type="text" id="display_size_mm" class="form-control" placeholder="Enter display size (mm)">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <!-- Cột 1: Label Resolution (Width px) và Resolution (Height px) -->
-                                    <label class="fw-bold" for="resolution_w_px">Resolution (Width x Height (px))</label>
-                                    <!-- Cột 2: Input fields cho Width và Height -->
-                                    <div class="col">
-                                        <input type="text" id="resolution_w_px" class="form-control" placeholder="Enter width in px">
-
-                                    </div>
-                                    <div class="col">
-                                        <input type="text" id="resolution_h_px" class="form-control" placeholder="Enter height in px">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label class="fw-bold" for="ram_bytes">RAM (Bytes)</label>
-                                        <input type="text" id="ram_bytes" class="form-control" placeholder="Enter RAM size in bytes">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="rom_bytes">ROM (Bytes)</label>
-                                        <input type="text" id="rom_bytes" class="form-control" placeholder="Enter ROM size in bytes">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label class="fw-bold" for="connectivity">Connectivity</label>
-                                        <input type="text" id="connectivity" class="form-control" placeholder="Enter connectivity">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="sensors">Sensors</label>
-                                        <input type="text" id="sensors" class="form-control" placeholder="Enter sensors">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Materials & Construction Section -->
-                            <div class="mb-3">
-                                <h5 class="text-center bg-warning text-dark p-2">Materials & Construction</h5>
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label class="fw-bold" for="case_material">Case Material</label>
-                                        <input type="text" id="case_material" class="form-control" placeholder="Enter case material">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="band_material">Band Material</label>
-                                        <input type="text" id="band_material" class="form-control" placeholder="Enter band material">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="band_size_mm">Band Size (mm)</label>
-                                        <input type="text" id="band_size_mm" class="form-control" placeholder="Enter band size (mm)">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="band_color">Band Color</label>
-                                        <input type="text" id="band_color" class="form-control" placeholder="Enter band color">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Dimensions & Durability Section -->
-                            <div class="mb-3">
-                                <h5 class="text-center bg-info text-white p-2">Dimensions & Durability</h5>
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label class="fw-bold" for="battery_life_mah">Battery Life (mAh)</label>
-                                        <input type="text" id="battery_life_mah" class="form-control" placeholder="Enter battery life in mAh">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="water_resistance_value">Water Resistance</label>
-                                        <input type="text" id="water_resistance_value" class="form-control" placeholder="Enter water resistance">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="water_resistance_unit">Water Resistance Unit</label>
-                                        <input type="text" id="water_resistance_unit" class="form-control" placeholder="Enter unit of measurement">
-                                    </div>
-                                    <div class="col">
-                                        <label class="fw-bold" for="weight_miligam">Weight (mg)</label>
-                                        <input type="text" id="weight_miligam" class="form-control" placeholder="Enter weight in mg">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pricing & Availability Section -->
-                            <div class="mb-3">
+                            <!-- ===== CÁC TRƯỜNG CHUNG CHO TẤT CẢ DANH MỤC ===== -->
+                            <div class="mb-3 common-fields">
                                 <h5 class="text-center bg-danger text-white p-2">Pricing & Availability</h5>
                                 <div class="row mb-3">
                                     <div class="col">
-                                        <label class="fw-bold" for="base_price_cents">Base Price (Cents)</label>
-                                        <input type="text" id="base_price_cents" class="form-control" placeholder="Enter base price in cents">
+                                        <label class="fw-bold" for="base_price_cents">Base Price (cents)</label>
+                                        <input type="text" id="base_price_cents" data-field="base_price_cents" class="form-control" placeholder="Base price in cents">
                                     </div>
                                     <div class="col">
-                                        <label class="fw-bold" for="price_cents">Selling Price (Cents)</label>
-                                        <input type="text" id="price_cents" class="form-control" placeholder="Enter selling price in cents">
+                                        <label class="fw-bold" for="price_cents">Selling Price (cents)</label>
+                                        <input type="text" id="price_cents" data-field="price_cents" class="form-control" placeholder="Selling price in cents">
                                     </div>
+                                </div>
+
+                                <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="stop_selling">Stop Selling</label>
-                                        <select id="stop_selling" class="form-select">
+                                        <select id="stop_selling" data-field="stop_selling" class="form-control">
                                             <option value="no">No</option>
                                             <option value="yes">Yes</option>
                                         </select>
+                                    </div>
+                                    <!-- <div class="col">
+                                        <label class="fw-bold" for="stock_quantity">Stock Quantity</label>
+                                        <input type="number" id="stock_quantity" data-field="stock_quantity" class="form-control" placeholder="Available quantity">
+                                    </div> -->
+                                </div>
+                            </div>
+
+                            <!-- ===== SMARTWATCH ===== -->
+                            <div id="smartwatch-section" class="category-specific-section" style="display:none;">
+                                <!-- Operating System -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-gray text-white p-2">Operating System</h5>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="os_select">OS</label>
+                                            <select id="os_select" data-field="os_id" class="form-control">
+                                                <option value="">Select OS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Watch Specifications -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-success text-white p-2">Watch Specifications</h5>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="watch_size_mm">Watch Size (mm)</label>
+                                            <input type="text" id="watch_size_mm" data-field="watch_size_mm" class="form-control" placeholder="Enter size in mm">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="watch_color">Watch Color</label>
+                                            <input type="text" id="watch_color" data-field="watch_color" class="form-control" placeholder="Enter color">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="display_type">Display Type</label>
+                                            <input type="text" id="display_type" data-field="display_type" class="form-control" placeholder="AMOLED, LCD, etc.">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="display_size_mm">Display Size (mm)</label>
+                                            <input type="text" id="display_size_mm" data-field="display_size_mm" class="form-control" placeholder="Enter size in mm">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="resolution_w_px">Resolution Width (px)</label>
+                                            <input type="text" id="resolution_w_px" data-field="resolution_w_px" class="form-control" placeholder="Width in pixels">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="resolution_h_px">Resolution Height (px)</label>
+                                            <input type="text" id="resolution_h_px" data-field="resolution_h_px" class="form-control" placeholder="Height in pixels">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="ram_bytes">RAM (Bytes)</label>
+                                            <input type="text" id="ram_bytes" data-field="ram_bytes" class="form-control" placeholder="RAM size in bytes">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="rom_bytes">ROM (Bytes)</label>
+                                            <input type="text" id="rom_bytes" data-field="rom_bytes" class="form-control" placeholder="ROM size in bytes">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="connectivity">Connectivity</label>
+                                            <input type="text" id="connectivity" data-field="connectivity" class="form-control" placeholder="Bluetooth, WiFi, etc.">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="sensors">Sensors</label>
+                                            <input type="text" id="sensors" data-field="sensors" class="form-control" placeholder="Heart rate, GPS, etc.">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Materials & Construction -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-warning text-dark p-2">Materials & Construction</h5>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="case_material">Case Material</label>
+                                            <input type="text" id="case_material" data-field="case_material" class="form-control" placeholder="Metal, Plastic, etc.">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="band_material">Band Material</label>
+                                            <input type="text" id="band_material" data-field="band_material" class="form-control" placeholder="Silicone, Leather, etc.">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="band_size_mm">Band Size (mm)</label>
+                                            <input type="text" id="band_size_mm" data-field="band_size_mm" class="form-control" placeholder="Band size in mm">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="band_color">Band Color</label>
+                                            <input type="text" id="band_color" data-field="band_color" class="form-control" placeholder="Band color">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dimensions & Durability -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-info text-white p-2">Dimensions & Durability</h5>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="battery_life_mah">Battery Life (mAh)</label>
+                                            <input type="text" id="battery_life_mah" data-field="battery_life_mah" class="form-control" placeholder="Battery capacity">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="water_resistance_value">Water Resistance</label>
+                                            <input type="text" id="water_resistance_value" data-field="water_resistance_value" class="form-control" placeholder="Water resistance level">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label class="fw-bold" for="water_resistance_unit">Water Resistance Unit</label>
+                                            <input type="text" id="water_resistance_unit" data-field="water_resistance_unit" class="form-control" placeholder="ATM, meters, etc.">
+                                        </div>
+                                        <div class="col">
+                                            <label class="fw-bold" for="weight_miligam">Weight (mg)</label>
+                                            <input type="text" id="weight_miligam" data-field="weight_miligam" class="form-control" placeholder="Weight in milligrams">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ===== BAND ===== -->
+                            <div id="band-section" class="category-specific-section" style="display:none;">
+                                <!-- Band Specifications -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-success text-white p-2">Band Specifications</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="band_width">Width (mm)</label>
+                                            <input type="number" id="band_width" data-field="band_width" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="band_length">Length (mm)</label>
+                                            <input type="number" id="band_length" data-field="band_length" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="band_size_mm">Size (mm)</label>
+                                            <input type="number" id="band_size_mm" data-field="band_size_mm" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Materials & Colors -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-warning text-dark p-2">Materials & Colors</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="fw-bold" for="band_material">Material</label>
+                                            <select id="band_material" data-field="band_material" class="form-control">
+                                                <option value="silicone">Silicone</option>
+                                                <option value="leather">Leather</option>
+                                                <option value="metal">Metal</option>
+                                                <option value="nylon">Nylon</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="fw-bold" for="band_color">Color</label>
+                                            <input type="text" id="band_color" data-field="band_color" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Connector Type -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-info text-white p-2">Connector</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="fw-bold" for="connector_type">Connector Type</label>
+                                            <input type="text" id="connector_type" data-field="connector_type" class="form-control" placeholder="Quick Release, Pin,...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ===== CABLE ===== -->
+                            <div id="cable-section" class="category-specific-section" style="display:none;">
+                                <!-- Cable Specifications -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-success text-white p-2">Cable Specifications</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="cable_length">Length (m)</label>
+                                            <input type="number" step="0.1" id="cable_length" data-field="cable_length" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="current">Current (A)</label>
+                                            <input type="number" step="0.1" id="current" data-field="current" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="charging_speed">Charging Speed</label>
+                                            <input type="text" id="charging_speed" data-field="charging_speed" class="form-control" placeholder="e.g., PD 20W">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Connectors -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-warning text-dark p-2">Connectors</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="fw-bold" for="connector_a">Connector A</label>
+                                            <select id="connector_a" data-field="connector_a" class="form-control">
+                                                <option value="usb-c">USB-C</option>
+                                                <option value="lightning">Lightning</option>
+                                                <option value="micro-usb">Micro USB</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="fw-bold" for="connector_b">Connector B</label>
+                                            <select id="connector_b" data-field="connector_b" class="form-control">
+                                                <option value="usb-c">USB-C</option>
+                                                <option value="usb-a">USB-A</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ===== CHARGER ===== -->
+                            <div id="charger-section" class="category-specific-section" style="display:none;">
+                                <!-- Charger Specifications -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-success text-white p-2">Charger Specifications</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="wattage">Wattage (W)</label>
+                                            <input type="number" id="wattage" data-field="wattage" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="port_count">Port Count</label>
+                                            <input type="number" id="port_count" data-field="port_count" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold" for="input_voltage">Input Voltage</label>
+                                            <input type="text" id="input_voltage" data-field="input_voltage" class="form-control" placeholder="100-240V">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ports -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-warning text-dark p-2">Ports</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="fw-bold" for="port_type">Port Types</label>
+                                            <select id="port_type" data-field="port_type" class="form-control" multiple>
+                                                <option value="usb-c">USB-C</option>
+                                                <option value="usb-a">USB-A</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Output -->
+                                <div class="mb-3">
+                                    <h5 class="text-center bg-info text-white p-2">Output</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="fw-bold" for="output">Output Specifications</label>
+                                            <input type="text" id="output" data-field="output" class="form-control" placeholder="e.g., 5V/3A, 9V/2A">
+                                        </div>
                                     </div>
                                 </div>
                             </div>

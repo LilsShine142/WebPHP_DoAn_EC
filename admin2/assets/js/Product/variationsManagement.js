@@ -137,9 +137,11 @@ document.addEventListener("DOMContentLoaded", function () {
             //     return;
             // }
 
-            // Lấy productId từ URL
-            // const productId = getProductIdFromURL();
-            const productId = 1;
+            //Lấy productId từ URL
+            // Kiểm tra
+            const productId = getProductIdFromURL();
+            console.log("productId", productId);
+            // const productId = 1;
             if (!productId) {
                 showToast("Không tìm thấy ID sản phẩm trong URL", 'error');
                 return;
@@ -323,7 +325,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Hàm lấy productId từ URL
         function getProductIdFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get("productId");
+            const productId = urlParams.get("product_Id");
+            return productId ? parseInt(productId) : null; // Trả về number hoặc null
         }
 
         // Hàm hiển thị thông báo

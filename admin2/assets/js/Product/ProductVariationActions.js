@@ -267,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         variations.forEach((variation, index) => {
+            console.log("Rendering variation:", variation);
             const imageUrl = variation.image_url || "default-image.jpg";
             const row = `
         <tr class="align-middle">
@@ -278,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
                      width="60" 
                      class="img-thumbnail"
                      onerror="this.onerror=null; this.src='default-image.jpg';"
-                     alt="Variation ${variation.variation_id}">
+                     alt="Variation ${variation.id}">
             </td>
             <td class="text-center">${variation.sku}</td>
             <td class="text-center">${variation.watch_size_mm || '-'}</td>
@@ -288,18 +289,14 @@ document.addEventListener("DOMContentLoaded", function () {
             <td class="text-center">${variation.stop_selling ? 'Yes' : 'No'}</td>
             <td class="text-center">
                 <div class="d-flex gap-1 justify-content-center">
-                    <button class="btn btn-info btn-sm py-1 px-2 btn-view" 
-                            data-id="${variation.variation_id}" 
-                            title="View">
+                    <button class="btn btn-info btn-sm py-1 px-2 btn-view" data-id="${variation.id}" title="View">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-warning btn-sm py-1 px-2 btn-update" 
-                            data-id="${variation.variation_id}" 
-                            title="Edit">
+                    <button class="btn btn-warning btn-sm py-1 px-2 btn-update" data-id="${variation.id}" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="btn btn-danger btn-sm py-1 px-2 btn-delete" 
-                            data-id="${variation.variation_id}" 
+                            data-id="${variation.id}" 
                             title="Delete">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -314,15 +311,24 @@ document.addEventListener("DOMContentLoaded", function () {
         // View button
         $(document).on('click', '.btn-view', function () {
             const variationId = $(this).data('id');
-            const variation = productVariationListData.find(v => v.variation_id == variationId);
-            showVariationDetail(variation);
+            // $('#productId_view').val(variationId || "");
+            // $('#productId_update').val(variationId || "");
+            console.log("View variation:", variationId);
+            // console.log("Product Variation List Data:", productVariationListData);
+            // const variation = productVariationListData.find(v => v.id == variationId);
+            // console.log("Found variation:", variation);
+            showVariationDetail(variationId);
         });
 
         // Edit button
         $(document).on('click', '.btn-update', function () {
-            const variationId = $(this).data('id');
+            const productVariationId = $(this).data('id');
             // Implement edit functionality
-            console.log("Edit variation:", variationId);
+            console.log("Edit variation:", productVariationId);
+            // const productToUpdateModal = productVariationListData.find(v => v.id == productVariationId);
+            // // console.log("Found variation:", variation);
+            // console.log("Product Variation to Update:", productToUpdateModal);
+            fillUpdateModal(productVariationId); // Đổ dữ liệu lên modal
         });
 
         // Delete button
@@ -334,29 +340,304 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ======================== DETAIL VIEW ========================
-    function showVariationDetail(variation) {
-        if (!variation) {
-            console.error("Invalid variation data");
-            return;
+    // function showVariationDetail(variation) {
+    //     if (!variation) {
+    //         console.error("Invalid variation data");
+    //         return;
+    //     }
+
+    //     // Display basic info
+    //     $("#variationId").text(variation.variation_id);
+    //     $("#variationSku").text(variation.sku);
+
+    //     // Display specifications
+    //     $("#os_name").text(variation.os_name || "N/A");
+    //     $("#watch_size_mm").text(variation.watch_size_mm ? `${variation.watch_size_mm}mm` : "N/A");
+    //     $("#display_size_mm").text(variation.display_size_mm ? `${variation.display_size_mm}mm` : "N/A");
+    //     $("#ram_bytes").text(variation.ram_bytes ? `${(variation.ram_bytes / 1024).toFixed(1)} GB` : "N/A");
+    //     $("#rom_bytes").text(variation.rom_bytes ? `${(variation.rom_bytes / 1024).toFixed(1)} GB` : "N/A");
+
+    //     // Display pricing and stock
+    //     $("#price_cents").text(formatCurrency(variation.price_cents || 0));
+    //     $("#stock_quantity").text(variation.stock_quantity || "0");
+
+    //     // Show the modal
+    //     $("#modalView").modal('show');
+    // }
+
+
+    // ================================= CHI TIẾT SẢN PHẨM =================================
+    // CALL API LẤY CHI TIẾT BIẾN THỂ SẢN PHẨM
+    function fetchAPIProductVariationDetail(productVariationId) {
+        // Kiểm tra productId hợp lệ
+        if (!productVariationId) {
+            console.error("Product ID không hợp lệ");
+            return $.Deferred().reject("Product ID không hợp lệ");
         }
 
-        // Display basic info
-        $("#variationId").text(variation.variation_id);
-        $("#variationSku").text(variation.sku);
+        let APIProductDetailurl = `${BASE_API_URL}/api/products/variations/${productVariationId}`;
 
-        // Display specifications
-        $("#os_name").text(variation.os_name || "N/A");
-        $("#watch_size_mm").text(variation.watch_size_mm ? `${variation.watch_size_mm}mm` : "N/A");
-        $("#display_size_mm").text(variation.display_size_mm ? `${variation.display_size_mm}mm` : "N/A");
-        $("#ram_bytes").text(variation.ram_bytes ? `${(variation.ram_bytes / 1024).toFixed(1)} GB` : "N/A");
-        $("#rom_bytes").text(variation.rom_bytes ? `${(variation.rom_bytes / 1024).toFixed(1)} GB` : "N/A");
+        return $.ajax({
+            url: APIProductDetailurl,
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json"
+        }).then(function (response) {
+            if (response.success) {
+                return response.data;  // Trả về dữ liệu khi thành công
+            } else {
+                throw new Error("Lỗi khi tải dữ liệu chi tiết biến thể sản phẩm");
+            }
+        });
+    }
+    // CALL API LẤY CHI TIẾT SẢN PHẨM
+    function fetchAPIProductDetail(productId) {
+        // Kiểm tra productId hợp lệ
+        if (!productId) {
+            console.error("Product ID không hợp lệ");
+            return $.Deferred().reject("Product ID không hợp lệ");
+        }
 
-        // Display pricing and stock
-        $("#price_cents").text(formatCurrency(variation.price_cents || 0));
-        $("#stock_quantity").text(variation.stock_quantity || "0");
+        let APIProductDetailurl = `${BASE_API_URL}/api/products/${productId}`;
 
-        // Show the modal
-        $("#variationDetailModal").modal('show');
+        return $.ajax({
+            url: APIProductDetailurl,
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json"
+        }).then(function (response) {
+            if (response.success) {
+                return response.data;  // Trả về dữ liệu khi thành công
+            } else {
+                throw new Error("Lỗi khi tải dữ liệu chi tiết sản phẩm");
+            }
+        });
+    }
+    // CALL API LẤY TÊN OS
+    function fetchAPIOSDetail(osId) {
+        // Kiểm tra productId hợp lệ
+        if (!osId) {
+            console.error("osId ID không hợp lệ");
+            return $.Deferred().reject("osId ID không hợp lệ");
+        }
+
+        let APIOSDetailurl = `${BASE_API_URL}/api/products/os/${osId}`;
+
+        return $.ajax({
+            url: APIOSDetailurl,
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json"
+        }).then(function (response) {
+            if (response.success) {
+                return response.data;  // Trả về dữ liệu khi thành công
+            } else {
+                throw new Error("Lỗi khi tải dữ liệu chi tiết hệ điều hành");
+            }
+        });
+    }
+    // Hàm hiển thị chi tiết biến thể sản phẩm
+    // function showVariationDetail(variation) {
+    //     if (!variation) {
+    //         console.error("Invalid variation data");
+    //         return;
+    //     }
+    //     console.log("Showing variation detail:", variation.product_id);
+    //     fetchAPIProductDetail(variation.product_id)
+    //         .done(function (productDetail) {
+    //             console.log("Product Detail:", productDetail);
+    //             $("#product_name").text(productDetail.name || "N/A");
+    //         })
+    //     // Thông tin hệ điều hành
+    //     fetchAPIOSDetail(variation.os_id)
+    //         .done(function (osDetail) {
+    //             console.log("Product Detail:", osDetail);
+    //             $("#os_name").text(osDetail.name || "N/A");
+    //         })
+
+    //     // Thông số kỹ thuật
+    //     $("#watch_size_mm").text(variation.watch_size_mm ? `${variation.watch_size_mm} mm` : "N/A");
+    //     $("#watch_color").text(variation.watch_color || "N/A");
+    //     $("#display_type").text(variation.display_type || "N/A");
+    //     $("#display_size_mm").text(variation.display_size_mm ? `${variation.display_size_mm} mm` : "N/A");
+
+    //     // Xử lý resolution (ghép W và H nếu có cả hai)
+    //     const resolution = [];
+    //     if (variation.resolution_w_px) resolution.push(variation.resolution_w_px);
+    //     if (variation.resolution_h_px) resolution.push(variation.resolution_h_px);
+    //     $("#resolution_w_px").text(resolution.length ? resolution.join(" × ") + " px" : "N/A");
+
+    //     $("#ram_bytes").text(variation.ram_bytes ? `${(variation.ram_bytes / (1024 * 1024 * 1024)).toFixed(1)} GB` : "N/A");
+    //     $("#rom_bytes").text(variation.rom_bytes ? `${(variation.rom_bytes / (1024 * 1024 * 1024)).toFixed(1)} GB` : "N/A");
+    //     $("#connectivity").text(variation.connectivity || "N/A");
+    //     $("#sensors").text(variation.sensor || "N/A");
+
+    //     // Vật liệu & kết cấu
+    //     $("#case_material").text(variation.case_material || "N/A");
+    //     $("#band_material").text(variation.band_material || "N/A");
+    //     $("#band_size_mm").text(variation.band_size_mm ? `${variation.band_size_mm} mm` : "N/A");
+    //     $("#band_color").text(variation.band_color || "N/A");
+
+    //     // Kích thước & khả năng chống nước
+    //     $("#battery_life_mah").text(variation.battery_life_mah ? `${variation.battery_life_mah} mAh` : "N/A");
+
+    //     // Xử lý water resistance (ghép value và unit)
+    //     const waterResistance = [];
+    //     if (variation.water_resistance_value) waterResistance.push(variation.water_resistance_value);
+    //     if (variation.water_resistance_unit) waterResistance.push(variation.water_resistance_unit);
+    //     $("#water_resistance_value").text(waterResistance.length ? waterResistance.join(" ") : "N/A");
+
+    //     $("#weight_miligam").text(variation.weight_milligrams ? `${variation.weight_milligrams} mg` : "N/A");
+
+    //     // Giá & thời gian ra mắt
+    //     $("#stock_quantity").text(variation.stock_quantity || "0");
+    //     $("#base_price_cents").text(formatCurrency(variation.base_price_cents || 0));
+    //     $("#price_cents").text(formatCurrency(variation.price_cents || 0));
+    //     $("#release_date").text(variation.release_date ? formatDate(variation.release_date) : "N/A");
+    //     $("#stop_selling").text(variation.stop_selling ? "Yes" : "No");
+
+    //     // Hiển thị modal
+    //     const modal = new bootstrap.Modal(document.getElementById('modalView'));
+    //     modal.show();
+    // }
+
+    function toggleFieldsByCategory(categoryId) {
+        // Ẩn tất cả các section theo danh mục
+        document.querySelectorAll('.category-specific-section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // Kiểm tra danh mục có hợp lệ không
+        if (categoryId) {
+            console.log("categoryId", categoryId);
+            const sectionId = getSectionIdByCategory(categoryId);
+            console.log("sectionId", sectionId);
+
+            if (sectionId) {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.style.display = 'block';
+                } else {
+                    console.warn(`No section found for categoryId: ${categoryId}`);
+                }
+            } else {
+                console.warn(`No section ID mapping found for categoryId: ${categoryId}`);
+            }
+        }
+    }
+
+    // Hàm ánh xạ category_id sang section ID tương ứng
+    function getSectionIdByCategory(categoryId) {
+        const categoryMap = {
+            1: 'smartwatch-section',
+            4: 'band-section',
+            2: 'cable-section',
+            3: 'charger-section'
+            // Thêm các ánh xạ khác nếu cần
+        };
+        return categoryMap[categoryId] || null; // Trả về null nếu không tìm thấy ánh xạ
+    }
+    function showVariationDetail(variationId) {
+        // Gọi API để lấy chi tiết biến thể sản phẩm
+        fetchAPIProductVariationDetail(variationId)
+            .done(function (variation) {
+                if (!variation) {
+                    console.error("Invalid variation data");
+                    return;
+                }
+
+                console.log("Showing variation detail:", variation.product_id);
+
+                // Gọi API chi tiết sản phẩm chính
+                fetchAPIProductDetail(variation.product_id)
+                    .done(function (productDetail) {
+                        if (productDetail && productDetail.category_id) {
+                            console.log("Product Detail:", productDetail.category_id);
+                            toggleFieldsByCategory(productDetail.category_id);
+                        }
+                        console.log("Product Detail:", productDetail);
+                        $("#product_name").text(productDetail.name || "N/A");
+                    })
+                    .fail(function (error) {
+                        console.error("Error fetching product detail:", error);
+                        $("#product_name").text("N/A");
+                    });
+
+                // Gọi API hệ điều hành nếu có os_id
+                if (variation.os_id) {
+                    fetchAPIOSDetail(variation.os_id)
+                        .done(function (osDetail) {
+                            console.log("OS Detail:", osDetail);
+                            $("#os_name").text(osDetail.name || "N/A");
+                        })
+                        .fail(function (error) {
+                            console.error("Error fetching OS detail:", error);
+                            $("#os_name").text("N/A");
+                        });
+                } else {
+                    $("#os_name").text("N/A");
+                }
+
+                // Thông số kỹ thuật
+                $("#watch_size_mm").text(variation.watch_size_mm ? `${variation.watch_size_mm} mm` : "N/A");
+                $("#watch_color").text(variation.watch_color || "N/A");
+                $("#display_type").text(variation.display_type || "N/A");
+                $("#display_size_mm").text(variation.display_size_mm ? `${variation.display_size_mm} mm` : "N/A");
+
+                // Xử lý resolution (ghép W và H nếu có cả hai)
+                const resolution = [];
+                if (variation.resolution_w_px) resolution.push(variation.resolution_w_px);
+                if (variation.resolution_h_px) resolution.push(variation.resolution_h_px);
+                $("#resolution_w_px").text(resolution.length ? resolution.join(" × ") + " px" : "N/A");
+
+                $("#ram_bytes").text(variation.ram_bytes ? `${(variation.ram_bytes / (1024 * 1024 * 1024)).toFixed(1)} GB` : "N/A");
+                $("#rom_bytes").text(variation.rom_bytes ? `${(variation.rom_bytes / (1024 * 1024 * 1024)).toFixed(1)} GB` : "N/A");
+                $("#connectivity").text(variation.connectivity || "N/A");
+                $("#sensors").text(variation.sensor || "N/A");
+
+                // Vật liệu & kết cấu
+                $("#case_material").text(variation.case_material || "N/A");
+                $("#band_material").text(variation.band_material || "N/A");
+                $("#band_size_mm").text(variation.band_size_mm ? `${variation.band_size_mm} mm` : "N/A");
+                $("#band_color").text(variation.band_color || "N/A");
+
+                // Kích thước & khả năng chống nước
+                $("#battery_life_mah").text(variation.battery_life_mah ? `${variation.battery_life_mah} mAh` : "N/A");
+
+                // Xử lý water resistance (ghép value và unit)
+                const waterResistance = [];
+                if (variation.water_resistance_value) waterResistance.push(variation.water_resistance_value);
+                if (variation.water_resistance_unit) waterResistance.push(variation.water_resistance_unit);
+                $("#water_resistance_value").text(waterResistance.length ? waterResistance.join(" ") : "N/A");
+
+                $("#weight_miligam").text(variation.weight_milligrams ? `${variation.weight_milligrams} mg` : "N/A");
+
+                // Giá & thời gian ra mắt
+                $("#stock_quantity").text(variation.stock_quantity || "0");
+                $("#base_price_cents").text(formatCurrency(variation.base_price_cents || 0));
+                $("#price_cents").text(formatCurrency(variation.price_cents || 0));
+                $("#release_date").text(variation.release_date ? formatDate(variation.release_date) : "N/A");
+                $("#stop_selling").text(variation.stop_selling ? "Yes" : "No");
+
+                // Hiển thị modal
+                const modal = new bootstrap.Modal(document.getElementById('modalView'));
+                modal.show();
+            })
+            .fail(function (error) {
+                console.error("Error fetching variation detail:", error);
+                alert("Lỗi khi tải chi tiết biến thể: " + error);
+            });
+    }
+
+    // Hàm định dạng tiền tệ (giả định)
+    function formatCurrency(cents) {
+        return `$${(cents / 100).toFixed(2)}`;
+    }
+
+    // Hàm định dạng ngày tháng (giả định)
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
     }
 
     // ======================== UTILITY FUNCTIONS ========================
@@ -439,66 +720,137 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ========================== HIỆN MODAL UPDATE SẢN PHẨM ==========================
-    $(document).on('click', '.btn-update', async function () {
-        let productVariationId = $(this).data('id');
-        console.log("productVariationId ID:", productVariationId);
-        // Gán giá trị ID vào input hidden trong modal
-        $("#productVariationId").val(productVariationId);
-        let productToUpdateModal = await fetchAPIProductOSAndVariations(productVariationId);
-        console.log("Product Variation to Update:", productToUpdateModal);
-        fillUpdateModal(productToUpdateModal); // Đổ dữ liệu lên modal
+    // $(document).on('click', '.btn-update', async function () {
+    //     let productVariationId = document.getElementById("data-id");
+    //     console.log("productVariationId ID:", productVariationId);
+    //     // Gán giá trị ID vào input hidden trong modal
+    //     $("#productVariationId").val(productVariationId);
+    //     // let productToUpdateModal = await fetchAPIProductOSAndVariations(productVariationId);
+    //     const productToUpdateModal = productVariationListData.find(v => v.id == productVariationId);
+    //     // console.log("Found variation:", variation);
+    //     console.log("Product Variation to Update:", productToUpdateModal);
+    //     fillUpdateModal(productToUpdateModal); // Đổ dữ liệu lên modal
 
-    });
+    // });
 
     // Hiện dữ liệu lên modal update
-    function fillUpdateModal(productData) {
-        let modal = document.querySelector("#modalUpdate");
-        console.log("Product to Update:", productData);
+    // function fillUpdateModal(productData) {
+    //     let modal = document.querySelector("#modalUpdate");
+    //     console.log("Product to Update:", productData);
 
-        // Gán giá trị vào các input
-        if (!modal) {
-            console.error("Modal không tồn tại!");
-            return;
-        }
+    //     // Gán giá trị vào các input
+    //     if (!modal) {
+    //         console.error("Modal không tồn tại!");
+    //         return;
+    //     }
+    //     modal.querySelector("#productVariationId").value = productData.id || ""; // Gán ID vào input hidden
+    //     // modal.querySelector("#image_name").value = productData.image_name || "";
+    //     //modal.querySelector("#os_name").textContent = productData.os_name || "";
+    //     modal.querySelector("#watch_size_mm").value = productData.watch_size_mm || "";
+    //     modal.querySelector("#watch_color").value = productData.watch_color || "";
+    //     modal.querySelector("#display_type").value = productData.display_type || "";
+    //     modal.querySelector("#display_size_mm").value = productData.display_size_mm || "";
+    //     modal.querySelector("#resolution_w_px").value = productData.resolution_w_px || "";
+    //     modal.querySelector("#resolution_h_px").value = productData.resolution_h_px || "";
+    //     modal.querySelector("#ram_bytes").value = productData.ram_bytes || "";
+    //     modal.querySelector("#rom_bytes").value = productData.rom_bytes || "";
+    //     modal.querySelector("#connectivity").value = productData.connectivity || "";
+    //     modal.querySelector("#sensors").value = productData.sensor || "";
+    //     modal.querySelector("#case_material").value = productData.case_material || "";
+    //     modal.querySelector("#band_material").value = productData.band_material || "";
+    //     modal.querySelector("#band_size_mm").value = productData.band_size_mm || "";
+    //     modal.querySelector("#band_color").value = productData.band_color || "";
+    //     modal.querySelector("#battery_life_mah").value = productData.battery_life_mah || "";
+    //     modal.querySelector("#water_resistance_value").value = productData.water_resistance_value || "";
+    //     modal.querySelector("#water_resistance_unit").value = productData.water_resistance_unit || "";
+    //     modal.querySelector("#weight_miligam").value = productData.weight_milligrams || "";
+    //     //modal.querySelector("#stock_quantity").value = productData.stock_quantity || "";
+    //     modal.querySelector("#base_price_cents").value = productData.base_price_cents || "";
+    //     modal.querySelector("#price_cents").value = productData.price_cents || "";
+    //     modal.querySelector("#stop_selling").value = productData.stop_selling || "";
+    //     // Gán ngày tháng (convert thành định dạng yyyy-MM-dd nếu chưa đúng)
+    //     //console.log("Release Date Before Format:", productData.release_date);
 
-        modal.querySelector("#image_name").value = productData.image_name || "";
-        //modal.querySelector("#os_name").textContent = productData.os_name || "";
-        modal.querySelector("#watch_size_mm").value = productData.watch_size_mm || "";
-        modal.querySelector("#watch_color").value = productData.watch_color || "";
-        modal.querySelector("#display_type").value = productData.display_type || "";
-        modal.querySelector("#display_size_mm").value = productData.display_size_mm || "";
-        modal.querySelector("#resolution_w_px").value = productData.resolution_w_px || "";
-        modal.querySelector("#resolution_h_px").value = productData.resolution_h_px || "";
-        modal.querySelector("#ram_bytes").value = productData.ram_bytes || "";
-        modal.querySelector("#rom_bytes").value = productData.rom_bytes || "";
-        modal.querySelector("#connectivity").value = productData.connectivity || "";
-        modal.querySelector("#sensors").value = productData.sensor || "";
-        modal.querySelector("#case_material").value = productData.case_material || "";
-        modal.querySelector("#band_material").value = productData.band_material || "";
-        modal.querySelector("#band_size_mm").value = productData.band_size_mm || "";
-        modal.querySelector("#band_color").value = productData.band_color || "";
-        modal.querySelector("#battery_life_mah").value = productData.battery_life_mah || "";
-        modal.querySelector("#water_resistance_value").value = productData.water_resistance_value || "";
-        modal.querySelector("#water_resistance_unit").value = productData.water_resistance_unit || "";
-        modal.querySelector("#weight_miligam").value = productData.weight_milligrams || "";
-        //modal.querySelector("#stock_quantity").value = productData.stock_quantity || "";
-        modal.querySelector("#base_price_cents").value = productData.base_price_cents || "";
-        modal.querySelector("#price_cents").value = productData.price_cents || "";
-        modal.querySelector("#stop_selling").value = productData.stop_selling || "";
-        // Gán ngày tháng (convert thành định dạng yyyy-MM-dd nếu chưa đúng)
-        //console.log("Release Date Before Format:", productData.release_date);
-
-        // if (productData.release_date) {
-        //     let formattedDate = formatDate(productData.release_date);
-        //     console.log("Formatted Release Date:", formattedDate);
-        //     modal.querySelector("#release_date").value = formattedDate;
-        // }
+    //     // if (productData.release_date) {
+    //     //     let formattedDate = formatDate(productData.release_date);
+    //     //     console.log("Formatted Release Date:", formattedDate);
+    //     //     modal.querySelector("#release_date").value = formattedDate;
+    //     // }
 
 
-        // Mở modal bằng Bootstrap 5
-        let modalInstance = new bootstrap.Modal(modal);
-        modalInstance.show();
+    //     // Mở modal bằng Bootstrap 5
+    //     let modalInstance = new bootstrap.Modal(modal);
+    //     modalInstance.show();
+    // }
+    function fillUpdateModal(productVariationId) {
+        // Mở modal
+        const modalEl = document.getElementById('modalUpdate');
+        const modal = new bootstrap.Modal(modalEl);
+        const $modal = $(modalEl);
+
+        // Xử lý khi modal hiển thị xong
+        $modal.on('shown.bs.modal', function () {
+            // Gọi API để lấy dữ liệu
+            fetchAPIProductVariationDetail(productVariationId)
+                .done(function (productData) {
+                    console.log("Product data to update:", productData);
+
+                    // Gán giá trị sử dụng data-field
+                    $modal.find('[data-field="productVariationId"]').val(productData.id || "");
+                    // Gọi API chi tiết sản phẩm chính
+                    fetchAPIProductDetail(productData.product_id)
+                        .done(function (productDetail) {
+                            console.log("Product Detail:", productDetail);
+                            if (productDetail && productDetail.category_id) {
+                                console.log("Product Detail:", productDetail.category_id);
+                                toggleFieldsByCategory(productDetail.category_id);
+                            }
+                            $modal.find('[data-field="product_name"]').text(productDetail.name || "N/A");
+                        })
+                        .fail(function (error) {
+                            console.error("Error fetching product detail:", error);
+                        });
+
+                    $modal.find('[data-field="watch_size_mm"]').val(productData.watch_size_mm || "");
+                    $modal.find('[data-field="watch_color"]').val(productData.watch_color || "");
+                    $modal.find('[data-field="display_type"]').val(productData.display_type || "");
+                    $modal.find('[data-field="display_size_mm"]').val(productData.display_size_mm || "");
+                    $modal.find('[data-field="resolution_w_px"]').val(productData.resolution_w_px || "");
+                    $modal.find('[data-field="resolution_h_px"]').val(productData.resolution_h_px || "");
+                    $modal.find('[data-field="ram_bytes"]').val(productData.ram_bytes || "");
+                    $modal.find('[data-field="rom_bytes"]').val(productData.rom_bytes || "");
+                    $modal.find('[data-field="connectivity"]').val(productData.connectivity || "");
+                    $modal.find('[data-field="sensors"]').val(productData.sensor || "");
+                    $modal.find('[data-field="case_material"]').val(productData.case_material || "");
+                    $modal.find('[data-field="band_material"]').val(productData.band_material || "");
+                    $modal.find('[data-field="band_size_mm"]').val(productData.band_size_mm || "");
+                    $modal.find('[data-field="band_color"]').val(productData.band_color || "");
+                    $modal.find('[data-field="battery_life_mah"]').val(productData.battery_life_mah || "");
+                    $modal.find('[data-field="water_resistance_value"]').val(productData.water_resistance_value || "");
+                    $modal.find('[data-field="water_resistance_unit"]').val(productData.water_resistance_unit || "");
+                    $modal.find('[data-field="weight_miligam"]').val(productData.weight_milligrams || "");
+                    $modal.find('[data-field="base_price_cents"]').val(productData.base_price_cents || "");
+                    $modal.find('[data-field="price_cents"]').val(productData.price_cents || "");
+
+                    // Xử lý checkbox
+                    $modal.find('[data-field="stop_selling"]').prop('checked', productData.stop_selling || false);
+
+                    // Xử lý ngày release
+                    if (productData.release_date) {
+                        $modal.find('[data-field="release_date"]').val(formatDate(productData.release_date));
+                    }
+                })
+                .fail(function (error) {
+                    console.error("Error fetching product variation:", error);
+                    alert("Không thể tải dữ liệu sản phẩm: " + error);
+                    modal.hide();
+                });
+        });
+
+        // Hiển thị modal
+        modal.show();
     }
+
     // Hàm định dạng ngày thành yyyy-MM-dd
     function formatDate(dateString) {
         let date = new Date(dateString);
@@ -521,7 +873,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //stock_quantity: parseInt(modal.querySelector("#stock_quantity").value) || 0,
             price_cents: parseInt(modal.querySelector("#price_cents").value) || 0,
             base_price_cents: parseInt(modal.querySelector("#base_price_cents").value) || 0,
-            image_name: modal.querySelector("#image_name").value.trim(),
+            // image_name: modal.querySelector("#image_name").value.trim(),
             display_size_mm: parseInt(modal.querySelector("#display_size_mm").value) || 0,
             display_type: modal.querySelector("#display_type").value.trim(),
             resolution_h_px: parseInt(modal.querySelector("#resolution_h_px").value) || 0,
@@ -579,12 +931,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ========================== CẬP NHẬT THÔNG TIN SẢN PHẨM ==========================
     $("#saveChanges").click(function () {
-        let productVariationId = document.getElementById("productVariationId").value;
+        const productVariationId = document.getElementById("productVariationId").value.trim();
+        // let productVariationId = document.getElementById("productVariationId").value;
         console.log("productVariationId:", productVariationId);
         console.log("Lưu thay đổi");
         let updatedProductVariation = getUpdatedProductVariationInfo();
         // Kiểm tra nếu có lỗi trong dữ liệu
-        if (!updatedProductVariation || !validateProductVariation(updatedProductVariation)) {
+        if (!updatedProductVariation) {
             console.error("Lỗi: Dữ liệu không hợp lệ");
             return;
         }
@@ -617,7 +970,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Gửi updatedProductVariation lên server bằng AJAX
             $.ajax({
-                url: `${BASE_API_URL}/api/products/variations/instances/${updatedProductVariation.id}`, // URL API backend
+                url: `${BASE_API_URL}/api/products/variations/${updatedProductVariation.id}`, // URL API backend
                 type: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify(updatedProductVariation), // Sửa lỗi: Dùng đúng biến
@@ -625,7 +978,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (response.success) {
                         console.log("Cập nhật thành công:", response);
                         toast("Cập nhật thành công!", "success", true);
-                        fetchAPIProductsVariations(); // Load lại dữ liệu sau khi cập nhật
+                        // fetchAPIProductsVariations(); // Load lại dữ liệu sau khi cập nhật
                         $("#modalUpdate").modal("hide"); // Ẩn modal sau khi cập nhật
                     }
                 },

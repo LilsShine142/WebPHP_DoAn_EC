@@ -170,7 +170,6 @@
                         <th>ID</th>
                         <th>name</th>
                         <th>Product count</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -287,7 +286,6 @@
                                     <td class="cate-id">${category.id}</td>
                                     <td class="cate-name">${category.name}</td>
                                     <td class="cate-product_count">${product_count}</td>
-                                    <td class="cate-status">${category.status}</td>
                                     <td>
                                         <button class="btn btn-warning btn-update" data-id="${category.id}">
                                             <i class="fas fa-edit"></i>

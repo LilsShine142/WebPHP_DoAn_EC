@@ -115,7 +115,7 @@ class ProductVariationController extends ErrorHandler
       case "POST":
         $this->auths->verifyAction("CREATE_PRODUCT_VARIATION");
         $data = (array) json_decode(file_get_contents("php://input"));
-        $errors = $this->getValidationErrors($data);
+        // $errors = $this->getValidationErrors($data);
         if (!empty($errors)) {
           $this->sendErrorResponse(422, $errors);
           break;

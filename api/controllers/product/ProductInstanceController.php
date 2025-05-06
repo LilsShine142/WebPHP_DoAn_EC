@@ -99,6 +99,29 @@ class ProductInstanceController extends ErrorHandler
         elseif (!empty($_GET["product_variation_id"])) {
           $result = $this->gateway->getByProductVariationIdWithPagination(
             (int)$_GET["product_variation_id"],
+            null,
+            $limit,
+            $offset
+          );
+
+          if (empty($result['data'])) {
+            $this->sendErrorResponse(404, "No product instances found for this variation");
+          }
+
+          echo json_encode([
+            "success" => true,
+            "data" => $result['data'],
+            "totalElements" => $result['total'],
+            "limit" => $limit,
+            "offset" => $offset,
+            "totalPages" => ceil($result['total'] / $limit)
+          ]);
+        }
+        // Trường hợp lấy theo goods_receipt_note_id
+        elseif (!empty($_GET["goods_receipt_note_id"])) {
+          $result = $this->gateway->getByProductVariationIdWithPagination(
+            null,
+            (int)$_GET["goods_receipt_note_id"],
             $limit,
             $offset
           );

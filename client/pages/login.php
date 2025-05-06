@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <?php
+    require_once __DIR__ . "/../../api/config/constants.php";
+    ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login/Signup Form</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 </head>
+
+
 <body>
     <div class="container">
         <div class="form-box login">
@@ -17,7 +24,7 @@
                 </div>
                 <div class="input-box validate-input" data-validate="Password is required">
                     <input name="pass" type="password" placeholder="Password" required>
-                    <i class='bx bxs-lock-alt' ></i>
+                    <i class='bx bxs-lock-alt'></i>
                 </div>
                 <div class="forgot-link">
                     <a href="#">Forgot Password?</a>
@@ -43,13 +50,13 @@
                     <!-- hiện thông báo -->
                     <div class="message" id="current-password-message" style="color: red; display: none;">Current password is incorrect</div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="new-password">New Password</label>
                     <input type="password" id="new-password" placeholder="Enter your new password">
                     <div class="message" id="new-password-message" style="color: red; display: none;">New password must be at least 8 characters long and contain at least one number and one letter</div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="confirm-password">Confirm New Password</label>
                     <input type="password" id="confirm-password" placeholder="Confirm your new password">
@@ -66,11 +73,11 @@
                 <h1>Registration</h1>
                 <div class="input-box validate-input" data-validate="Valid email is required: ex@abc.xyz">
                     <input type="text" name="newEmail" placeholder="Email" required>
-                    <i class='bx bxs-envelope' ></i>
+                    <i class='bx bxs-envelope'></i>
                 </div>
                 <div class="input-box validate-input" data-validate="Password is required">
                     <input type="password" name="newPassword" placeholder="Password" required>
-                    <i class='bx bxs-lock-alt' ></i>
+                    <i class='bx bxs-lock-alt'></i>
                 </div>
                 <button type="submit" class="btn">Register</button>
             </form>
@@ -109,12 +116,13 @@
     <script src="../js/auth.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
 </body>
+
 </html>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-    *{
+    * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -123,7 +131,7 @@
         list-style: none;
     }
 
-    body{
+    body {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -131,7 +139,7 @@
         background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
     }
 
-    .container{
+    .container {
         position: relative;
         width: 850px;
         height: 550px;
@@ -142,19 +150,21 @@
         overflow: hidden;
     }
 
-        .container h1{
-            font-size: 36px;
-            margin: -10px 0;
-        }
+    .container h1 {
+        font-size: 36px;
+        margin: -10px 0;
+    }
 
-        .container p{
-            font-size: 14.5px;
-            margin: 15px 0;
-        }
+    .container p {
+        font-size: 14.5px;
+        margin: 15px 0;
+    }
 
-    form{ width: 100%; }
+    form {
+        width: 100%;
+    }
 
-    .form-box{
+    .form-box {
         position: absolute;
         right: 0;
         width: 50%;
@@ -169,48 +179,58 @@
         transition: .6s ease-in-out 1.2s, visibility 0s 1s;
     }
 
-        .container.active .form-box{ right: 50%; }
+    .container.active .form-box {
+        right: 50%;
+    }
 
-        .form-box.register{ visibility: hidden; }
-            .container.active .form-box.register{ visibility: visible; }
+    .form-box.register {
+        visibility: hidden;
+    }
 
-    .input-box{
+    .container.active .form-box.register {
+        visibility: visible;
+    }
+
+    .input-box {
         position: relative;
         margin: 30px 0;
     }
 
-        .input-box input{
-            width: 100%;
-            padding: 13px 50px 13px 20px;
-            background: #eee;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-        }
+    .input-box input {
+        width: 100%;
+        padding: 13px 50px 13px 20px;
+        background: #eee;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #333;
+        font-weight: 500;
+    }
 
-            .input-box input::placeholder{
-                color: #888;
-                font-weight: 400;
-            }
-        
-        .input-box i{
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-        }
+    .input-box input::placeholder {
+        color: #888;
+        font-weight: 400;
+    }
 
-    .forgot-link{ margin: -15px 0 15px; }
-        .forgot-link a{
-            font-size: 14.5px;
-            color: #333;
-        }
+    .input-box i {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+    }
 
-    .btn{
+    .forgot-link {
+        margin: -15px 0 15px;
+    }
+
+    .forgot-link a {
+        font-size: 14.5px;
+        color: #333;
+    }
+
+    .btn {
         width: 100%;
         height: 48px;
         background: #7494ec;
@@ -223,43 +243,45 @@
         font-weight: 600;
     }
 
-    .social-icons{
+    .social-icons {
         display: flex;
         justify-content: center;
     }
 
-        .social-icons a{
-            display: inline-flex;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            font-size: 24px;
-            color: #333;
-            margin: 0 8px;
-        }
+    .social-icons a {
+        display: inline-flex;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        font-size: 24px;
+        color: #333;
+        margin: 0 8px;
+    }
 
-    .toggle-box{
+    .toggle-box {
         position: absolute;
         width: 100%;
         height: 100%;
     }
 
-        .toggle-box::before{
-            content: '';
-            position: absolute;
-            left: -250%;
-            width: 300%;
-            height: 100%;
-            background: #7494ec;
-            /* border: 2px solid red; */
-            border-radius: 150px;
-            z-index: 2;
-            transition: 1.8s ease-in-out;
-        }
+    .toggle-box::before {
+        content: '';
+        position: absolute;
+        left: -250%;
+        width: 300%;
+        height: 100%;
+        background: #7494ec;
+        /* border: 2px solid red; */
+        border-radius: 150px;
+        z-index: 2;
+        transition: 1.8s ease-in-out;
+    }
 
-            .container.active .toggle-box::before{ left: 50%; }
+    .container.active .toggle-box::before {
+        left: 50%;
+    }
 
-    .toggle-panel{
+    .toggle-panel {
         position: absolute;
         width: 50%;
         height: 100%;
@@ -273,49 +295,55 @@
         transition: .6s ease-in-out;
     }
 
-        .toggle-panel.toggle-left{ 
-            left: 0;
-            transition-delay: 1.2s; 
+    .toggle-panel.toggle-left {
+        left: 0;
+        transition-delay: 1.2s;
+    }
+
+    .container.active .toggle-panel.toggle-left {
+        left: -50%;
+        transition-delay: .6s;
+    }
+
+    .toggle-panel.toggle-right {
+        right: -50%;
+        transition-delay: .6s;
+    }
+
+    .container.active .toggle-panel.toggle-right {
+        right: 0;
+        transition-delay: 1.2s;
+    }
+
+    .toggle-panel p {
+        margin-bottom: 20px;
+    }
+
+    .toggle-panel .btn {
+        width: 160px;
+        height: 46px;
+        background: transparent;
+        border: 2px solid #fff;
+        box-shadow: none;
+    }
+
+    @media screen and (max-width: 650px) {
+        .container {
+            height: calc(100vh - 40px);
         }
-            .container.active .toggle-panel.toggle-left{
-                left: -50%;
-                transition-delay: .6s;
-            }
 
-        .toggle-panel.toggle-right{ 
-            right: -50%;
-            transition-delay: .6s;
-        }
-            .container.active .toggle-panel.toggle-right{
-                right: 0;
-                transition-delay: 1.2s;
-            }
-
-        .toggle-panel p{ margin-bottom: 20px; }
-
-        .toggle-panel .btn{
-            width: 160px;
-            height: 46px;
-            background: transparent;
-            border: 2px solid #fff;
-            box-shadow: none;
-        }
-
-    @media screen and (max-width: 650px){
-        .container{ height: calc(100vh - 40px); }
-
-        .form-box{
+        .form-box {
             bottom: 0;
             width: 100%;
             height: 70%;
         }
 
-            .container.active .form-box{
-                right: 0;
-                bottom: 30%;
-            }
+        .container.active .form-box {
+            right: 0;
+            bottom: 30%;
+        }
 
-        .toggle-box::before{
+        .toggle-box::before {
             left: 0;
             top: -270%;
             width: 100%;
@@ -323,37 +351,48 @@
             border-radius: 20vw;
         }
 
-            .container.active .toggle-box::before{
-                left: 0;
-                top: 70%;
-            }
+        .container.active .toggle-box::before {
+            left: 0;
+            top: 70%;
+        }
 
-            .container.active .toggle-panel.toggle-left{
-                left: 0;
-                top: -30%;
-            }
+        .container.active .toggle-panel.toggle-left {
+            left: 0;
+            top: -30%;
+        }
 
-        .toggle-panel{ 
+        .toggle-panel {
             width: 100%;
             height: 30%;
         }
-            .toggle-panel.toggle-left{ top: 0; }
-            .toggle-panel.toggle-right{
-                right: 0;
-                bottom: -30%;
-            }
 
-                .container.active .toggle-panel.toggle-right{ bottom: 0; }
+        .toggle-panel.toggle-left {
+            top: 0;
+        }
+
+        .toggle-panel.toggle-right {
+            right: 0;
+            bottom: -30%;
+        }
+
+        .container.active .toggle-panel.toggle-right {
+            bottom: 0;
+        }
     }
 
-    @media screen and (max-width: 400px){
-        .form-box { padding: 20px; }
+    @media screen and (max-width: 400px) {
+        .form-box {
+            padding: 20px;
+        }
 
-        .toggle-panel h1{font-size: 30px; }
+        .toggle-panel h1 {
+            font-size: 30px;
+        }
     }
 
     .input-group {
-        flex: 1; /* Chia đều không gian */
+        flex: 1;
+        /* Chia đều không gian */
         display: flex;
         flex-direction: column;
         margin-bottom: 20px;
@@ -365,7 +404,7 @@
         margin-bottom: 5px;
     }
 
-    .input-group input{
+    .input-group input {
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -386,15 +425,15 @@
         border-radius: 5px;
         cursor: pointer;
     }
+
     button:hover {
         background: #e04e50;
     }
-    
+
     button {
         margin-top: 0;
         padding: 2px 6px;
     }
-
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -402,7 +441,9 @@
     const container = document.querySelector('.container');
     const registerBtn = document.querySelector('.register-btn');
     const loginBtn = document.querySelector('.login-btn');
-    const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
+    // const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
+    // Gán BASE_API_URL cho biến JS từ PHP
+    const BASE_API_URL = "<?php echo BASE_API_URL; ?>";
 
     registerBtn.addEventListener('click', () => {
         container.classList.add('active');
@@ -430,7 +471,7 @@
         return re.test(String(email).toLowerCase());
     }
 
-    $("#change-password").on("click", function (event) {
+    $("#change-password").on("click", function(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
         let email = $("#email").val();
         const currentPassword = $("#current-password").val();
@@ -449,8 +490,8 @@
             $("#email-message").css("color", "red");
             $("#email-message").focus();
             return;
-        } 
-        
+        }
+
         if (newPassword !== confirmPassword) {
             $("#confirm-password-message").show();
             $("#new-password-message").hide();
@@ -472,7 +513,7 @@
             $("#confirm-password-message").hide();
             // hide
             $("#email-message").hide();
-            $("#current-password-message").hide();  
+            $("#current-password-message").hide();
         }
 
         // Kiểm tra mật khẩu hiện tại
@@ -480,7 +521,7 @@
             url: `${BASE_API_URL}/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(currentPassword)}`,
             method: "GET",
             dataType: "json",
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $("#email-message").hide();
                     $("#current-password-message").hide();
@@ -489,8 +530,10 @@
                         url: `${BASE_API_URL}/api/users/${response.data.id}`, // Sử dụng id từ phản hồi
                         method: "PUT",
                         contentType: "application/json",
-                        data: JSON.stringify({ password: newPassword }),
-                        success: function (response) {
+                        data: JSON.stringify({
+                            password: newPassword
+                        }),
+                        success: function(response) {
                             if (response.success) {
                                 alert("Đổi mật khẩu thành công!");
                                 location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
@@ -498,15 +541,15 @@
                                 alert("Có lỗi xảy ra khi đổi mật khẩu.");
                             }
                         },
-                        error: function () {
+                        error: function() {
                             alert("Không thể kết nối đến server.");
                         }
                     });
                 } else {
-                    
+
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 if (xhr.status === 404) {
                     $("#email-message").text("Email không tồn tại!");
                     $("#email-message").show();
@@ -519,7 +562,7 @@
                     $("#current-password-message").show();
                     $("#email-message").hide();
                     $("#new-password-message").hide();
-                    $("#confirm-password-message").hide();  
+                    $("#confirm-password-message").hide();
                 }
             }
         });

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // GẮN THÊM BASE_API_URL VÀO ĐÂY VÌ Ở INDEX KHÔNG TRUYỀN ĐƯỢC VÀO FILE JS NÀY
-    const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
+    const BASE_API_URL = "http://localhost:3000/WebPHP_DoAn_EC";
     // Chuyển đổi giữa form đăng nhập và đăng ký
     $("#show-register").click(function (e) {
         e.preventDefault();
@@ -21,7 +21,7 @@ $(document).ready(function () {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     }
-    
+
     // Xử lý đăng ký bằng AJAX
     $("#register-form").submit(function (e) {
         e.preventDefault();
@@ -38,7 +38,7 @@ $(document).ready(function () {
             alert("Invalid email format.");
             return;
         }
-        
+
         $.ajax({
             url: `${BASE_API_URL}/api/users`,
             method: "POST",
@@ -46,9 +46,18 @@ $(document).ready(function () {
             data: JSON.stringify({ email: email, password: password }),
             dataType: "json",
             success: function (response) {
+                console.log("response", response);
+                // Call api để tạo role cho user
+                $.ajax({
+                    url: `${BASE_API_URL}/api/users/user_roles`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ user_id: response.data.id, role_id: 2 }), // 2 là role_id cho khách hàng
+                    dataType: "json",
+                });
                 alert("Registration successful! You can now log in.");
                 // Chuyển về trang đăng nhập href="./pages/login.php"
-                window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client/pages/login.php';
+                window.location.href = `${BASE_API_URL}/client/pages/login.php`;
 
             },
             error: function (xhr) {
@@ -59,9 +68,9 @@ $(document).ready(function () {
                     alert("Error: Invalid JSON response from server.");
                     console.error("Parsing error:", e, "Response:", xhr.responseText);
                 }
-            }            
+            }
         });
-    });    
+    });
 
     // Xử lý đăng nhập bằng AJAX
     $("#login-form").submit(function (e) {
@@ -82,37 +91,76 @@ $(document).ready(function () {
             alert("Địa chỉ email không hợp lệ.");
             return; // Không gửi request
         }
-        
+
         $.ajax({
             url: `${BASE_API_URL}/api/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
             method: "GET",
             dataType: "json",
             success: function (response) {
+                // Lấy thông tin user
+                const userData = response.data;
+                console.log("userData", userData);
+                console.log("userData.id", userData.id);
+                console.log("path", `${BASE_API_URL}/api/users/user_roles?user_id=${userData.id}`);
+                // Kiểm tra role cua người dùng
                 $.ajax({
-                    url: `${BASE_API_URL}/api/users/user_roles?user_id=${response.data.id}&role_id=1`,
+                    url: `${BASE_API_URL}/api/users/user_roles?user_id=${userData.id}`,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
-                        if(response.success) {
+                        if (response.success) {
+                            console.log("response", response.data[0].role_id);
+                            console.log("response.data.role_id", response.data[0].role_id);
+                            // Kết hợp thông tin user và role
+                            const userWithRole = {
+                                role_id: response.data[0].role_id,
+                                ...userData
+
+                            };
+                            console.log("userWithRole", userWithRole);
                             // Lưu thông tin người dùng vào localStorage
-                            localStorage.setItem("user", JSON.stringify(response.data));
-                            alert("Đăng nhập thành công với quyền admin!");
-                            // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
-                            window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/admin2';
+                            localStorage.setItem("user", JSON.stringify(userWithRole));
+
+                            // Chuyển hướng theo role
+                            switch (response.data[0].role_id) {
+                                case 1: // Admin
+                                    alert("Đăng nhập thành công với quyền admin!");
+                                    window.location.href = `${BASE_API_URL}/admin2/index.php`;
+                                    break;
+                                case 2: // Customer
+                                    alert("Đăng nhập thành công với quyền khách hàng!");
+                                    window.location.href = `${BASE_API_URL}/client/index.php`;
+                                    break;
+                                case 3: // Staff
+                                    alert("Đăng nhập thành công với quyền nhân viên!");
+                                    window.location.href = `${BASE_API_URL}/admin2/index.php`;
+                                    break;
+                                default:
+                                    alert("Tài khoản không có quyền truy cập!");
+                                    window.location.href = `${BASE_API_URL}/client/login.php`;
+                            }
+                            // alert("Đăng nhập thành công với quyền admin!");
+                            // // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
+                            // window.location.href = `${BASE_API_URL}/admin2/index.php`;
                         }
                     },
+                    // error: function (xhr) {
+                    //     let error = JSON.parse(xhr.responseText);
+                    //     localStorage.setItem("user", JSON.stringify(response.data));
+                    //     alert("Đăng nhập thành công với quyền user!");
+                    //     window.location.href = `${BASE_API_URL}/client/index.php`;
+                    // }
                     error: function (xhr) {
                         let error = JSON.parse(xhr.responseText);
-                        localStorage.setItem("user", JSON.stringify(response.data));
-                        alert("Đăng nhập thành công với quyền user!");
-                        window.location.href = 'http://localhost:81/WebPHP_DoAn_EC/client';
+                        alert("Lỗi khi kiểm tra quyền: " + error.message);
+                        window.location.href = `${BASE_API_URL}/client/login.php`;
                     }
                 });
             },
             error: function (xhr) {
                 let error = JSON.parse(xhr.responseText);
-                alert("Error: " + error.message);
+                alert("Đăng nhập thất bại: " + error.message);
             }
         });
-    });             
+    });
 });

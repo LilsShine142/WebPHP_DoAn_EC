@@ -506,7 +506,8 @@ document.addEventListener("DOMContentLoaded", function () {
     $(document).on('click', '.btn-view', async function () {
         let productId = $(this).data('id');
         console.log("Product ID:", productId);
-
+        // Gán giá trị productId vào input có id là productId
+        $('#productId_update').val(productId);
         try {
             let productDetail = await fetchAPIProductDetail(productId);
             console.log("Product Detail:", productDetail);
@@ -544,6 +545,8 @@ document.addEventListener("DOMContentLoaded", function () {
     $(document).on('click', '.btn-update', async function () {
         let productId = $(this).data('id');
         console.log("Product ID:", productId);
+        // Gán giá trị productId vào input có id là productId
+        $('#productId_update').val(productId);
         let productToUpdateModal = await fetchAPIProductDetail(productId);
         console.log("Product to Update:", productToUpdateModal);
         fillUpdateModal(productToUpdateModal); // Đổ dữ liệu lên modal

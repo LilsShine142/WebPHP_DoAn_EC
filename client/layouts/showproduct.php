@@ -235,6 +235,10 @@
 						categoriesMap[category.id] = categoryKey;
 					});
 				}
+			}).catch(error => {
+				console.error("Database connection error:", error); // Log the error for debugging
+
+				alert("Error: Could not connect to the database. Please try again later.");
 			});
 		}
 

@@ -169,7 +169,7 @@ if (!$product_id) {
                 }
             },
             error: function() {
-                console.error("Error loading product details.");
+                alert("Error loading product details.");
             }
         });
 
@@ -205,7 +205,7 @@ if (!$product_id) {
                 }
             },
             error: function() {
-                console.error("Error loading product variations.");
+                alert("Error loading product variations.");
             }
         });
 

@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- In Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Import file pagination -->
     <script src="assets/Components/Pagination.js"></script>
 </head>
@@ -150,117 +152,85 @@
         </div>
     </div>
 
-    <!-- ModalView -->
-    <!-- <div class="modal fade" id="modalView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalViewLabel" aria-hidden="true">
+    <!-- Modal View Detail -->
+    <div class="modal fade" id="modalReceiptDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalReceiptDetailLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalViewLabel">Product Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalReceiptDetailLabel">Goods Receipt Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="card-body">
-                        <table id="viewProductTable" class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="text-start bg-dark text-white p-2" colspan="2">Product Information</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-viewproduct-table">
-                                <tr>
-                                    <td class="fw-bold">Product ID</td>
-                                    <td id="product_id"></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">Product Name</td>
-                                    <td id="product_name"></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">Model</td>
-                                    <td id="model"></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">Description</td>
-                                    <td id="description"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="card-title mb-0">Basic Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="fw-bold">Receipt ID:</label>
+                                    <p id="receipt_id" class="text-muted">-</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="fw-bold">Receipt Date:</label>
+                                    <p id="created_at" class="text-muted">-</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="fw-bold">Staff:</label>
+                                    <p id="staff_name" class="text-muted">-</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="fw-bold">Supplier:</label>
+                                    <p id="provider_name" class="text-muted">-</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="fw-bold">Total Amount:</label>
+                                    <p id="total_price" class="text-danger fw-bold">-</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
-    <!-- Modal Update -->
-    <!-- <div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalUpdateLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalUpdateLabel">Update Product Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="card-body">
-                        <form id="updateProductForm" enctype="multipart/form-data">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="text-start bg-dark text-white p-2" colspan="2">Product Information</th>
-                                        <input type="hidden" id="productId" value="">
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="fw-bold col-4">Product Name</td>
-                                        <td><input type="text" id="product_name" class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Brand ID</td>
-                                        <td><input type="number" id="brand_id" class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Model</td>
-                                        <td><input type="text" id="model" class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Category ID</td>
-                                        <td><input type="number" id="category_id" class="form-control"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Description</td>
-                                        <td><textarea id="description" class="form-control"></textarea></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Image Name</td>
-                                        <td>
-                                            <input type="text" id="image_name" class="form-control" readonly>
-                                            <input type="file" id="image_upload" class="form-control mt-2" accept="image/*">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Stop Selling</td>
-                                        <td>
-                                            <select id="stop_selling" class="form-control">
-                                                <option value="false">No</option>
-                                                <option value="true">Yes</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </form>
+                    <div class="card mt-3">
+                        <div class="card-header bg-light">
+                            <h6 class="card-title mb-0">Product List</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>SKU</th>
+                                            <th>Product Name</th>
+                                            <th>Variant (ID)</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="receipt_items">
+                                        <!-- Product data will be added by JavaScript -->
+                                        <tr>
+                                            <td colspan="7" class="text-center">No products found</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveChanges">Save Changes</button>
+                    <button type="button" class="btn btn-primary" id="exportExcelBtn">
+                        <i class="fas fa-file-excel btn-print"></i>Print
+                    </button>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Toast container để hiển thị thông báo thành công -->
     <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>

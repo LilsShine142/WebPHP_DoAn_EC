@@ -114,7 +114,7 @@
         </div>
 
         <div class="card-body">
-            <h2>Danh sách Phiên Bản Sản Phẩm</h2>
+            <h2>Product Variations List</h2>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -163,7 +163,7 @@
                         <table id="viewProductTable" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th class="text-start bg-dark text-white p-2" colspan="2">Apple Watch Series 7</th>
+                                    <th class="text-start bg-dark text-white p-2" colspan="2" id="product_name"></th>
                                 </tr>
                                 <!-- Nhóm tiêu đề theo tên sản phẩm -->
                             </thead>
@@ -307,21 +307,18 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <form id="updateProductForm" enctype="multipart/form-data">
+                            <input type="hidden" id="productVariationId" data-field="productVariationId" value="">
+
                             <!-- Product Info -->
                             <div class="mb-3 text-center bg-dark text-white p-2">
-                                <h5>Apple Watch Series 7</h5>
-                                <input type="hidden" id="productVariationId" value="">
+                                <h5 id="product_name" data-field="product_name">Apple Watch Series 7</h5>
                             </div>
 
                             <!-- Image Upload Section -->
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label class="fw-bold" for="image_name">Image Name</label>
-                                    <input type="text" id="image_name" class="form-control" readonly value="avatar.png">
-                                </div>
-                                <div class="col">
                                     <label class="fw-bold" for="image_upload">Upload Image</label>
-                                    <input type="file" id="image_upload" class="form-control" accept="image/*">
+                                    <input type="file" id="image_upload" data-field="image_upload" class="form-control" accept="image/*">
                                 </div>
                             </div>
 
@@ -331,52 +328,51 @@
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="watch_size_mm">Watch Size (mm)</label>
-                                        <input type="text" id="watch_size_mm" class="form-control" placeholder="Enter size (mm)">
+                                        <input type="text" id="watch_size_mm" data-field="watch_size_mm" class="form-control" placeholder="Enter size (mm)">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="watch_color">Watch Color</label>
-                                        <input type="text" id="watch_color" class="form-control" placeholder="Enter color">
+                                        <input type="text" id="watch_color" data-field="watch_color" class="form-control" placeholder="Enter color">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="display_type">Display Type</label>
-                                        <input type="text" id="display_type" class="form-control" placeholder="Enter display type">
+                                        <input type="text" id="display_type" data-field="display_type" class="form-control" placeholder="Enter display type">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="display_size_mm">Display Size (mm)</label>
-                                        <input type="text" id="display_size_mm" class="form-control" placeholder="Enter display size (mm)">
+                                        <input type="text" id="display_size_mm" data-field="display_size_mm" class="form-control" placeholder="Enter display size (mm)">
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
-                                    <!-- Cột 1: Label Resolution (Width px) và Resolution (Height px) -->
-                                    <label class="fw-bold" for="resolution_w_px">Resolution (Width x Height (px))</label>
-                                    <!-- Cột 2: Input fields cho Width và Height -->
+                                    <label class="fw-bold" for="resolution_w_px_total">Resolution (Width x Height (px))</label>
                                     <div class="col">
-                                        <input type="text" id="resolution_w_px" class="form-control" placeholder="Enter width in px">
-
+                                        <input type="text" id="resolution_w_px" data-field="resolution_w_px" class="form-control" placeholder="Enter width in px">
                                     </div>
                                     <div class="col">
-                                        <input type="text" id="resolution_h_px" class="form-control" placeholder="Enter height in px">
+                                        <input type="text" id="resolution_h_px" data-field="resolution_h_px" class="form-control" placeholder="Enter height in px">
                                     </div>
                                 </div>
+
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="ram_bytes">RAM (Bytes)</label>
-                                        <input type="text" id="ram_bytes" class="form-control" placeholder="Enter RAM size in bytes">
+                                        <input type="text" id="ram_bytes" data-field="ram_bytes" class="form-control" placeholder="Enter RAM size in bytes">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="rom_bytes">ROM (Bytes)</label>
-                                        <input type="text" id="rom_bytes" class="form-control" placeholder="Enter ROM size in bytes">
+                                        <input type="text" id="rom_bytes" data-field="rom_bytes" class="form-control" placeholder="Enter ROM size in bytes">
                                     </div>
                                 </div>
+
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="connectivity">Connectivity</label>
-                                        <input type="text" id="connectivity" class="form-control" placeholder="Enter connectivity">
+                                        <input type="text" id="connectivity" data-field="connectivity" class="form-control" placeholder="Enter connectivity">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="sensors">Sensors</label>
-                                        <input type="text" id="sensors" class="form-control" placeholder="Enter sensors">
+                                        <input type="text" id="sensors" data-field="sensors" class="form-control" placeholder="Enter sensors">
                                     </div>
                                 </div>
                             </div>
@@ -387,19 +383,19 @@
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="case_material">Case Material</label>
-                                        <input type="text" id="case_material" class="form-control" placeholder="Enter case material">
+                                        <input type="text" id="case_material" data-field="case_material" class="form-control" placeholder="Enter case material">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="band_material">Band Material</label>
-                                        <input type="text" id="band_material" class="form-control" placeholder="Enter band material">
+                                        <input type="text" id="band_material" data-field="band_material" class="form-control" placeholder="Enter band material">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="band_size_mm">Band Size (mm)</label>
-                                        <input type="text" id="band_size_mm" class="form-control" placeholder="Enter band size (mm)">
+                                        <input type="text" id="band_size_mm" data-field="band_size_mm" class="form-control" placeholder="Enter band size (mm)">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="band_color">Band Color</label>
-                                        <input type="text" id="band_color" class="form-control" placeholder="Enter band color">
+                                        <input type="text" id="band_color" data-field="band_color" class="form-control" placeholder="Enter band color">
                                     </div>
                                 </div>
                             </div>
@@ -410,19 +406,19 @@
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="battery_life_mah">Battery Life (mAh)</label>
-                                        <input type="text" id="battery_life_mah" class="form-control" placeholder="Enter battery life in mAh">
+                                        <input type="text" id="battery_life_mah" data-field="battery_life_mah" class="form-control" placeholder="Enter battery life in mAh">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="water_resistance_value">Water Resistance</label>
-                                        <input type="text" id="water_resistance_value" class="form-control" placeholder="Enter water resistance">
+                                        <input type="text" id="water_resistance_value" data-field="water_resistance_value" class="form-control" placeholder="Enter water resistance">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="water_resistance_unit">Water Resistance Unit</label>
-                                        <input type="text" id="water_resistance_unit" class="form-control" placeholder="Enter unit of measurement">
+                                        <input type="text" id="water_resistance_unit" data-field="water_resistance_unit" class="form-control" placeholder="Enter unit of measurement">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="weight_miligam">Weight (mg)</label>
-                                        <input type="text" id="weight_miligam" class="form-control" placeholder="Enter weight in mg">
+                                        <input type="text" id="weight_miligam" data-field="weight_miligam" class="form-control" placeholder="Enter weight in mg">
                                     </div>
                                 </div>
                             </div>
@@ -433,15 +429,15 @@
                                 <div class="row mb-3">
                                     <div class="col">
                                         <label class="fw-bold" for="base_price_cents">Base Price (Cents)</label>
-                                        <input type="text" id="base_price_cents" class="form-control" placeholder="Enter base price in cents">
+                                        <input type="text" id="base_price_cents" data-field="base_price_cents" class="form-control" placeholder="Enter base price in cents">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="price_cents">Selling Price (Cents)</label>
-                                        <input type="text" id="price_cents" class="form-control" placeholder="Enter selling price in cents">
+                                        <input type="text" id="price_cents" data-field="price_cents" class="form-control" placeholder="Enter selling price in cents">
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="stop_selling">Stop Selling</label>
-                                        <select id="stop_selling" class="form-select">
+                                        <select id="stop_selling" data-field="stop_selling" class="form-select">
                                             <option value="no">No</option>
                                             <option value="yes">Yes</option>
                                         </select>

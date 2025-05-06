@@ -7,15 +7,26 @@
   $jsStack = [];
   $selectedContent = isset($_GET['page']) ? $_GET['page'] : 'index';
   $contentPath = strtok($selectedContent, '?'); // Loại bỏ query string
-  //Link constants để lấy BASE_URL_API
   require_once __DIR__ . "/../api/config/constants.php";
-  // Kết quả: http://localhost:3000/WebPHP_DoAn_EC
-
   include("layouts/head.php");
   ?>
   <script>
     // Gán BASE_API_URL cho biến JS từ PHP
     const BASE_API_URL = "<?php echo BASE_API_URL; ?>";
+
+    // Kiểm tra đăng nhập khi trang tải xong
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      console.log("user", user);
+      // Nếu không có user hoặc không phải admin (role_id = 1)
+      if (!user || user.role_id !== 1) {
+        alert('Bạn cần đăng nhập với quyền admin để truy cập trang này!');
+        window.location.href = '<?php echo BASE_API_URL; ?>/login.php';
+      } else {
+        // Hiển thị thông tin admin
+        document.getElementById('admin_name').textContent = user.full_name;
+      }
+    });
   </script>
 </head>
 

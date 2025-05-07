@@ -19,13 +19,7 @@
       const user = JSON.parse(localStorage.getItem('user'));
       console.log("user", user);
       // Nếu không có user hoặc không phải admin (role_id = 1)
-      if (!user || user.role_id !== 1 && user.role_id !== 3) {
-        alert('Bạn cần đăng nhập với quyền admin hoặc staff để truy cập trang này!');
-        window.location.href = '<?php echo BASE_API_URL; ?>/login.php';
-      } else {
-        // Hiển thị thông tin admin
-        document.getElementById('admin_name').textContent = user.full_name;
-      }
+      
     });
   </script>
 </head>

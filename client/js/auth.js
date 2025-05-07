@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // GẮN THÊM BASE_API_URL VÀO ĐÂY VÌ Ở INDEX KHÔNG TRUYỀN ĐƯỢC VÀO FILE JS NÀY
-    const BASE_API_URL = "http://localhost:3000/WebPHP_DoAn_EC";
+    const BASE_API_URL = "http://localhost:81/WebPHP_DoAn_EC";
     // Chuyển đổi giữa form đăng nhập và đăng ký
     $("#show-register").click(function (e) {
         e.preventDefault();
@@ -123,22 +123,42 @@ $(document).ready(function () {
 
                             // Chuyển hướng theo role
                             switch (response.data[0].role_id) {
-                                case 1: // Admin
-                                    alert("Đăng nhập thành công với quyền admin!");
-                                    window.location.href = `${BASE_API_URL}/admin2/index.php`;
+                                case "1": // Admin
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: 'Đăng nhập thành công với quyền admin!'
+                                    }).then(() => {
+                                        window.location.href = `${BASE_API_URL}/admin2/index.php`;
+                                    });
                                     break;
-                                case 2: // Customer
-                                    alert("Đăng nhập thành công với quyền khách hàng!");
-                                    window.location.href = `${BASE_API_URL}/client/index.php`;
+                                case "2": // Customer
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: 'Đăng nhập thành công với quyền khách hàng!'
+                                    }).then(() => {
+                                        window.location.href = `${BASE_API_URL}/client/index.php`;
+                                    });
                                     break;
-                                case 3: // Staff
-                                    alert("Đăng nhập thành công với quyền nhân viên!");
-                                    window.location.href = `${BASE_API_URL}/admin2/index.php`;
+                                case "3": // Staff
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: 'Đăng nhập thành công với quyền nhân viên!'
+                                    }).then(() => {
+                                        window.location.href = `${BASE_API_URL}/admin2/index.php`;
+                                    });
                                     break;
                                 default:
-                                    alert("Tài khoản không có quyền truy cập!");
-                                    window.location.href = `${BASE_API_URL}/client/login.php`;
-                            }
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi',
+                                        text: 'Tài khoản không có quyền truy cập!'
+                                    }).then(() => {
+                                        window.location.href = `${BASE_API_URL}/client/login.php`;
+                                    });
+                            }    
                             // alert("Đăng nhập thành công với quyền admin!");
                             // // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
                             // window.location.href = `${BASE_API_URL}/admin2/index.php`;

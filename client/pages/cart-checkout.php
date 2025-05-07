@@ -834,7 +834,21 @@
 
 
         } else if (paymentMethod === "COD") {
-            createOrder();
+            // confirm before create order
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You are about to place an order with COD payment method.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, place the order!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    createOrder();
+                }
+            });
         }
 
         // Gọi API tạo đơn hàng
@@ -917,8 +931,15 @@
                     }
                     sessionStorage.removeItem("selected_products");
                     sessionStorage.removeItem("order_id");
-                    alert("Đặt hàng thành công!");
-                    window.location.href = `${BASE_API_URL}/client/index.php?content=pages/shopping-cart.php`; // Chuyển hướng về trang giỏ hàng
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Order successfully!',
+                        text: 'Your order has been created.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    }).then(() => {
+                        window.location.href = `${BASE_API_URL}/client/index.php?content=pages/shopping-cart.php`; // Chuyển hướng về trang giỏ hàng
+                    });
                 },
                 error: function() {
                     alert("Không thể kết nối đến server.");

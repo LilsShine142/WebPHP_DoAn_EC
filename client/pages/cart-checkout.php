@@ -135,11 +135,11 @@
                 <label for="specificAddress">Specific Address</label>
                 <input type="text" id="specificAddress" value="Tạp Quá Cô Huế">
             </div>
-            <div class="address-type">
-                <!-- checkbox Set as default address -->
+
+            <!-- <div class="address-type">
                 <input type="checkbox" id="defaultAddress" name="defaultAddress">
                 <label style="margin-bottom: 0;" for="defaultAddress">Set as default address</label>
-            </div>
+            </div> -->
         </div>
         <div class="buttons">
             <button class="closeUpdateAddressModal">Back</button>
@@ -614,10 +614,22 @@
                                     ward: selectedWard,
                                     district: selectedDistrict,
                                     city_province: selectedProvince,
-                                    phone_number: $("#phoneNumber").val(),
-                                    is_default: $("#defaultAddress").is(":checked") ? true : false
+                                    phone_number: $("#phoneNumber").val()
                                 };
 
+                                // validate sđt 
+                                const phoneRegex = /^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$/;
+                                if (!phoneRegex.test(updatedAddressData.phone_number)) {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Invalid phone number',
+                                        text: 'Please enter a valid phone number!',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#3085d6'
+                                    });
+                                    return;
+                                }
+                                
                                 // Gọi API cập nhật địa chỉ
                                 $.ajax({
                                     url: `${BASE_API_URL}/api/users/addresses/${selectedAddressId}`,
@@ -626,10 +638,17 @@
                                     data: JSON.stringify(updatedAddressData),
                                     success: function(response) {
                                         if (response.success) {
-                                            alert("Cập nhật địa chỉ thành công!");
-                                            $("#updateAddressModal").hide();
-                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
-                                            modal.show();
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Address updated successfully!',
+                                                text: 'Your address has been updated.',
+                                                confirmButtonText: 'OK',
+                                                confirmButtonColor: '#3085d6'
+                                            }).then(() => {
+                                                $("#updateAddressModal").hide();
+                                                location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                                modal.show();
+                                            });
                                         } else {
                                             alert("Có lỗi xảy ra khi cập nhật địa chỉ.");
                                         }

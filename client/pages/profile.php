@@ -394,7 +394,7 @@
         font-weight: bold;
     }
 </style>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // xử lí sự kiên nhấn các li 
@@ -574,7 +574,7 @@
     });
 
     function validatePhoneNumber(phoneNumber) {
-        const phoneRegex = /^(0[3|5|7|8|9][0-9]{8})$/;
+        const phoneRegex = /^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$/;
         return phoneRegex.test(phoneNumber);
     }
 
@@ -607,8 +607,13 @@
                 // validate phone number
                 const phoneNumber = $("#phoneNumber").val();
                 if (!validatePhoneNumber(phoneNumber)) {
-                    alert("Số điện thoại không hợp lệ!");
-                    $("#phoneNumber").focus(); // Đưa con trỏ vào ô nhập số điện thoại
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid phone number',
+                        text: 'Please enter a valid phone number!',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
                     return;
                 }
                 const updatedUserData = {
@@ -623,8 +628,15 @@
                     data: JSON.stringify(updatedUserData),
                     success: function(response) {
                         if (response.success) {
-                            alert("Cập nhật thông tin thành công!");
-                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'User infor updated successfully!',
+                                text: 'Your infor has been updated.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#3085d6'
+                            }).then(() => {
+                                location.reload(); 
+                            });
                         } else {
                             alert("Có lỗi xảy ra khi cập nhật thông tin.");
                         }
@@ -684,8 +696,13 @@
                                 // validate phone number
                                 const phoneNumber = $(".phoneNumber").val();
                                 if (!validatePhoneNumber(phoneNumber)) {
-                                    alert("Số điện thoại không hợp lệ!");
-                                    $(".phoneNumber").focus(); // Đưa con trỏ vào ô nhập số điện thoại
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Invalid phone number',
+                                        text: 'Please enter a valid phone number!',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#3085d6'
+                                    });
                                     return;
                                 }
 
@@ -698,8 +715,7 @@
                                     ward: selectedWard,
                                     district: selectedDistrict,
                                     city_province: selectedProvince,
-                                    phone_number: phoneNumber,
-                                    is_default: false
+                                    phone_number: phoneNumber
                                 };
 
                                 // Gọi API cập nhật địa chỉ
@@ -710,9 +726,16 @@
                                     data: JSON.stringify(updatedAddressData),
                                     success: function(response) {
                                         if (response.success) {
-                                            alert("Cập nhật địa chỉ thành công!");
-                                            $("#updateAddressModal").hide();
-                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Address updated successfully!',
+                                                text: 'Your address has been updated.',
+                                                confirmButtonText: 'OK',
+                                                confirmButtonColor: '#3085d6'
+                                            }).then(() => {
+                                                $("#updateAddressModal").hide();
+                                                location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                            });
                                         } else {
                                             alert("Có lỗi xảy ra khi cập nhật địa chỉ.");
                                         }
@@ -737,8 +760,15 @@
                                     type: "DELETE",
                                     success: function(response) {
                                         if (response.success) {
-                                            alert("Xóa địa chỉ thành công!");
-                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Address deleted successfully!',
+                                                text: 'Your address has been deleted.',
+                                                confirmButtonText: 'OK',
+                                                confirmButtonColor: '#3085d6'
+                                            }).then(() => {
+                                                location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                            });
                                         } else {
                                             alert("Có lỗi xảy ra khi xóa địa chỉ.");
                                         }
@@ -783,8 +813,15 @@
                                             }),
                                             success: function(response) {
                                                 if (response.success) {
-                                                    alert("Đặt địa chỉ làm mặc định thành công!");
-                                                    location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                                    Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Address update default successfully!',
+                                                    text: 'Your address has been updated default.',
+                                                    confirmButtonText: 'OK',
+                                                    confirmButtonColor: '#3085d6'
+                                                    }).then(() => {
+                                                        location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                                    });
                                                 } else {
                                                     alert("Có lỗi xảy ra khi đặt địa chỉ làm mặc định.");
                                                 }
@@ -819,8 +856,13 @@
                             // validate phone number
                             const phoneNumber = $(".phoneNumber").val();
                             if (!validatePhoneNumber(phoneNumber)) {
-                                alert("Số điện thoại không hợp lệ!");
-                                $(".phoneNumber").focus(); // Đưa con trỏ vào ô nhập số điện thoại
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Invalid phone number',
+                                    text: 'Please enter a valid phone number!',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#3085d6'
+                                });
                                 return;
                             }
                             // Tạo body dữ liệu từ các input trong modal
@@ -845,9 +887,16 @@
                                 data: JSON.stringify(newAddressData),
                                 success: function(response) {
                                     if (response.success) {
-                                        alert("Thêm địa chỉ thành công!");
-                                        $("#updateAddressModal").hide();
-                                        location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Address added successfully!',
+                                            text: 'Your address has been added.',
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor: '#3085d6'
+                                        }).then(() => {
+                                            $("#updateAddressModal").hide();
+                                            location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                        });
                                     } else {
                                         alert("Có lỗi xảy ra khi thêm địa chỉ.");
                                     }
@@ -882,7 +931,13 @@
                             // Nếu mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
                             $("#current-password-message").hide();
                         } else {
-                            alert("Mật khẩu hiện tại không đúng!");
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Incorect password',
+                                text: 'Please enter the correct current password!',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#3085d6'
+                            });
                         }
                     },
                     error: function(xhr) {
@@ -897,7 +952,13 @@
                     $("#new-password-message").hide();
                     return;
                 } else if (!newPassword || !currentPassword || !confirmPassword) {
-                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Empty field',
+                        text: 'Please fill in all fields!',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
                     return;
                 } else if (newPassword.length < 8 || !/\d/.test(newPassword) || !/[a-zA-Z]/.test(newPassword)) {
                     $("#new-password-message").show();
@@ -915,8 +976,15 @@
                         }),
                         success: function(response) {
                             if (response.success) {
-                                alert("Đổi mật khẩu thành công!");
-                                location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Address updated successfully!',
+                                    text: 'Your address has been updated.',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#3085d6'
+                                }).then(() => {
+                                    location.reload(); // Tải lại trang để cập nhật thông tin hiển thị
+                                });
                             } else {
                                 alert("Có lỗi xảy ra khi đổi mật khẩu.");
                             }
